@@ -29,3 +29,27 @@ Thumbs.db
 
 # Windows reserved names
 nul
+
+# Design files and reference materials
+참고자료/
+figma-extracted/
+design-screens/
+*.fig
+*.png
+*.jpg
+*.jpeg
+*.pdf
+*.hwpx
+*.xlsx
+
+# Anima generated files
+.anima/
+
+# Generated/extracted files
+figma*.png
+figma*.json
+extracted_screens.json
+main_screen_url.json
+
+# Debug and test files
+debug-*.html
