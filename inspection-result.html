@@ -212,10 +212,37 @@
     }
 
     .result-table .radio-cell input[type="radio"] {
-      width: 16px;
-      height: 16px;
-      accent-color: var(--color-primary);
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #B0B0B0;
+      border-radius: 50%;
       cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+      background-color: #FFFFFF;
+    }
+
+    .result-table .radio-cell input[type="radio"]:hover {
+      border-color: var(--color-primary);
+    }
+
+    .result-table .radio-cell input[type="radio"]:checked {
+      background-color: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+
+    .result-table .radio-cell input[type="radio"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 6px;
+      height: 6px;
+      background-color: white;
+      border-radius: 50%;
     }
 
     .result-table .remark-cell {
@@ -392,7 +419,7 @@
                   <input type="radio" name="result" value="관심">
                 </td>
                 <td class="radio-cell">
-                  <input type="radio" name="result" value="주의" checked>
+                  <input type="radio" name="result" value="주의">
                 </td>
                 <td class="radio-cell">
                   <input type="radio" name="result" value="경계">
@@ -450,13 +477,33 @@
       }
     }
 
+    // 점검결과 데이터 수집 및 저장
+    function collectResultData() {
+      const selectedRadio = document.querySelector('input[name="result"]:checked');
+      const remarkInput = document.querySelector('.remark-cell input[type="text"]');
+      const repairInput = document.querySelector('.input-cell input[type="text"]');
+
+      const resultData = {
+        rating: selectedRadio ? selectedRadio.value : '',
+        repairNeed: repairInput ? repairInput.value : '',
+        remark: remarkInput ? remarkInput.value : ''
+      };
+
+      // sessionStorage에 저장
+      const existingData = JSON.parse(sessionStorage.getItem('inspectionData') || '{}');
+      existingData.result = resultData;
+      sessionStorage.setItem('inspectionData', JSON.stringify(existingData));
+    }
+
     // 이전 버튼
     function goBack() {
+      collectResultData();
       window.location.href = `inspection-checklist.html?site=${siteId}&type=${inspectionType}&target=${encodeURIComponent(target)}`;
     }
 
     // 다음 버튼
     function goNext() {
+      collectResultData();
       window.location.href = `inspection-final.html?site=${siteId}&type=${inspectionType}&target=${encodeURIComponent(target)}`;
     }
   </script>

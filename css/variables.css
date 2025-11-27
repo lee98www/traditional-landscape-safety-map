@@ -4,6 +4,31 @@
  * v1.1 (2025.11.26)
  */
 
+/* KoPub Dotum 폰트 정의 */
+@font-face {
+  font-family: 'KoPub Dotum';
+  src: url('../assets/fonts/KoPubDotumLight.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'KoPub Dotum';
+  src: url('../assets/fonts/KoPubDotumMedium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'KoPub Dotum';
+  src: url('../assets/fonts/KoPubDotumBold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* ========================================
    * 색상 팔레트 (디자인 시안 기준)
@@ -82,6 +107,7 @@
 
   /* 폰트 패밀리 */
   --font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-report: 'KoPub Dotum', 'Noto Sans KR', sans-serif;
 
   /* 폰트 크기 */
   --font-size-xs: 11px;

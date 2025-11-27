@@ -69,7 +69,7 @@
     /* Report Preview - 디자인 시안: 파란색 테두리(좌측/상단 강조) */
     .report-preview {
       width: 100%;
-      max-width: 800px;
+      max-width: 960px;
       background-color: #FFFFFF;
       border-radius: 16px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -77,6 +77,7 @@
       border: 2px solid #4A90E2;
       border-left-width: 4px;
       border-top-width: 4px;
+      font-family: 'KoPub Dotum', 'Noto Sans KR', sans-serif;
     }
 
     .report-header {
@@ -393,6 +394,169 @@
       font-size: 11px;
     }
 
+    /* 점검표 테이블 - 디자인 시안 기준 */
+    .checklist-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      border: 1px solid #333;
+      table-layout: fixed;
+    }
+
+    .checklist-table th,
+    .checklist-table td {
+      border: 1px solid #D0D0D0;
+      padding: 10px 8px;
+      text-align: center;
+      vertical-align: middle;
+      word-break: keep-all;
+    }
+
+    .checklist-table th {
+      background-color: #F5F5F5;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .checklist-table .row-header {
+      background-color: #FAFAFA;
+      font-weight: 500;
+      text-align: center;
+      width: 50px;
+    }
+
+    .checklist-table .sub-header {
+      background-color: #F0F0F0;
+      font-weight: 600;
+      width: 50px;
+    }
+
+    .checklist-table .col-item {
+      width: 70px;
+    }
+
+    .checklist-table .col-rating {
+      width: 100px;
+    }
+
+    .checklist-table .col-note {
+      width: 80px;
+    }
+
+    /* 체크박스 스타일 */
+    .check-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .check-box {
+      width: 14px;
+      height: 14px;
+      border: 1px solid #CCC;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .check-box.checked {
+      background-color: #4A90E2;
+      border-color: #4A90E2;
+    }
+
+    .check-box.checked::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background-color: #FFFFFF;
+    }
+
+    .check-label {
+      font-size: 11px;
+      color: #333;
+    }
+
+    /* 일반 현황 테이블 */
+    .status-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      border: 1px solid #333;
+      margin-bottom: 16px;
+    }
+
+    .status-table th,
+    .status-table td {
+      border: 1px solid #D0D0D0;
+      padding: 10px 12px;
+      vertical-align: middle;
+    }
+
+    .status-table th {
+      background-color: #F5F5F5;
+      font-weight: 600;
+      text-align: center;
+      width: 120px;
+    }
+
+    .status-table td {
+      text-align: left;
+    }
+
+    .status-table .option-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .status-table .option-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Report Judgment */
+    .report-judgment {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .report-judgment__item {
+      flex: 1;
+      min-width: 100px;
+      padding: 12px 8px;
+      text-align: center;
+      border: 2px solid #E0E0E0;
+      border-radius: 8px;
+      background-color: #FFFFFF;
+    }
+
+    .report-judgment__item--selected {
+      border-color: #0052CC;
+      background-color: #E8F4FD;
+    }
+
+    .report-judgment__item--selected .report-judgment__label {
+      color: #0052CC;
+    }
+
+    .report-judgment__label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333333;
+      margin-bottom: 2px;
+    }
+
+    .report-judgment__desc {
+      font-size: 11px;
+      color: #999999;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .report-info {
@@ -405,6 +569,23 @@
 
       .btn-action {
         width: 100%;
+      }
+
+      .checklist-table {
+        font-size: 10px;
+      }
+
+      .checklist-table th,
+      .checklist-table td {
+        padding: 6px 4px;
+      }
+
+      .report-judgment {
+        flex-direction: column;
+      }
+
+      .report-judgment__item {
+        min-width: auto;
       }
     }
   </style>
@@ -426,87 +607,287 @@
       </div>
 
       <div class="report-body">
-        <!-- 기본 정보 -->
+        <!-- 일반 현황 - 디자인 시안 기준 테이블 형식 -->
         <div class="report-section">
-          <h3 class="report-section__title">기본 정보</h3>
-          <div class="report-info">
-            <span class="report-info__label">점검 유형</span>
-            <span class="report-info__value" id="inspectionTypeDisplay">정기점검</span>
+          <h3 class="report-section__title">일반 현황</h3>
+          <table class="status-table">
+            <tr>
+              <th>항목</th>
+              <td colspan="3">내용</td>
+              <th>비고</th>
+            </tr>
+            <tr>
+              <th>재료</th>
+              <td colspan="3">
+                <div class="option-group">
+                  <span class="option-item"><span class="check-box checked"></span> <span class="check-label">석재</span></span>
+                  <span class="option-item"><span class="check-box"></span> <span class="check-label">콘크리트</span></span>
+                  <span class="option-item"><span class="check-box"></span> <span class="check-label">기타(　　)</span></span>
+                </div>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>상단 식물 여부</th>
+              <td colspan="3">
+                <div class="option-group">
+                  <span class="option-item"><span class="check-box checked"></span> <span class="check-label">교목</span></span>
+                  <span class="option-item"><span class="check-box"></span> <span class="check-label">관목</span></span>
+                  <span class="option-item"><span class="check-box checked"></span> <span class="check-label">초화류</span></span>
+                  <span class="option-item"><span class="check-box"></span> <span class="check-label">없음</span></span>
+                </div>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>상단 시설물 여부</th>
+              <td colspan="3">
+                <div class="option-group">
+                  <span class="option-item"><span class="check-box"></span> <span class="check-label">있음(　　)</span></span>
+                  <span class="option-item"><span class="check-box checked"></span> <span class="check-label">없음</span></span>
+                </div>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>상단 경사 여부</th>
+              <td colspan="3">
+                <div class="option-group">
+                  <span class="option-item"><span class="check-box"></span> <span class="check-label">있음</span></span>
+                  <span class="option-item"><span class="check-box checked"></span> <span class="check-label">없음</span></span>
+                </div>
+              </td>
+              <td></td>
+            </tr>
+          </table>
+        </div>
 
-            <span class="report-info__label">대상지</span>
-            <span class="report-info__value" id="siteDisplay">창덕궁 낙선재 권역</span>
+        <!-- 점검 항목 - 디자인 시안 기준 테이블 형식 -->
+        <div class="report-section">
+          <h3 class="report-section__title">점검 항목</h3>
+          <table class="checklist-table">
+            <colgroup>
+              <col style="width: 50px;"><!-- 대분류 -->
+              <col style="width: 50px;"><!-- 중분류 -->
+              <col style="width: 70px;"><!-- 항목명 -->
+              <col style="width: 100px;"><!-- 안전 -->
+              <col style="width: 100px;"><!-- 관심 -->
+              <col style="width: 100px;"><!-- 주의 -->
+              <col style="width: 100px;"><!-- 경계 -->
+              <col style="width: 100px;"><!-- 위험 -->
+              <col style="width: 90px;"><!-- 비고 -->
+            </colgroup>
+            <thead>
+              <tr>
+                <th colspan="2" rowspan="2">구분</th>
+                <th rowspan="2"></th>
+                <th colspan="5">평가 척도</th>
+                <th rowspan="2">비고</th>
+              </tr>
+              <tr>
+                <th>안전</th>
+                <th>관심</th>
+                <th>주의</th>
+                <th>경계</th>
+                <th>위험</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 당해시설 - 기초부 -->
+              <tr>
+                <td rowspan="12" class="sub-header">당해<br>시설<br>(12)</td>
+                <td rowspan="3" class="row-header">기초부</td>
+                <td>세굴</td>
+                <td><span class="check-cell"><span class="check-box checked"></span> 없음</span></td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td><span class="check-cell"><span class="check-box"></span> 있음</span></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>침하</td>
+                <td><span class="check-cell"><span class="check-box checked"></span> 없음</span></td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td><span class="check-cell"><span class="check-box"></span> 있음</span></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>우수침투흔</td>
+                <td><span class="check-cell"><span class="check-box checked"></span> 없음</span></td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td><span class="check-cell"><span class="check-box"></span> 있음</span></td>
+                <td></td>
+              </tr>
+              <!-- 당해시설 - 전면부 -->
+              <tr>
+                <td rowspan="9" class="row-header">전면부</td>
+                <td>균열</td>
+                <td><span class="check-cell"><span class="check-box"></span> 없음</span></td>
+                <td><span class="check-cell"><span class="check-box"></span> 경미</span></td>
+                <td><span class="check-cell"><span class="check-box checked"></span> 심각(국부)</span></td>
+                <td><span class="check-cell"><span class="check-box"></span> 심각(광대)</span></td>
+                <td><span class="check-cell"><span class="check-box"></span> 파괴예상</span></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>파손·탈락</td>
+                <td><span class="check-cell"><span class="check-box"></span> 없음</span></td>
+                <td><span class="check-cell"><span class="check-box checked"></span> 경미</span></td>
+                <td><span class="check-cell"><span class="check-box"></span> 심각(국부)</span></td>
+                <td><span class="check-cell"><span class="check-box"></span> 심각(광대)</span></td>
+                <td><span class="check-cell"><span class="check-box"></span> 파괴예상</span></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>열화</td>
+                <td><span class="check-cell"><span class="check-box"></span> 없음</span></td>
+                <td><span class="check-cell"><span class="check-box"></span> 경미</span></td>
+                <td><span class="check-cell"><span class="check-box checked"></span> 심각(국부)</span></td>
+                <td><span class="check-cell"><span class="check-box"></span> 심각(광대)</span></td>
+                <td><span class="check-cell"><span class="check-box"></span> 파괴예상</span></td>
+                <td style="font-size:10px;">풍화, 배흘,<br>벌리박락, 탄화/<br>철근 노출</td>
+              </tr>
+              <tr>
+                <td>누수흔</td>
+                <td><span class="check-cell"><span class="check-box"></span> 없음</span></td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td><span class="check-cell"><span class="check-box checked"></span> 있음</span></td>
+                <td>지의류</td>
+              </tr>
+              <tr>
+                <td>유실-채움재</td>
+                <td><span class="check-cell"><span class="check-box"></span> 없음</span></td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td><span class="check-cell"><span class="check-box checked"></span> 있음</span></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>유실-줄눈</td>
+                <td><span class="check-cell"><span class="check-box"></span> 없음</span></td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td><span class="check-cell"><span class="check-box checked"></span> 있음</span></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>변형</td>
+                <td><span class="check-cell"><span class="check-box checked"></span> 없음</span></td>
+                <td><span class="check-cell"><span class="check-box"></span> 경미</span></td>
+                <td><span class="check-cell"><span class="check-box"></span> 심각(국부)</span></td>
+                <td><span class="check-cell"><span class="check-box"></span> 심각(광대)</span></td>
+                <td><span class="check-cell"><span class="check-box"></span> 파괴예상</span></td>
+                <td style="font-size:10px;">기울기, 배부름<br>등 석렬이탈</td>
+              </tr>
+              <tr>
+                <td>배수공</td>
+                <td><span class="check-cell"><span class="check-box"></span> 양호</span></td>
+                <td><span class="check-cell"><span class="check-box checked"></span> 없음</span></td>
+                <td><span class="check-cell"><span class="check-box"></span> 불량</span></td>
+                <td>-</td>
+                <td>-</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>낙석 흔적</td>
+                <td><span class="check-cell"><span class="check-box checked"></span> 없음</span></td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td><span class="check-cell"><span class="check-box"></span> 있음</span></td>
+                <td></td>
+              </tr>
+              <!-- 추가 피해 요소 -->
+              <tr>
+                <td rowspan="3" class="sub-header">추가<br>피해<br>요소<br>(3)</td>
+                <td class="row-header">상부</td>
+                <td>지반 침하<br>여부</td>
+                <td><span class="check-cell"><span class="check-box checked"></span> 없음</span></td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td><span class="check-cell"><span class="check-box"></span> 있음</span></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td rowspan="2" class="row-header">인접<br>요소</td>
+                <td>위치</td>
+                <td><span class="check-cell"><span class="check-box"></span> 없음</span></td>
+                <td>-</td>
+                <td><span class="check-cell"><span class="check-box checked"></span> 석축·옹벽<br>높이 2배 이내</span></td>
+                <td>-</td>
+                <td><span class="check-cell"><span class="check-box"></span> 석축·옹벽<br>높이 1/2배 이내</span></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>유형</td>
+                <td><span class="check-cell"><span class="check-box"></span> 건조물</span></td>
+                <td><span class="check-cell"><span class="check-box"></span> 시설물</span></td>
+                <td><span class="check-cell"><span class="check-box"></span> 보행로</span></td>
+                <td><span class="check-cell"><span class="check-box checked"></span> 수목</span></td>
+                <td><span class="check-cell"><span class="check-box"></span> 기타</span></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-            <span class="report-info__label">점검 대상</span>
-            <span class="report-info__value" id="targetDisplay">석축 및 옹벽</span>
-
-            <span class="report-info__label">점검일</span>
-            <span class="report-info__value" id="dateDisplay">2025.11.27</span>
-
-            <span class="report-info__label">점검자</span>
-            <span class="report-info__value">홍길동 (국가유산청)</span>
+        <!-- 예상 피해 유형 -->
+        <div class="report-section">
+          <h3 class="report-section__title">예상 피해 유형 (중복가능)</h3>
+          <div class="option-group" style="padding: 12px 0;">
+            <span class="option-item"><span class="check-box checked"></span> <span class="check-label">손상</span></span>
+            <span class="option-item"><span class="check-box"></span> <span class="check-label">침하</span></span>
+            <span class="option-item"><span class="check-box"></span> <span class="check-label">전도</span></span>
+            <span class="option-item"><span class="check-box checked"></span> <span class="check-label">배부름</span></span>
+            <span class="option-item"><span class="check-box"></span> <span class="check-label">붕괴</span></span>
           </div>
         </div>
 
-        <!-- 점검 결과 요약 -->
+        <!-- 종합 판정 -->
         <div class="report-section">
-          <h3 class="report-section__title">점검 결과 요약</h3>
-          <div class="report-summary">
-            <div class="report-summary__item">
-              <span class="report-summary__label">균열</span>
-              <span class="report-summary__value report-summary__value--warning">관심 (경미)</span>
+          <h3 class="report-section__title">종합 판정</h3>
+          <div class="report-info" style="margin-bottom: 16px;">
+            <span class="report-info__label">조사자 의견</span>
+            <span class="report-info__value">*서로 영향을 주고받는 피해지점을 함께 기입하여 내용 작성 필요 (예: 수목 ③에 의해 석축 전면부 변형)</span>
+          </div>
+          <div style="font-size: 13px; font-weight: 500; color: #333; margin-bottom: 12px;">점검 결과에 따른 보수 필요성</div>
+          <div class="report-judgment">
+            <div class="report-judgment__item report-judgment__item--selected">
+              <span class="report-judgment__label">관심</span>
+              <span class="report-judgment__desc">(현상유지)</span>
             </div>
-            <div class="report-summary__item">
-              <span class="report-summary__label">파손·탈락</span>
-              <span class="report-summary__value report-summary__value--warning">관심 (경미)</span>
+            <div class="report-judgment__item">
+              <span class="report-judgment__label">주의</span>
+              <span class="report-judgment__desc">(경미보수)</span>
             </div>
-            <div class="report-summary__item">
-              <span class="report-summary__label">열화</span>
-              <span class="report-summary__value report-summary__value--danger">주의 (심각-국부)</span>
+            <div class="report-judgment__item">
+              <span class="report-judgment__label">경계</span>
+              <span class="report-judgment__desc">(수리)</span>
             </div>
-            <div class="report-summary__item">
-              <span class="report-summary__label">누수흔</span>
-              <span class="report-summary__value report-summary__value--danger">위험 (있음)</span>
-            </div>
-            <div class="report-summary__item">
-              <span class="report-summary__label">채움재 유실</span>
-              <span class="report-summary__value report-summary__value--danger">위험 (있음)</span>
+            <div class="report-judgment__item">
+              <span class="report-judgment__label">즉시 조치</span>
+              <span class="report-judgment__desc"></span>
             </div>
           </div>
         </div>
 
-        <!-- 예상피해유형 -->
-        <div class="report-section">
-          <h3 class="report-section__title">예상피해유형</h3>
-          <div class="report-info">
-            <span class="report-info__label">선택 항목</span>
-            <span class="report-info__value">붕괴, 세굴</span>
-          </div>
-        </div>
-
-        <!-- 조사자 의견 -->
-        <div class="report-section">
-          <h3 class="report-section__title">조사자 의견</h3>
-          <p style="font-size: var(--font-size-sm); color: var(--color-text-primary); line-height: 1.6;">
-            석축 전면부 일부 구간에서 균열 및 열화가 관찰되었으며, 누수흔과 채움재 유실이 확인되어 지속적인 모니터링이 필요합니다. 특히 우기 시 세굴 피해가 우려되므로 배수시설 점검 및 보수가 권장됩니다.
-          </p>
-        </div>
-
-        <!-- 액션 버튼 -->
+        <!-- 제출 버튼 (디자인 시안 기준: 제출하기만 표시) -->
         <div class="action-buttons">
           <button type="button" class="btn-action btn-submit" onclick="submitReport()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 2L11 13"/>
-              <path d="M22 2l-7 20-4-9-9-4 20-7z"/>
-            </svg>
             제출하기
-          </button>
-          <button type="button" class="btn-action btn-download" onclick="downloadReport()">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-              <polyline points="7,10 12,15 17,10"/>
-              <line x1="12" y1="15" x2="12" y2="3"/>
+              <polyline points="20,6 9,17 4,12"/>
             </svg>
-            보고서 다운로드
           </button>
         </div>
       </div>
@@ -525,21 +906,28 @@
     <div></div>
   </div>
 
-  <!-- 제출 완료 모달 -->
+  <!-- 제출 완료 모달 (디자인 시안 02_07_02 기준) -->
   <div class="modal-overlay" id="submitModal">
-    <div class="modal">
-      <div class="modal__icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-          <polyline points="20,6 9,17 4,12"/>
+    <div class="modal" style="text-align: left;">
+      <h3 class="modal__title" style="text-align: left; display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0052CC" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12" y2="8"/>
         </svg>
-      </div>
-      <h3 class="modal__title">제출 완료</h3>
-      <p class="modal__message">안전 점검 보고서가 성공적으로 제출되었습니다.</p>
-      <div class="modal__buttons">
-        <button type="button" class="btn-modal btn-modal--secondary" onclick="downloadReport()">
+        알림
+      </h3>
+      <p class="modal__message" style="background-color: #F5F5F5; padding: 16px; border-radius: 8px; margin-bottom: 24px;">제출 완료되었습니다.</p>
+      <div class="modal__buttons" style="display: flex; gap: 12px;">
+        <button type="button" class="btn-modal btn-modal--secondary" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;" onclick="downloadReport()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+            <polyline points="7,10 12,15 17,10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
           보고서 다운로드
         </button>
-        <button type="button" class="btn-modal btn-modal--primary" onclick="goHome()">
+        <button type="button" class="btn-modal btn-modal--primary" style="flex: 1;" onclick="goHome()">
           종료
         </button>
       </div>
@@ -571,18 +959,120 @@
     const inspectionType = urlParams.get('type') || 'regular';
     const target = urlParams.get('target') || '석축 및 옹벽';
 
-    // 사이트 정보
+    // sessionStorage에서 점검 데이터 불러오기
+    const inspectionData = JSON.parse(sessionStorage.getItem('inspectionData') || '{}');
+
+    // 사이트 정보 (설계서 기준: 낙선재, 주합루, 의두합)
     const sites = {
-      1: '창덕궁 주합루 권역',
-      2: '창덕궁 연경당 권역',
-      3: '창덕궁 낙선재 권역'
+      1: '창덕궁 낙선재 권역',
+      2: '창덕궁 주합루 권역',
+      3: '창덕궁 의두합 권역'
     };
 
-    // 화면 초기화
-    document.getElementById('inspectionTypeDisplay').textContent = inspectionType === 'regular' ? '정기점검' : '상시점검';
-    document.getElementById('siteDisplay').textContent = sites[siteId] || '창덕궁 낙선재 권역';
-    document.getElementById('targetDisplay').textContent = decodeURIComponent(target);
-    document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('ko-KR').replace(/\./g, '.').slice(0, -1);
+    // 화면 초기화 (ID가 존재하는 경우에만 업데이트)
+    const inspectionTypeEl = document.getElementById('inspectionTypeDisplay');
+    const siteEl = document.getElementById('siteDisplay');
+    const targetEl = document.getElementById('targetDisplay');
+    const dateEl = document.getElementById('dateDisplay');
+
+    // sessionStorage 데이터가 있으면 우선 사용, 없으면 URL 파라미터 사용
+    if (inspectionTypeEl) inspectionTypeEl.textContent = inspectionData.inspectionTypeName || (inspectionType === 'regular' ? '정기점검' : '상시점검');
+    if (siteEl) siteEl.textContent = (inspectionData.basicInfo && inspectionData.basicInfo['국가유산명']) || sites[siteId] || '창덕궁 낙선재 권역';
+    if (targetEl) targetEl.textContent = inspectionData.target || decodeURIComponent(target);
+    if (dateEl) dateEl.textContent = inspectionData.inspectionDate || new Date().toLocaleDateString('ko-KR').replace(/\./g, '.').slice(0, -1);
+
+    // 일반현황 정보 업데이트
+    function updateBasicInfo() {
+      if (inspectionData.basicInfo) {
+        // 국가유산유형
+        const typeEl = document.querySelector('.report-info__value');
+        if (typeEl && inspectionData.basicInfo['국가유산유형']) {
+          typeEl.textContent = inspectionData.basicInfo['국가유산유형'];
+        }
+
+        // 소재지
+        const addressEl = document.querySelectorAll('.report-info__value')[1];
+        if (addressEl && inspectionData.basicInfo['소재지']) {
+          addressEl.textContent = inspectionData.basicInfo['소재지'];
+        }
+
+        // 소유자/관리자
+        const ownerEl = document.querySelectorAll('.report-info__value')[2];
+        if (ownerEl && inspectionData.basicInfo['소유자관리자']) {
+          ownerEl.textContent = inspectionData.basicInfo['소유자관리자'];
+        }
+
+        // 관리 항목 체크박스 업데이트
+        if (inspectionData.basicInfo['관리항목']) {
+          const items = inspectionData.basicInfo['관리항목'];
+          const checkItems = document.querySelectorAll('.management-item');
+          checkItems.forEach(item => {
+            const label = item.querySelector('.check-label')?.textContent;
+            const checkbox = item.querySelector('.check-box');
+            if (checkbox && label) {
+              if (items[label]) {
+                checkbox.classList.add('checked');
+              } else {
+                checkbox.classList.remove('checked');
+              }
+            }
+          });
+        }
+      }
+    }
+
+    // 점검결과 업데이트
+    function updateResultInfo() {
+      if (inspectionData.result && inspectionData.result.rating) {
+        const rating = inspectionData.result.rating;
+        const judgmentItems = document.querySelectorAll('.report-judgment__item');
+
+        judgmentItems.forEach(item => {
+          const label = item.querySelector('.report-judgment__label')?.textContent;
+          if (label === rating) {
+            item.classList.add('report-judgment__item--selected');
+          } else {
+            item.classList.remove('report-judgment__item--selected');
+          }
+        });
+      }
+    }
+
+    // 종합판정 업데이트
+    function updateFinalInfo() {
+      if (inspectionData.final) {
+        // 예상 피해 유형
+        if (inspectionData.final.damageTypes && inspectionData.final.damageTypes.length > 0) {
+          const damageItems = document.querySelectorAll('.option-item');
+          damageItems.forEach(item => {
+            const label = item.querySelector('.check-label')?.textContent;
+            const checkbox = item.querySelector('.check-box');
+            if (checkbox && label) {
+              if (inspectionData.final.damageTypes.includes(label)) {
+                checkbox.classList.add('checked');
+              } else {
+                checkbox.classList.remove('checked');
+              }
+            }
+          });
+        }
+
+        // 조사자 의견
+        if (inspectionData.final.opinion) {
+          const opinionEl = document.querySelector('.report-info__value');
+          // 조사자 의견 항목 찾기
+          const opinionSection = document.querySelector('.report-section:last-of-type .report-info__value');
+          if (opinionSection) {
+            opinionSection.textContent = inspectionData.final.opinion;
+          }
+        }
+      }
+    }
+
+    // 페이지 로드 시 데이터 업데이트
+    updateBasicInfo();
+    updateResultInfo();
+    updateFinalInfo();
 
     // 이전 버튼
     function goBack() {

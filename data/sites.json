@@ -1,0 +1,284 @@
+{
+  "sites": [
+    {
+      "id": 1,
+      "name": "낙선재",
+      "address": "서울 종로구 율곡로 99",
+      "coordinates": { "lat": 37.5795, "lng": 126.9910 },
+      "basicInfo": {
+        "국가유산명": "창덕궁 낙선재 권역",
+        "국가유산유형": "사적",
+        "소재지": "서울특별시 종로구 율곡로 99-0",
+        "소유자관리자": "국가유산청 창덕궁관리소",
+        "관리항목": {
+          "종합정비계획": true,
+          "정기조사": true,
+          "돌봄사업": false,
+          "모니터링": true,
+          "국가유산지킴이": true
+        },
+        "주변환경": {
+          "범람위험요소": ["강", "하천"],
+          "인접지형": ["경사", "전도위험"],
+          "주변영향": [],
+          "고저차": "낮음",
+          "수리조건": "dry"
+        }
+      },
+      "inspectionHistory": [
+        {
+          "id": 1,
+          "date": "2024-03-15",
+          "inspector": "김철수",
+          "type": "정기점검",
+          "element": "석축",
+          "location": "낙선재 석축",
+          "result": "양호",
+          "coordinates": { "lat": 37.5798, "lng": 126.9905 },
+          "report": {
+            "title": "낙선재 석축 정기점검 보고서",
+            "summary": "전반적으로 양호한 상태이나, 일부 배수시설 점검 필요"
+          },
+          "photos": ["inspection_001_photo1.jpg", "inspection_001_photo2.jpg"],
+          "metafortUrl": "https://metafort.example.com/report/001"
+        },
+        {
+          "id": 2,
+          "date": "2024-02-10",
+          "inspector": "이영희",
+          "type": "상시점검",
+          "element": "배수시설",
+          "location": "낙선재 배수로",
+          "result": "주의",
+          "coordinates": { "lat": 37.5792, "lng": 126.9915 },
+          "report": {
+            "title": "낙선재 배수시설 점검 보고서",
+            "summary": "배수로 일부 낙엽 적체 확인, 청소 필요"
+          },
+          "photos": ["inspection_002_photo1.jpg"],
+          "metafortUrl": "https://metafort.example.com/report/002"
+        },
+        {
+          "id": 3,
+          "date": "2023-12-20",
+          "inspector": "박민수",
+          "type": "정기점검",
+          "element": "비탈면",
+          "location": "낙선재 북측 비탈면",
+          "result": "양호",
+          "coordinates": { "lat": 37.5800, "lng": 126.9920 },
+          "report": {
+            "title": "낙선재 비탈면 안전 점검 보고서",
+            "summary": "비탈면 안정성 양호, 배수 상태 정상"
+          },
+          "photos": ["inspection_003_photo1.jpg", "inspection_003_photo2.jpg"],
+          "metafortUrl": "https://metafort.example.com/report/003"
+        },
+        {
+          "id": 4,
+          "date": "2023-10-05",
+          "inspector": "정수진",
+          "type": "정기점검",
+          "element": "수목:단일목",
+          "location": "낙선재 정원",
+          "result": "양호",
+          "coordinates": { "lat": 37.5790, "lng": 126.9908 },
+          "report": {
+            "title": "낙선재 수목 건강 점검 보고서",
+            "summary": "수목 생육 상태 양호, 병충해 없음"
+          },
+          "photos": ["inspection_004_photo1.jpg"],
+          "metafortUrl": "https://metafort.example.com/report/004"
+        }
+      ],
+      "disasterHistory": [
+        {
+          "year": 2023,
+          "location": "창덕궁낙선재권역",
+          "type": "호우, 강풍",
+          "target": "수목",
+          "damage": "미송나무 1구 도목",
+          "recovery": "자체복구",
+          "coordinates": { "lat": 37.5797, "lng": 126.9912 }
+        },
+        {
+          "year": 2020,
+          "location": "낙선재 서측",
+          "type": "호우, 강풍",
+          "target": "수목",
+          "damage": "느티나무(B60*H10) 1구 도목",
+          "recovery": "자체복구",
+          "coordinates": { "lat": 37.5793, "lng": 126.9903 }
+        },
+        {
+          "year": 2020,
+          "location": "낙선재 계단",
+          "type": "호우, 강풍",
+          "target": "석축",
+          "damage": "수도로로 인한 석축 1.5m 부분 파손",
+          "recovery": "자체복구",
+          "coordinates": { "lat": 37.5795, "lng": 126.9908 }
+        }
+      ],
+      "repairHistory": [
+        {
+          "year": 2021,
+          "location": "낙선재",
+          "type": "돌",
+          "content": "낙선재 별묘 보수공사",
+          "cost": 82182,
+          "coordinates": { "lat": 37.5796, "lng": 126.9909 }
+        },
+        {
+          "year": 2021,
+          "location": "낙선재",
+          "type": "",
+          "content": "창덕궁 강풍 피해복 경비사업",
+          "cost": 24000,
+          "coordinates": { "lat": 37.5794, "lng": 126.9911 }
+        },
+        {
+          "year": 2020,
+          "location": "낙선재",
+          "type": "",
+          "content": "창덕궁 정밀안전 해충피해 복구공사",
+          "cost": 7060,
+          "coordinates": { "lat": 37.5795, "lng": 126.9907 }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "주합루",
+      "address": "서울 종로구 율곡로 99",
+      "coordinates": { "lat": 37.5820, "lng": 126.9935 },
+      "basicInfo": {
+        "국가유산명": "창덕궁 주합루 권역",
+        "국가유산유형": "사적",
+        "소재지": "서울특별시 종로구 율곡로 99",
+        "소유자관리자": "국가유산청 창덕궁관리소",
+        "관리항목": {
+          "종합정비계획": true,
+          "정기조사": true,
+          "돌봄사업": false,
+          "모니터링": true,
+          "국가유산지킴이": false
+        },
+        "주변환경": {
+          "범람위험요소": [],
+          "인접지형": ["경사"],
+          "주변영향": [],
+          "고저차": "높음",
+          "수리조건": "dry"
+        }
+      },
+      "inspectionHistory": [
+        {
+          "id": 5,
+          "date": "2024-03-10",
+          "inspector": "김철수",
+          "type": "정기점검",
+          "element": "석축",
+          "location": "주합루 기단",
+          "result": "양호",
+          "coordinates": { "lat": 37.5821, "lng": 126.9936 },
+          "report": {
+            "title": "주합루 석축 정기점검 보고서",
+            "summary": "석축 상태 양호"
+          },
+          "photos": ["inspection_005_photo1.jpg"],
+          "metafortUrl": "https://metafort.example.com/report/005"
+        }
+      ],
+      "disasterHistory": [],
+      "repairHistory": [
+        {
+          "year": 2022,
+          "location": "주합루",
+          "type": "",
+          "content": "주합루 보수정비공사",
+          "cost": 45000,
+          "coordinates": { "lat": 37.5820, "lng": 126.9935 }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "의두합",
+      "address": "서울 종로구 율곡로 99",
+      "coordinates": { "lat": 37.5810, "lng": 126.9925 },
+      "basicInfo": {
+        "국가유산명": "창덕궁 의두합 권역",
+        "국가유산유형": "사적",
+        "소재지": "서울특별시 종로구 율곡로 99",
+        "소유자관리자": "국가유산청 창덕궁관리소",
+        "관리항목": {
+          "종합정비계획": true,
+          "정기조사": true,
+          "돌봄사업": true,
+          "모니터링": true,
+          "국가유산지킴이": true
+        },
+        "주변환경": {
+          "범람위험요소": ["하천"],
+          "인접지형": ["경사"],
+          "주변영향": [],
+          "고저차": "낮음",
+          "수리조건": "damp"
+        }
+      },
+      "inspectionHistory": [
+        {
+          "id": 6,
+          "date": "2024-02-20",
+          "inspector": "이영희",
+          "type": "정기점검",
+          "element": "담장",
+          "location": "의두합 담장",
+          "result": "관심",
+          "coordinates": { "lat": 37.5811, "lng": 126.9926 },
+          "report": {
+            "title": "의두합 담장 점검 보고서",
+            "summary": "담장 일부 균열 확인, 모니터링 필요"
+          },
+          "photos": ["inspection_006_photo1.jpg"],
+          "metafortUrl": "https://metafort.example.com/report/006"
+        }
+      ],
+      "disasterHistory": [
+        {
+          "year": 2022,
+          "location": "의두합 남측",
+          "type": "태풍",
+          "target": "담장",
+          "damage": "담장 일부 기와 탈락",
+          "recovery": "자체복구",
+          "coordinates": { "lat": 37.5809, "lng": 126.9924 }
+        }
+      ],
+      "repairHistory": [
+        {
+          "year": 2022,
+          "location": "의두합",
+          "type": "",
+          "content": "의두합 담장 기와 보수",
+          "cost": 15000,
+          "coordinates": { "lat": 37.5810, "lng": 126.9925 }
+        }
+      ]
+    }
+  ],
+  "landscapeElements": [
+    { "id": 1, "name": "석축", "icon": "stone-wall" },
+    { "id": 2, "name": "옹벽", "icon": "retaining-wall" },
+    { "id": 3, "name": "담장", "icon": "fence" },
+    { "id": 4, "name": "문", "icon": "gate" },
+    { "id": 5, "name": "굴뚝", "icon": "chimney" },
+    { "id": 6, "name": "비탈면", "icon": "slope" },
+    { "id": 7, "name": "배수시설", "icon": "drainage" },
+    { "id": 8, "name": "수목:단일목", "icon": "tree-single" },
+    { "id": 9, "name": "수목:군집", "icon": "tree-group" },
+    { "id": 10, "name": "지당", "icon": "pond" },
+    { "id": 11, "name": "계류", "icon": "stream" }
+  ]
+}

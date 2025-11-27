@@ -192,10 +192,37 @@
     }
 
     .damage-type-item input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
       width: 18px;
       height: 18px;
-      accent-color: var(--color-primary);
+      border: 2px solid #B0B0B0;
+      border-radius: 4px;
       cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+      background-color: #FFFFFF;
+    }
+
+    .damage-type-item input[type="checkbox"]:hover {
+      border-color: var(--color-primary);
+    }
+
+    .damage-type-item input[type="checkbox"]:checked {
+      background-color: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+
+    .damage-type-item input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 5px;
+      top: 2px;
+      width: 5px;
+      height: 9px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
     }
 
     .damage-type-item label {
@@ -370,7 +397,7 @@
             <h3 class="final-section__title">예상 피해 유형 (중복가능)</h3>
             <div class="damage-type-group">
               <div class="damage-type-item">
-                <input type="checkbox" id="erosion" name="damageType" value="침식" checked>
+                <input type="checkbox" id="erosion" name="damageType" value="침식">
                 <label for="erosion">침식</label>
               </div>
               <div class="damage-type-item">
@@ -378,7 +405,7 @@
                 <label for="relaxation">이완</label>
               </div>
               <div class="damage-type-item">
-                <input type="checkbox" id="collapse" name="damageType" value="붕괴" checked>
+                <input type="checkbox" id="collapse" name="damageType" value="붕괴">
                 <label for="collapse">붕괴</label>
               </div>
             </div>
@@ -388,7 +415,7 @@
           <!-- 조사자 의견 섹션 -->
           <div class="final-section">
             <h3 class="final-section__title">조사자 의견</h3>
-            <textarea class="opinion-textarea" placeholder="조사자 의견을 입력해 주세요.">석축 전면부 일부 구간에서 균열 및 열화가 관찰되었으며, 누수흔과 채움재 유실이 확인되어 지속적인 모니터링이 필요합니다. 특히 우기 시 세굴 피해가 우려되므로 배수시설 점검 및 보수가 권장됩니다.</textarea>
+            <textarea class="opinion-textarea" placeholder="조사자 의견을 입력해 주세요."></textarea>
           </div>
         </div>
       </div>
@@ -434,13 +461,38 @@
       }
     }
 
+    // 종합판정 데이터 수집 및 저장
+    function collectFinalData() {
+      // 예상 피해 유형 수집
+      const damageTypes = [];
+      document.querySelectorAll('input[name="damageType"]:checked').forEach(cb => {
+        damageTypes.push(cb.value);
+      });
+
+      // 조사자 의견 수집
+      const opinionTextarea = document.querySelector('.opinion-textarea');
+      const opinion = opinionTextarea ? opinionTextarea.value : '';
+
+      const finalData = {
+        damageTypes: damageTypes,
+        opinion: opinion
+      };
+
+      // sessionStorage에 저장
+      const existingData = JSON.parse(sessionStorage.getItem('inspectionData') || '{}');
+      existingData.final = finalData;
+      sessionStorage.setItem('inspectionData', JSON.stringify(existingData));
+    }
+
     // 이전 버튼
     function goBack() {
+      collectFinalData();
       window.location.href = `inspection-result.html?site=${siteId}&type=${inspectionType}&target=${encodeURIComponent(target)}`;
     }
 
     // 다음 버튼
     function goNext() {
+      collectFinalData();
       window.location.href = `inspection-confirm.html?site=${siteId}&type=${inspectionType}&target=${encodeURIComponent(target)}`;
     }
   </script>
