@@ -35,12 +35,18 @@ nul
 figma-extracted/
 design-screens/
 *.fig
+*.hwpx
+*.xlsx
+
+# Ignore images EXCEPT in assets folder
 *.png
 *.jpg
 *.jpeg
 *.pdf
-*.hwpx
-*.xlsx
+!assets/**/*.png
+!assets/**/*.jpg
+!assets/**/*.jpeg
+!assets/**/*.ttf
 
 # Anima generated files
 .anima/

@@ -263,12 +263,49 @@ node scripts/validate-data.js
 
 ---
 
+## Phase 5: 점검표 상세 페이지 데이터 연동 (2025-11-27 완료)
+
+### 구현 내용
+1. **inspection-confirm.html 수정**:
+   - data-loader.js, photo-gallery.js 스크립트 추가
+   - URL 파라미터 `?id=xxx` 처리 로직 추가
+   - 실제 점검표 데이터 로딩 및 렌더링 함수 구현
+
+2. **데이터 플로우 완성**:
+   - site-detail.html → 마커 클릭 → inspection-confirm.html?id=pl1_wall
+   - 실제 JSON 데이터 로드 및 표시
+   - 사진 갤러리 모달 통합
+
+3. **렌더링 함수**:
+   - `loadInspectionData()` - 데이터 로드
+   - `renderInspectionData()` - 헤더 및 기본 정보
+   - `renderGeneralInfo()` - 일반 현황
+   - `renderOverallAssessment()` - 종합 판정
+   - `renderPhotos()` - 사진 썸네일 그리드
+   - `openPhotoGallery()` - 사진 갤러리 모달
+
+4. **하위 호환성**: inspectionId가 없으면 기존 sessionStorage 플로우 사용
+
+### 테스트 방법
+```bash
+cd D:\작업파일_종명\TLSM_v1.0_Release_Final
+python -m http.server 9821
+
+# 브라우저에서:
+http://127.0.0.1:9821/inspection-confirm.html?id=pl1_wall
+http://127.0.0.1:9821/inspection-confirm.html?id=pt2_tree
+```
+
+자세한 내용은 [PHASE5_COMPLETION.md](PHASE5_COMPLETION.md) 참조.
+
+---
+
 ## 알려진 제한사항
 
-### 완료되지 않은 작업
-1. **점검표 템플릿 12종**: 참고자료/안전점검표 폴더의 템플릿 추출 (미완료)
-2. **기본정보/재해이력/수리이력**: 별도 HWPX 파일의 데이터 추출 (미완료)
-3. **점검표 상세 필드**: pl2~pl6, pt2~pt6, drain의 checklistItems는 템플릿 구조만 존재 (수동 입력 필요)
+### 완료되지 않은 작업 (선택 사항)
+1. **점검표 템플릿 12종**: 참고자료/안전점검표 폴더의 템플릿 추출 (미완료, 시연에 필수 아님)
+2. **기본정보/재해이력/수리이력**: 별도 HWPX 파일의 데이터 추출 (미완료, 시연에 필수 아님)
+3. **점검표 상세 필드**: pl2~pl6, pt2~pt6, drain의 checklistItems는 템플릿 구조만 존재 (수동 입력 필요, 시연에 필수 아님)
 
 ### 향후 개선사항
 1. 점검표 입력 폼 동적 생성 (템플릿 기반)
