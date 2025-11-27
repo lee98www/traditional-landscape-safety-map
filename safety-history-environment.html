@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>안전 관리 이력 - 주변 환경</title>
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <style>
+    .environment-grid {
+      display: grid;
+      gap: var(--spacing-xl);
+      margin-top: var(--spacing-xl);
+    }
+
+    .environment-section {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-xl);
+      box-shadow: var(--shadow-md);
+    }
+
+    .environment-section__title {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-primary);
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 2px solid var(--color-primary);
+    }
+
+    .photo-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-md);
+    }
+
+    .photo-item {
+      position: relative;
+      aspect-ratio: 4/3;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--color-bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform var(--transition-fast);
+    }
+
+    .photo-item:hover {
+      transform: scale(1.05);
+    }
+
+    .photo-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-placeholder {
+      font-size: 48px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-md);
+    }
+
+    .info-card {
+      background: var(--color-bg-secondary);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-md);
+      border-left: 4px solid var(--color-primary);
+    }
+
+    .info-card__label {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .info-card__value {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+
+    .description-text {
+      line-height: var(--line-height-relaxed);
+      color: var(--color-text-secondary);
+      margin-top: var(--spacing-md);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <div class="header">
+      <a href="dashboard.html" class="header__logo" style="text-decoration: none; color: inherit;">전통 조경 안전 지도</a>
+      <div class="header__user">
+        <span class="header__username">테스트 사용자님</span>
+        <a href="index.html" class="btn btn--small btn--ghost">메인으로</a>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <ul class="sidebar__menu">
+        <li class="sidebar__item">
+          <a href="dashboard.html" class="sidebar__link">
+            🏠 홈
+          </a>
+        </li>
+        <li class="sidebar__item">
+          <a href="site-selection.html" class="sidebar__link sidebar__link--active">
+            📋 안전 관리 이력 조회
+          </a>
+        </li>
+        <li class="sidebar__item">
+          <a href="inspection-site-selection.html" class="sidebar__link">
+            ✓ 안전 점검 실시
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Main -->
+    <div class="main main--with-sidebar">
+      <div class="container">
+        <!-- Breadcrumb -->
+        <nav style="margin-bottom: var(--spacing-lg);">
+          <ol style="display: flex; gap: var(--spacing-sm); font-size: var(--font-size-sm); color: var(--color-text-secondary); list-style: none; padding: 0;">
+            <li><a href="dashboard.html" style="color: var(--color-text-secondary); text-decoration: none;">홈</a></li>
+            <li style="color: var(--color-text-disabled);">/</li>
+            <li><a href="site-selection.html" style="color: var(--color-text-secondary); text-decoration: none;">안전 관리 이력 조회</a></li>
+            <li style="color: var(--color-text-disabled);">/</li>
+            <li style="color: var(--color-text-primary); font-weight: var(--font-weight-medium);" id="breadcrumbSiteName">창덕궁 후원</li>
+          </ol>
+        </nav>
+
+        <div class="page-header">
+          <h1 class="page-header__title" id="pageTitle">창덕궁 후원 - 주변 환경</h1>
+          <p class="page-header__subtitle">대상지 주변 환경 및 자연 조건을 확인하세요</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+          <button class="tab" id="infoTabLink">기본 정보</button>
+          <button class="tab" id="disasterTabLink">재해 이력</button>
+          <button class="tab" id="repairTabLink">수리 이력</button>
+          <button class="tab tab--active">주변 환경</button>
+        </div>
+
+        <!-- Environment Content -->
+        <div class="environment-grid">
+          <!-- Section 1: Surrounding Environment -->
+          <div class="environment-section">
+            <h2 class="environment-section__title">📍 주변 환경 개요</h2>
+            <p class="description-text">
+              창덕궁은 서울특별시 종로구에 위치하며, 북악산 자락에 자리잡고 있습니다.
+              주변은 도심지역으로 교통이 편리하나, 북쪽으로는 자연환경이 잘 보존되어 있습니다.
+              인근에 창경궁, 종묘 등 다른 문화재가 인접해 있어 역사문화환경 보호가 중요합니다.
+            </p>
+
+            <div class="photo-gallery">
+              <div class="photo-item">
+                <div class="photo-placeholder">🏞️</div>
+              </div>
+              <div class="photo-item">
+                <div class="photo-placeholder">🌳</div>
+              </div>
+              <div class="photo-item">
+                <div class="photo-placeholder">🏛️</div>
+              </div>
+              <div class="photo-item">
+                <div class="photo-placeholder">🌲</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: Natural Conditions -->
+          <div class="environment-section">
+            <h2 class="environment-section__title">🌤️ 자연 조건</h2>
+
+            <div class="info-grid">
+              <div class="info-card">
+                <div class="info-card__label">지형</div>
+                <div class="info-card__value">산지 경사면</div>
+              </div>
+              <div class="info-card">
+                <div class="info-card__label">표고</div>
+                <div class="info-card__value">60-80m</div>
+              </div>
+              <div class="info-card">
+                <div class="info-card__label">경사도</div>
+                <div class="info-card__value">10-15°</div>
+              </div>
+              <div class="info-card">
+                <div class="info-card__label">향</div>
+                <div class="info-card__value">남향</div>
+              </div>
+            </div>
+
+            <p class="description-text">
+              북악산 남사면에 위치하여 일조량이 풍부하고 배수가 양호한 편입니다.
+              다만 여름철 집중호우 시 산사면에서 유입되는 지표수에 대한 배수 관리가 필요합니다.
+            </p>
+          </div>
+
+          <!-- Section 3: Vegetation -->
+          <div class="environment-section">
+            <h2 class="environment-section__title">🌿 식생 현황</h2>
+
+            <div class="info-grid">
+              <div class="info-card">
+                <div class="info-card__label">주요 수종</div>
+                <div class="info-card__value">소나무, 느티나무</div>
+              </div>
+              <div class="info-card">
+                <div class="info-card__label">초본류</div>
+                <div class="info-card__value">잔디, 야생화</div>
+              </div>
+              <div class="info-card">
+                <div class="info-card__label">관리 상태</div>
+                <div class="info-card__value">양호</div>
+              </div>
+            </div>
+
+            <p class="description-text">
+              전통 조경 수종이 잘 보존되어 있으며, 정기적인 관리로 수목의 건강 상태가 양호합니다.
+              다만 일부 석축 및 담장 부근에서 식생 침투가 발견되어 지속적인 모니터링이 필요합니다.
+            </p>
+
+            <div class="photo-gallery">
+              <div class="photo-item">
+                <div class="photo-placeholder">🌲</div>
+              </div>
+              <div class="photo-item">
+                <div class="photo-placeholder">🌸</div>
+              </div>
+              <div class="photo-item">
+                <div class="photo-placeholder">🍂</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: Risk Factors -->
+          <div class="environment-section">
+            <h2 class="environment-section__title">⚠️ 주변 환경 위험 요인</h2>
+
+            <div class="info-grid">
+              <div class="info-card" style="border-left-color: #F44336;">
+                <div class="info-card__label">위험 요인</div>
+                <div class="info-card__value">집중호우 배수</div>
+              </div>
+              <div class="info-card" style="border-left-color: #FF9800;">
+                <div class="info-card__label">주의 요인</div>
+                <div class="info-card__value">식생 침투</div>
+              </div>
+              <div class="info-card" style="border-left-color: #FF9800;">
+                <div class="info-card__label">주의 요인</div>
+                <div class="info-card__value">방문객 동선</div>
+              </div>
+            </div>
+
+            <p class="description-text">
+              <strong>배수 관리:</strong> 여름철 집중호우 시 산사면 유입수에 대한 배수시설 점검 필요<br>
+              <strong>식생 관리:</strong> 석축 및 담장 틈새의 식생 침투 정기 점검 필요<br>
+              <strong>이용객 관리:</strong> 방문객 동선이 문화재에 미치는 영향 모니터링 필요
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Site data
+    const siteData = {
+      '1': { name: '창덕궁 후원' },
+      '2': { name: '경복궁 향원정' },
+      '3': { name: '비원 석축' },
+      '4': { name: '종묘 담장' },
+      '5': { name: '덕수궁 석조전' },
+      '6': { name: '창경궁 화계' }
+    };
+
+    // Get site ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const siteId = urlParams.get('site') || '1';
+    const site = siteData[siteId] || siteData['1'];
+
+    // Update page title and breadcrumb
+    document.getElementById('pageTitle').textContent = `${site.name} - 주변 환경`;
+    document.getElementById('breadcrumbSiteName').textContent = site.name;
+
+    // Update tab links
+    document.getElementById('infoTabLink').onclick = () => {
+      window.location.href = `safety-history-info.html?site=${siteId}`;
+    };
+    document.getElementById('disasterTabLink').onclick = () => {
+      window.location.href = `safety-history-disaster.html?site=${siteId}`;
+    };
+    document.getElementById('repairTabLink').onclick = () => {
+      window.location.href = `safety-history-repair.html?site=${siteId}`;
+    };
+  </script>
+</body>
+</html>

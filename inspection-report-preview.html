@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>보고서 미리보기</title>
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <style>
+    body {
+      background: #f5f5f5;
+      padding: var(--spacing-xl);
+    }
+
+    .preview-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .preview-header {
+      text-align: center;
+      padding: var(--spacing-2xl);
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--spacing-xl);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .preview-header__title {
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-primary);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .preview-header__subtitle {
+      font-size: var(--font-size-lg);
+      color: var(--color-text-secondary);
+    }
+
+    .preview-content {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-2xl);
+      margin-bottom: var(--spacing-xl);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .report-section {
+      margin-bottom: var(--spacing-2xl);
+      padding-bottom: var(--spacing-2xl);
+      border-bottom: 2px solid var(--color-border-light);
+    }
+
+    .report-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .report-section__title {
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-primary);
+      margin-bottom: var(--spacing-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+
+    .report-section__icon {
+      font-size: var(--font-size-3xl);
+    }
+
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: var(--spacing-md);
+    }
+
+    .info-table th,
+    .info-table td {
+      padding: var(--spacing-md);
+      border: 1px solid var(--color-border-light);
+      text-align: left;
+    }
+
+    .info-table th {
+      background: var(--color-bg-secondary);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+      width: 25%;
+    }
+
+    .info-table td {
+      background: var(--color-white);
+      color: var(--color-text-secondary);
+    }
+
+    .report-text {
+      line-height: var(--line-height-relaxed);
+      color: var(--color-text-secondary);
+      padding: var(--spacing-lg);
+      background: var(--color-bg-tertiary);
+      border-radius: var(--radius-md);
+      border-left: 4px solid var(--color-primary);
+      margin-top: var(--spacing-md);
+    }
+
+    .action-panel {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-2xl);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+    }
+
+    .action-panel__title {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      text-align: center;
+      color: var(--color-text-primary);
+    }
+
+    .action-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-md);
+    }
+
+    .btn-action {
+      padding: var(--spacing-lg) var(--spacing-xl);
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      text-align: center;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+    }
+
+    .btn-download {
+      background: var(--color-primary);
+      color: var(--color-white);
+      border: none;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-download:hover {
+      background: var(--color-primary-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .btn-close {
+      background: transparent;
+      color: var(--color-text-secondary);
+      border: 2px solid var(--color-border-light);
+    }
+
+    .btn-close:hover {
+      background: var(--color-bg-secondary);
+      border-color: var(--color-text-secondary);
+    }
+
+    .download-icon {
+      font-size: var(--font-size-xl);
+    }
+
+    .info-note {
+      text-align: center;
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      font-style: italic;
+      margin-top: var(--spacing-md);
+      padding: var(--spacing-md);
+      background: var(--color-bg-tertiary);
+      border-radius: var(--radius-sm);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: var(--spacing-xs) var(--spacing-md);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      margin-left: var(--spacing-sm);
+    }
+
+    .badge--required {
+      background: #FFEBEE;
+      color: #C62828;
+    }
+
+    .badge--recommended {
+      background: #FFF3E0;
+      color: #E65100;
+    }
+
+    .badge--monitoring {
+      background: #E8F5E9;
+      color: #2E7D32;
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-container">
+    <!-- Header -->
+    <div class="preview-header">
+      <h1 class="preview-header__title">📄 안전 점검 보고서</h1>
+      <p class="preview-header__subtitle">전통 조경 안전 점검 결과 보고서 미리보기</p>
+    </div>
+
+    <!-- Report Content -->
+    <div class="preview-content">
+      <!-- Section 1: 기본 정보 -->
+      <div class="report-section">
+        <h2 class="report-section__title">
+          <span class="report-section__icon">📋</span>
+          기본 정보
+        </h2>
+
+        <table class="info-table">
+          <tr>
+            <th>대상지명</th>
+            <td>창덕궁 후원</td>
+          </tr>
+          <tr>
+            <th>소재지</th>
+            <td>서울특별시 종로구 율곡로 99</td>
+          </tr>
+          <tr>
+            <th>점검일시</th>
+            <td id="inspectionDate">2024년 09월 30일</td>
+          </tr>
+          <tr>
+            <th>점검자</th>
+            <td>홍길동 (문화재청 / 조경기사)</td>
+          </tr>
+          <tr>
+            <th>날씨</th>
+            <td>맑음</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Section 2: 점검 대상 -->
+      <div class="report-section">
+        <h2 class="report-section__title">
+          <span class="report-section__icon">🔍</span>
+          점검 대상
+        </h2>
+
+        <div class="report-text">
+          <p><strong>주요 점검 항목:</strong> 석축, 용벽, 담장</p>
+          <p style="margin-top: var(--spacing-sm);">
+            <strong>세부 점검 내용:</strong><br>
+            - 주택요건: 기초부 안정성, 구조적 결함 여부<br>
+            - 당해시설: 균열, 침하, 변형 상태<br>
+            - 추가 피해 요소: 식생 침투, 배수 문제
+          </p>
+        </div>
+      </div>
+
+      <!-- Section 3: 예상 피해 유형 -->
+      <div class="report-section">
+        <h2 class="report-section__title">
+          <span class="report-section__icon">⚠️</span>
+          예상 피해 유형
+        </h2>
+
+        <div class="report-text">
+          <p><strong>주요 피해:</strong></p>
+          <ul style="margin-left: var(--spacing-xl); margin-top: var(--spacing-sm);">
+            <li>균열 및 이격 현상 (경미)</li>
+            <li>일부 석재 탈락 위험</li>
+            <li>식생 침투에 따른 구조 약화</li>
+          </ul>
+
+          <p style="margin-top: var(--spacing-md);"><strong>위험도 평가:</strong> 중</p>
+        </div>
+      </div>
+
+      <!-- Section 4: 조사자 의견 -->
+      <div class="report-section">
+        <h2 class="report-section__title">
+          <span class="report-section__icon">📝</span>
+          조사자 의견
+        </h2>
+
+        <div class="report-text">
+          <p>
+            전반적으로 안정적인 상태를 유지하고 있으나, 일부 석축 구간에서 경미한 균열과
+            식생 침투가 확인되었습니다. 즉각적인 위험은 없으나, 향후 지속적인 모니터링과
+            예방적 보수가 필요합니다.
+          </p>
+          <p style="margin-top: var(--spacing-md);">
+            <strong>주요 권고사항:</strong>
+          </p>
+          <ul style="margin-left: var(--spacing-xl); margin-top: var(--spacing-sm);">
+            <li>균열 부위 정기 모니터링 (3개월 주기)</li>
+            <li>식생 침투 구간 제거 및 충전 작업</li>
+            <li>배수 시설 점검 및 개선</li>
+            <li>여름철 집중호우 대비 배수로 정비</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Section 5: 보수 필요성 -->
+      <div class="report-section">
+        <h2 class="report-section__title">
+          <span class="report-section__icon">🔧</span>
+          보수 필요성 판정
+        </h2>
+
+        <div class="report-text">
+          <p style="font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold);">
+            판정: 권장
+            <span class="badge badge--recommended">권장</span>
+          </p>
+
+          <p style="margin-top: var(--spacing-md);">
+            <strong>판정 사유:</strong><br>
+            현재 구조적 안정성은 확보되어 있으나, 예방적 차원에서 부분 보수를 권장합니다.
+            조기 대응을 통해 향후 대규모 보수 비용을 절감할 수 있습니다.
+          </p>
+
+          <p style="margin-top: var(--spacing-md);">
+            <strong>권장 조치 시기:</strong> 3개월 이내<br>
+            <strong>예상 소요 비용:</strong> 약 500~800만원 (부분 보수 기준)
+          </p>
+        </div>
+      </div>
+
+      <!-- Section 6: 첨부 자료 -->
+      <div class="report-section">
+        <h2 class="report-section__title">
+          <span class="report-section__icon">📎</span>
+          첨부 자료
+        </h2>
+
+        <div class="report-text">
+          <p>
+            - 현장 사진: 15장<br>
+            - 체크리스트: 3개 항목<br>
+            - 측정 데이터: 별첨<br>
+            - 지도 자료: 포함
+          </p>
+          <p style="margin-top: var(--spacing-sm); font-size: var(--font-size-sm); color: var(--color-text-disabled);">
+            (실제 첨부 파일은 고객사 제공 예정)
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Panel -->
+    <div class="action-panel">
+      <h3 class="action-panel__title">보고서 다운로드 및 재출하기</h3>
+
+      <div class="action-buttons">
+        <button class="btn-action btn-download" onclick="downloadReport()">
+          <span class="download-icon">📥</span>
+          보고서 다운로드
+        </button>
+        <button class="btn-action btn-close" onclick="closeReport()">
+          <span>✕</span>
+          종료
+        </button>
+      </div>
+
+      <div class="info-note">
+        보고서를 다운로드하거나 점검을 종료할 수 있습니다.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 현재 날짜 설정
+    const today = new Date();
+    const dateStr = `${today.getFullYear()}년 ${String(today.getMonth() + 1).padStart(2, '0')}월 ${String(today.getDate()).padStart(2, '0')}일`;
+    document.getElementById('inspectionDate').textContent = dateStr;
+
+    // 보고서 다운로드 (UI만)
+    function downloadReport() {
+      alert('보고서 다운로드 기능 (미구현)\n\n실제 구현 시:\n- PDF 생성\n- Excel 파일 생성\n- 이미지 첨부\n등의 기능이 포함됩니다.');
+
+      // 실제로는 서버에서 PDF 생성 후 다운로드
+      console.log('Downloading report...');
+    }
+
+    // 종료
+    function closeReport() {
+      if (confirm('점검을 종료하시겠습니까?\n대상지 선택 화면으로 돌아갑니다.')) {
+        window.location.href = 'inspection-site-selection.html';
+      }
+    }
+
+    // 인쇄 기능 (선택사항)
+    function printReport() {
+      window.print();
+    }
+
+    // Ctrl+P 단축키로 인쇄
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.key === 'p') {
+        e.preventDefault();
+        printReport();
+      }
+    });
+  </script>
+</body>
+</html>

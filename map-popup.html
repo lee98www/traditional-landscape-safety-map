@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>지도에서 선택 - 전통조경 안전지도 시범서비스</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", sans-serif;
+      background-color: #EAF2FE; min-height: 100vh; display: flex; flex-direction: column;
+    }
+    .header {
+      background-color: #FFFFFF; height: 80px; display: flex;
+      align-items: center; justify-content: space-between; padding: 0 40px;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+    }
+    .header__logo { font-size: 18px; font-weight: 600; color: #003E9C; text-decoration: none; }
+    .page-title { font-size: 18px; font-weight: 600; color: #171719; }
+    .logout-button {
+      padding: 8px 16px; background-color: #EF4444; color: #FFFFFF; border: none;
+      border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    .main-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 60px 40px; }
+    .content-box {
+      width: 100%; max-width: 740px; background-color: #FFFFFF;
+      border: 1.5px solid #0066FF; border-radius: 30px; padding: 40px;
+    }
+    .footer {
+      background-color: #1A1A1A; color: #FFFFFF; padding: 32px 40px;
+    }
+    .footer-content { max-width: 1440px; margin: 0 auto; }
+    .footer-links { display: flex; gap: 24px; margin-bottom: 16px; }
+    .footer-links a { color: #CCCCCC; text-decoration: none; font-size: 14px; }
+    .footer-info p { color: #999999; font-size: 13px; line-height: 1.6; }
+    .footer-copyright { color: #666666; font-size: 12px; margin-top: 12px; }
+    .map-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5); display: flex;
+      align-items: center; justify-content: center; z-index: 1000;
+    }
+    .map-popup {
+      width: 90%; max-width: 1200px; height: 80vh;
+      background-color: #FFFFFF; border-radius: 20px;
+      overflow: hidden; display: flex; flex-direction: column;
+    }
+    .map-popup-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 24px; border-bottom: 1px solid #E5E7EB;
+    }
+    .map-popup-title { font-size: 20px; font-weight: 700; color: #171719; }
+    .close-btn {
+      width: 32px; height: 32px; border: none; background: #F3F4F6;
+      border-radius: 50%; cursor: pointer; font-size: 18px;
+    }
+    .map-container { flex: 1; background-color: #E5E7EB; position: relative; }
+    .map-placeholder {
+      width: 100%; height: 100%; display: flex; align-items: center;
+      justify-content: center; font-size: 18px; color: #6B7280;
+    }
+    .map-marker {
+      position: absolute; width: 40px; height: 40px; background-color: #EF4444;
+      border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); cursor: pointer;
+    }
+    .map-marker::after {
+      content: ''; width: 16px; height: 16px; background-color: #FFFFFF;
+      border-radius: 50%; transform: rotate(45deg);
+    }
+    .map-info-card {
+      position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background-color: #FFFFFF; padding: 16px 24px; border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); min-width: 300px;
+    }
+    .map-info-title { font-size: 18px; font-weight: 700; color: #171719; margin-bottom: 4px; }
+    .map-info-address { font-size: 14px; color: #6B7280; margin-bottom: 12px; }
+    .map-select-btn {
+      width: 100%; padding: 12px; background-color: #0066FF; color: #FFFFFF;
+      border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="index.html" class="header__logo">전통조경 안전지도 시범서비스</a>
+    <h1 class="page-title">지도에서 선택</h1>
+    <button class="logout-button" onclick="window.location.href='index.html'">로그아웃</button>
+  </header>
+  <main class="main-container">
+    <div class="map-overlay" id="mapOverlay">
+      <div class="map-popup">
+        <div class="map-popup-header">
+          <h2 class="map-popup-title">대상지 위치 선택</h2>
+          <button class="close-btn" onclick="closeMapPopup()">✕</button>
+        </div>
+        <div class="map-container">
+          <div class="map-placeholder">
+            지도 영역 (Kakao Map API 연동)
+          </div>
+          <div class="map-marker" style="top: 40%; left: 45%;"></div>
+          <div class="map-marker" style="top: 35%; left: 55%;"></div>
+          <div class="map-marker" style="top: 50%; left: 50%;"></div>
+          <div class="map-info-card">
+            <div class="map-info-title">주합루</div>
+            <div class="map-info-address">서울 종로구 율곡로 99</div>
+            <button class="map-select-btn" onclick="selectLocation()">이 위치 선택</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <script>
+    function closeMapPopup() {
+      window.history.back();
+    }
+    function selectLocation() {
+      window.location.href = 'inspection-target-selection.html';
+    }
+  </script>
+  </main>
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="#">이용안내</a>
+        <a href="#">저작권정책</a>
+      </div>
+      <div class="footer-info">
+        <p>OO시 OO구 OO로 123, OO타워 12층</p>
+        <p>전화번호: 02-000-0000</p>
+      </div>
+      <p class="footer-copyright">© 2025.OOO SERVICE. ALL RIGHTS RESERVED.</p>
+    </div>
+  </footer>
+</body>
+</html>

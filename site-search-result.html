@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>대상지 선택 - 전통조경 안전지도 시범서비스</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", sans-serif;
+      background-color: #EAF2FE; min-height: 100vh; display: flex; flex-direction: column;
+    }
+    .header {
+      background-color: #FFFFFF; height: 80px; display: flex;
+      align-items: center; justify-content: space-between; padding: 0 40px;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+    }
+    .header__logo { font-size: 18px; font-weight: 600; color: #003E9C; text-decoration: none; }
+    .page-title { font-size: 18px; font-weight: 600; color: #171719; }
+    .logout-button {
+      padding: 8px 16px; background-color: #EF4444; color: #FFFFFF; border: none;
+      border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    .main-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 60px 40px; }
+    .content-box {
+      width: 100%; max-width: 740px; background-color: #FFFFFF;
+      border: 1.5px solid #0066FF; border-radius: 30px; padding: 40px;
+    }
+    .footer {
+      background-color: #1A1A1A; color: #FFFFFF; padding: 32px 40px;
+    }
+    .footer-content { max-width: 1440px; margin: 0 auto; }
+    .footer-links { display: flex; gap: 24px; margin-bottom: 16px; }
+    .footer-links a { color: #CCCCCC; text-decoration: none; font-size: 14px; }
+    .footer-info p { color: #999999; font-size: 13px; line-height: 1.6; }
+    .footer-copyright { color: #666666; font-size: 12px; margin-top: 12px; }
+    .search-container { margin-bottom: 24px; }
+    .search-label { display: block; font-size: 14px; font-weight: 600; color: #171719; margin-bottom: 8px; }
+    .search-label span { color: #EF4444; }
+    .search-wrapper { display: flex; gap: 12px; }
+    .search-input {
+      flex: 1; padding: 14px 16px; border: 1.5px solid #E5E7EB;
+      border-radius: 8px; font-size: 15px;
+    }
+    .search-btn {
+      padding: 14px 32px; background-color: #0066FF; color: #FFFFFF;
+      border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;
+    }
+    .search-results { margin-top: 24px; }
+    .result-item {
+      display: flex; align-items: center; padding: 16px;
+      background-color: #F9FAFB; border-radius: 12px; margin-bottom: 12px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .result-item:hover { background-color: #EFF6FF; transform: translateX(4px); }
+    .result-icon { font-size: 32px; margin-right: 16px; }
+    .result-info { flex: 1; }
+    .result-name { font-size: 16px; font-weight: 600; color: #171719; }
+    .result-address { font-size: 13px; color: #6B7280; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="index.html" class="header__logo">전통조경 안전지도 시범서비스</a>
+    <h1 class="page-title">대상지 선택</h1>
+    <button class="logout-button" onclick="window.location.href='index.html'">로그아웃</button>
+  </header>
+  <main class="main-container">
+    <div class="content-box">
+      <div class="search-container">
+        <label class="search-label">대상지 검색 <span>*</span></label>
+        <div class="search-wrapper">
+          <input type="text" class="search-input" placeholder="검색어를 입력해 주세요." id="searchInput" value="주합">
+          <button class="search-btn" onclick="search()">검색</button>
+        </div>
+      </div>
+      <div class="search-results">
+        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px;">검색 결과 (1건)</h3>
+        <div class="result-item" onclick="window.location.href='site-detail.html'">
+          <div class="result-icon">🏯</div>
+          <div class="result-info">
+            <div class="result-name">주합루</div>
+            <div class="result-address">서울 종로구 율곡로 99</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <script>
+    function search() {
+      alert('검색을 수행합니다.');
+    }
+  </script>
+  </main>
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="#">이용안내</a>
+        <a href="#">저작권정책</a>
+      </div>
+      <div class="footer-info">
+        <p>OO시 OO구 OO로 123, OO타워 12층</p>
+        <p>전화번호: 02-000-0000</p>
+      </div>
+      <p class="footer-copyright">© 2025.OOO SERVICE. ALL RIGHTS RESERVED.</p>
+    </div>
+  </footer>
+</body>
+</html>

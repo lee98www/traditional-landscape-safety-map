@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>안전 점검 실시 - 로그인 | 전통조경 안전지도 시범서비스</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <style>
+    /* 로그인 페이지 - 디자인 시안 기준 */
+    .login-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: #EBF3FF;
+    }
+
+    /* Header - 디자인 시안 기준 */
+    .header {
+      position: relative;
+      background-color: #FFFFFF;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+
+    .header__logo {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 20px;
+      background-color: #E8F4FD;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333333;
+      text-decoration: none;
+    }
+
+    .header__title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 18px;
+      font-weight: 600;
+      color: #333333;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    /* Login Card - 디자인 시안: 파란색 테두리(좌측/상단 강조) */
+    .login-card {
+      width: 100%;
+      max-width: 380px;
+      background-color: #FFFFFF;
+      border-radius: 16px;
+      padding: 40px 36px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: 2px solid #4A90E2;
+      border-left-width: 4px;
+      border-top-width: 4px;
+    }
+
+    /* Form Group */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #333333;
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      height: 44px;
+      padding: 0 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #333333;
+      background-color: #F5F5F5;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .form-input::placeholder {
+      color: #999999;
+    }
+
+    .form-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #4A90E2;
+    }
+
+    .form-hint {
+      font-size: 11px;
+      color: #999999;
+      margin-top: 6px;
+    }
+
+    /* Login Button - 디자인 시안 기준 */
+    .btn-login {
+      width: 100%;
+      height: 46px;
+      background-color: #0052CC;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      margin-top: 12px;
+    }
+
+    .btn-login:hover {
+      background-color: #003D99;
+    }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background-color: #E0E0E0;
+      margin: 28px 0;
+    }
+
+    /* Sub Actions - 디자인 시안: 테두리 스타일 버튼 */
+    .sub-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-sub {
+      flex: 1;
+      height: 44px;
+      background-color: #FFFFFF;
+      color: #0052CC;
+      border: 2px solid #0052CC;
+      border-radius: 24px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-sub:hover {
+      background-color: #E8F4FD;
+    }
+
+    /* Footer - 디자인 시안 기준 */
+    .footer {
+      background-color: #1A1A1A;
+      color: #FFFFFF;
+      padding: 20px 32px;
+    }
+
+    .footer__content {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .footer__links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+
+    .footer__link {
+      color: #888888;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer__link:hover {
+      color: #FFFFFF;
+    }
+
+    .footer__separator {
+      color: #555555;
+    }
+
+    .footer__info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .footer__info-item {
+      color: #777777;
+      font-size: 11px;
+    }
+
+    .footer__info-separator {
+      color: #555555;
+      font-size: 11px;
+    }
+
+    .footer__copyright {
+      color: #555555;
+      font-size: 11px;
+    }
+
+    /* Modal - 점검유형 선택 팝업 (디자인 시안 기준) */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-overlay .modal {
+      display: block !important;
+      position: relative !important;
+      background-color: #FFFFFF;
+      border-radius: 16px;
+      padding: 32px;
+      width: 100%;
+      max-width: 340px;
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #333333;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .modal__options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .modal__option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 1px solid #D0D0D0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .modal__option:hover {
+      background-color: #E8F4FD;
+      border-color: #4A90E2;
+    }
+
+    .modal__option.selected {
+      background-color: #E8F4FD;
+      border-color: #0052CC;
+    }
+
+    .modal__radio {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #D0D0D0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .modal__option.selected .modal__radio {
+      border-color: #0052CC;
+    }
+
+    .modal__radio-inner {
+      width: 10px;
+      height: 10px;
+      background-color: #0052CC;
+      border-radius: 50%;
+      display: none;
+    }
+
+    .modal__option.selected .modal__radio-inner {
+      display: block;
+    }
+
+    .modal__option-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333333;
+    }
+
+    .modal__actions {
+      margin-top: 24px;
+    }
+
+    .btn-modal {
+      width: 100%;
+      height: 46px;
+      background-color: #0052CC;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-modal:hover {
+      background-color: #003D99;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .header {
+        padding: 0 16px;
+      }
+
+      .header__logo {
+        font-size: 13px;
+        padding: 6px 14px;
+      }
+
+      .header__title {
+        font-size: 16px;
+      }
+
+      .login-card {
+        padding: 32px 24px;
+        border-radius: 12px;
+      }
+
+      .footer {
+        padding: 16px;
+      }
+
+      .footer__info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+
+      .footer__info-separator {
+        display: none;
+      }
+
+      .modal {
+        margin: 0 16px;
+        padding: 24px;
+      }
+
+      .sub-actions {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body class="login-page">
+  <!-- Header -->
+  <header class="header">
+    <a href="index.html" class="header__logo">전통조경 안전지도 시범서비스</a>
+    <h1 class="header__title">안전 점검 실시</h1>
+    <div style="width: 180px;"></div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="login-card">
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label">이름</label>
+          <input type="text" class="form-input" placeholder="이름을 입력해주세요." required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">소속</label>
+          <input type="text" class="form-input" placeholder="소속을 입력해 주세요." required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">직위</label>
+          <input type="text" class="form-input" placeholder="직위를 입력해주세요." required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">PW</label>
+          <input type="password" class="form-input" placeholder="비밀번호를 입력해주세요." required>
+          <p class="form-hint">PW 규정 사항 입력 위치</p>
+        </div>
+
+        <button type="submit" class="btn-login">로그인</button>
+      </form>
+
+      <div class="divider"></div>
+
+      <div class="sub-actions">
+        <button type="button" class="btn-sub">나의 정보 찾기</button>
+        <button type="button" class="btn-sub">점검원 회원 가입</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- 테스트용 바로가기 -->
+      <button type="button" class="btn-login" style="background-color: #666;" onclick="document.getElementById('inspectionTypeModal').classList.add('active')">
+        테스트용 바로가기 (로그인 생략)
+      </button>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__content">
+      <div class="footer__links">
+        <a href="#" class="footer__link">이용안내</a>
+        <span class="footer__separator">|</span>
+        <a href="#" class="footer__link">저작권정책</a>
+      </div>
+      <div class="footer__info">
+        <span class="footer__info-item">OO시 OO구 OO로 123, OO타워 12층</span>
+        <span class="footer__info-item">전화번호: 02-000-0000</span>
+      </div>
+      <p class="footer__copyright">© 2025.OOO SERVICE. ALL RIGHTS RESERVED.</p>
+    </div>
+  </footer>
+
+  <!-- 점검유형 선택 팝업 (v1.1 추가) -->
+  <div class="modal-overlay" id="inspectionTypeModal">
+    <div class="modal">
+      <h2 class="modal__title">점검유형 선택</h2>
+      <div class="modal__options">
+        <div class="modal__option selected" data-type="regular">
+          <div class="modal__radio">
+            <div class="modal__radio-inner"></div>
+          </div>
+          <span class="modal__option-text">정기점검</span>
+        </div>
+        <div class="modal__option" data-type="routine">
+          <div class="modal__radio">
+            <div class="modal__radio-inner"></div>
+          </div>
+          <span class="modal__option-text">상시점검</span>
+        </div>
+      </div>
+      <div class="modal__actions">
+        <button type="button" class="btn-modal" id="confirmInspectionType">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 로그인 폼 제출 처리
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      // 점검유형 선택 팝업 표시
+      document.getElementById('inspectionTypeModal').classList.add('active');
+    });
+
+    // 점검유형 옵션 선택
+    document.querySelectorAll('.modal__option').forEach(option => {
+      option.addEventListener('click', function() {
+        document.querySelectorAll('.modal__option').forEach(o => o.classList.remove('selected'));
+        this.classList.add('selected');
+      });
+    });
+
+    // 점검유형 확인 버튼
+    document.getElementById('confirmInspectionType').addEventListener('click', function() {
+      const selectedType = document.querySelector('.modal__option.selected').dataset.type;
+      // 대상지 선택 페이지로 이동
+      window.location.href = 'inspection-site-select.html?type=' + selectedType;
+    });
+
+    // 모달 바깥 클릭시 닫기
+    document.getElementById('inspectionTypeModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        this.classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>

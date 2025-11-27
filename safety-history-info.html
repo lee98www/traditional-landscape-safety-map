@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>기본 정보 - 전통조경 안전지도 시범서비스</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-family);
+      background-color: var(--color-bg-page);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header - 디자인 시스템 적용 */
+    .header {
+      position: relative;
+      background-color: var(--color-bg-white);
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header__logo {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 20px;
+      background-color: var(--color-logo-bg);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-logo-text);
+      text-decoration: none;
+      transition: all var(--transition-fast);
+    }
+
+    .header__logo:hover {
+      background-color: var(--color-primary-lighter);
+    }
+
+    .header__title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+
+    .header__logout {
+      padding: 8px 16px;
+      background-color: #EF4444;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .header__logout:hover {
+      background-color: #DC2626;
+    }
+
+    .main-container {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 24px 100px;
+    }
+
+    .content-box {
+      width: 100%;
+      max-width: 740px;
+      background-color: var(--color-bg-white);
+      border: 2px solid var(--color-primary-border);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-header__title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 4px;
+    }
+
+    .page-header__subtitle {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+    }
+
+    .detail-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--color-border-light);
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      min-width: 100px;
+    }
+
+    .info-value {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      text-align: right;
+    }
+
+    .info-value--status {
+      font-weight: 600;
+    }
+
+    .info-value--normal {
+      color: #10B981;
+    }
+
+    .info-value--caution {
+      color: #FFC107;
+    }
+
+    .info-value--watch {
+      color: #8BC34A;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .btn--danger {
+      background-color: #EF4444;
+      color: #FFFFFF;
+    }
+
+    .btn--danger:hover {
+      background-color: #DC2626;
+    }
+
+    .btn--primary {
+      background-color: var(--color-primary);
+      color: #FFFFFF;
+    }
+
+    .btn--primary:hover {
+      background-color: var(--color-primary-hover);
+    }
+
+    .btn--back {
+      background-color: #6B7280;
+      color: #FFFFFF;
+    }
+
+    .btn--back:hover {
+      background-color: #4B5563;
+    }
+
+    /* Footer */
+    .footer {
+      background-color: #1A1A1A;
+      color: #FFFFFF;
+      padding: 20px 32px;
+    }
+
+    .footer__content {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .footer__links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+
+    .footer__link {
+      color: #888888;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer__link:hover {
+      color: #FFFFFF;
+    }
+
+    .footer__separator {
+      color: #555555;
+    }
+
+    .footer__info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .footer__info-item {
+      color: #777777;
+      font-size: 11px;
+    }
+
+    .footer__copyright {
+      color: #555555;
+      font-size: 11px;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .header {
+        padding: 0 16px;
+      }
+
+      .header__logo {
+        font-size: 12px;
+        padding: 6px 12px;
+      }
+
+      .main-container {
+        padding: 16px;
+      }
+
+      .content-box {
+        padding: 24px 20px;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="index.html" class="header__logo">전통조경 안전지도 시범서비스</a>
+    <h1 class="header__title">기본 정보</h1>
+    <button class="header__logout" onclick="location.href='index.html'">로그아웃</button>
+  </header>
+
+  <main class="main-container">
+    <div class="content-box">
+      <div class="page-header">
+        <h2 class="page-header__title" id="siteName">주합루</h2>
+        <p class="page-header__subtitle" id="siteDescription">창덕궁 후원 부용지 북쪽 언덕 위에 위치한 2층 누각</p>
+      </div>
+
+      <div class="detail-info" id="infoTable">
+        <div class="info-row">
+          <span class="info-label">대상지명</span>
+          <span class="info-value" id="infoName">주합루</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">소재지</span>
+          <span class="info-value" id="infoLocation">서울 종로구 와룡동 2-71 (창덕궁 후원)</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">좌표</span>
+          <span class="info-value" id="infoCoords">37.5829°N, 126.9917°E</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">관리번호</span>
+          <span class="info-value" id="infoCode">CH-2024-001</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">등록일</span>
+          <span class="info-value" id="infoRegDate">2024-01-15</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">최근 점검일</span>
+          <span class="info-value" id="infoLastInspection">2024-11-20</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">상태</span>
+          <span class="info-value info-value--status info-value--normal" id="infoStatus">정상</span>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button class="btn btn--back" onclick="history.back()">뒤로가기</button>
+        <button class="btn btn--danger" id="btnDisaster">재해 이력</button>
+        <button class="btn btn--primary" id="btnRepair">수리 이력</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__content">
+      <div class="footer__links">
+        <a href="#" class="footer__link">이용안내</a>
+        <span class="footer__separator">|</span>
+        <a href="#" class="footer__link">저작권정책</a>
+      </div>
+      <div class="footer__info">
+        <span class="footer__info-item">OO시 OO구 OO로 123, OO타워 12층</span>
+        <span class="footer__info-item">전화번호: 02-000-0000</span>
+      </div>
+      <p class="footer__copyright">© 2025.OOO SERVICE. ALL RIGHTS RESERVED.</p>
+    </div>
+  </footer>
+
+  <script>
+    // URL 파라미터에서 site ID 가져오기
+    const urlParams = new URLSearchParams(window.location.search);
+    const siteId = urlParams.get('site') || '1';
+
+    // 창덕궁 내 실제 대상지 데이터 (site-detail.html과 동일)
+    const sites = {
+      1: {
+        name: '주합루',
+        location: '서울 종로구 와룡동 2-71 (창덕궁 후원)',
+        lat: 37.5829,
+        lng: 126.9917,
+        code: 'CH-2024-001',
+        regDate: '2024-01-15',
+        lastInspection: '2024-11-20',
+        status: '정상',
+        description: '창덕궁 후원 부용지 북쪽 언덕 위에 위치한 2층 누각'
+      },
+      2: {
+        name: '연경당',
+        location: '서울 종로구 와룡동 2-71 (창덕궁 후원)',
+        lat: 37.5825,
+        lng: 126.9932,
+        code: 'CH-2024-002',
+        regDate: '2024-01-15',
+        lastInspection: '2024-10-15',
+        status: '주의',
+        description: '순조 때 효명세자가 지은 사대부 주택 양식의 건물'
+      },
+      3: {
+        name: '낙선재',
+        location: '서울 종로구 와룡동 2-71 (창덕궁)',
+        lat: 37.5795,
+        lng: 126.9920,
+        code: 'CH-2024-003',
+        regDate: '2024-02-01',
+        lastInspection: '2024-09-10',
+        status: '정상',
+        description: '헌종이 후궁 경빈 김씨를 위해 지은 건물'
+      },
+      4: {
+        name: '부용정',
+        location: '서울 종로구 와룡동 2-71 (창덕궁 후원)',
+        lat: 37.5831,
+        lng: 126.9915,
+        code: 'CH-2024-004',
+        regDate: '2024-02-15',
+        lastInspection: '2024-11-05',
+        status: '정상',
+        description: '부용지 남쪽에 위치한 십자형 정자'
+      },
+      5: {
+        name: '존덕정',
+        location: '서울 종로구 와룡동 2-71 (창덕궁 후원)',
+        lat: 37.5838,
+        lng: 126.9925,
+        code: 'CH-2024-005',
+        regDate: '2024-03-01',
+        lastInspection: '2024-08-20',
+        status: '관심',
+        description: '후원 깊숙이 위치한 육각형 겹처마 정자'
+      }
+    };
+
+    // 현재 사이트 정보
+    const site = sites[siteId] || sites[1];
+
+    // 페이지 헤더 업데이트
+    document.getElementById('siteName').textContent = site.name;
+    document.getElementById('siteDescription').textContent = site.description;
+
+    // 상세 정보 업데이트
+    document.getElementById('infoName').textContent = site.name;
+    document.getElementById('infoLocation').textContent = site.location;
+    document.getElementById('infoCoords').textContent = `${site.lat}°N, ${site.lng}°E`;
+    document.getElementById('infoCode').textContent = site.code;
+    document.getElementById('infoRegDate').textContent = site.regDate;
+    document.getElementById('infoLastInspection').textContent = site.lastInspection;
+
+    // 상태 업데이트
+    const statusEl = document.getElementById('infoStatus');
+    statusEl.textContent = site.status;
+    statusEl.className = 'info-value info-value--status';
+    if (site.status === '정상') {
+      statusEl.classList.add('info-value--normal');
+    } else if (site.status === '주의') {
+      statusEl.classList.add('info-value--caution');
+    } else if (site.status === '관심') {
+      statusEl.classList.add('info-value--watch');
+    }
+
+    // 버튼 클릭 이벤트 (site ID 유지)
+    document.getElementById('btnDisaster').onclick = function() {
+      window.location.href = `safety-history-disaster.html?site=${siteId}`;
+    };
+    document.getElementById('btnRepair').onclick = function() {
+      window.location.href = `safety-history-repair.html?site=${siteId}`;
+    };
+  </script>
+</body>
+</html>

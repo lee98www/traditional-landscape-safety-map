@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>일반현황 - 안전 점검 실시</title>
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <style>
+    .form-section {
+      background: var(--color-white);
+      border: 2px solid var(--color-border-light);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-2xl);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .form-section__title {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-primary);
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 2px solid var(--color-primary);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+      align-items: start;
+    }
+
+    .form-label {
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+      padding-top: var(--spacing-sm);
+    }
+
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      padding: var(--spacing-md);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-base);
+      transition: border-color var(--transition-fast);
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .image-upload-area {
+      border: 2px dashed var(--color-border-light);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-2xl);
+      text-align: center;
+      background: var(--color-bg-tertiary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .image-upload-area:hover {
+      border-color: var(--color-primary);
+      background: var(--color-primary-bg);
+    }
+
+    .image-upload-area__icon {
+      font-size: 48px;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .image-upload-area__text {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-sm);
+    }
+
+    .document-display {
+      background: var(--color-bg-tertiary);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-xl);
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-secondary);
+    }
+
+    .housing-info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <div class="header">
+      <a href="dashboard.html" class="header__logo" style="text-decoration: none; color: inherit;">전통 조경 안전 지도</a>
+      <div class="header__user">
+        <span class="header__username">테스트 사용자님</span>
+        <a href="index.html" class="btn btn--small btn--ghost">메인으로</a>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <ul class="sidebar__menu">
+        <li class="sidebar__item">
+          <a href="dashboard.html" class="sidebar__link">
+            🏠 홈
+          </a>
+        </li>
+        <li class="sidebar__item">
+          <a href="site-selection.html" class="sidebar__link">
+            📋 안전 관리 이력 조회
+          </a>
+        </li>
+        <li class="sidebar__item">
+          <a href="inspection-site-selection.html" class="sidebar__link sidebar__link--active">
+            ✓ 안전 점검 실시
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Main -->
+    <div class="main main--with-sidebar">
+      <div class="container">
+        <div class="page-header">
+          <h1 class="page-header__title">일반현황</h1>
+          <p class="page-header__subtitle">대상지 일반현황 정보를 입력하세요</p>
+        </div>
+
+        <form id="generalStatusForm">
+          <!-- 기본 정보 섹션 -->
+          <div class="form-section">
+            <h2 class="form-section__title">기본 정보</h2>
+
+            <div class="form-row">
+              <label class="form-label">대상지명</label>
+              <input type="text" class="form-input" placeholder="대상지명을 입력하세요" value="창덕궁 후원">
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">위치</label>
+              <input type="text" class="form-input" placeholder="위치를 입력하세요" value="서울시 종로구 율곡로 99">
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">점검일시</label>
+              <input type="datetime-local" class="form-input">
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">점검자</label>
+              <input type="text" class="form-input" placeholder="점검자명을 입력하세요">
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">날씨</label>
+              <input type="text" class="form-input" placeholder="날씨를 입력하세요 (예: 맑음, 흐림)">
+            </div>
+          </div>
+
+          <!-- 주택 확장 정보 섹션 -->
+          <div class="form-section">
+            <h2 class="form-section__title">주택 확장 정보</h2>
+
+            <div class="housing-info-grid">
+              <div class="form-row" style="grid-template-columns: 1fr;">
+                <label class="form-label">규모</label>
+                <input type="text" class="form-input" placeholder="규모를 입력하세요">
+              </div>
+
+              <div class="form-row" style="grid-template-columns: 1fr;">
+                <label class="form-label">유형</label>
+                <input type="text" class="form-input" placeholder="유형을 입력하세요">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">특이사항</label>
+              <textarea class="form-textarea" placeholder="특이사항을 입력하세요"></textarea>
+            </div>
+
+            <!-- 고객사 전달 문서 표시 영역 -->
+            <div class="form-row">
+              <label class="form-label">참고 문서</label>
+              <div class="document-display">
+                <div style="text-align: center;">
+                  <p style="font-size: var(--font-size-lg); margin-bottom: var(--spacing-sm);">📄</p>
+                  <p>참고 문서 표출 영역</p>
+                  <p style="font-size: var(--font-size-sm); color: var(--color-text-disabled); margin-top: var(--spacing-sm);">
+                    관련 도면, 이전 점검 기록 등
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 현장 사진 업로드 섹션 -->
+          <div class="form-section">
+            <h2 class="form-section__title">현장 사진</h2>
+
+            <div class="form-row">
+              <label class="form-label">사진 업로드</label>
+              <div>
+                <div class="image-upload-area" onclick="document.getElementById('photoUpload').click()">
+                  <div class="image-upload-area__icon">📷</div>
+                  <div class="image-upload-area__text">
+                    <p>클릭하여 사진을 업로드하세요</p>
+                    <p style="font-size: var(--font-size-xs); margin-top: var(--spacing-xs);">
+                      (UI만 제작 - 실제 업로드 기능 미구현)
+                    </p>
+                  </div>
+                </div>
+                <input type="file" id="photoUpload" multiple accept="image/*" style="display: none;">
+              </div>
+            </div>
+          </div>
+
+          <!-- 추가 메모 섹션 -->
+          <div class="form-section">
+            <h2 class="form-section__title">추가 메모</h2>
+
+            <div class="form-row">
+              <label class="form-label">메모</label>
+              <textarea class="form-textarea" placeholder="추가 메모사항을 입력하세요" style="min-height: 150px;"></textarea>
+            </div>
+          </div>
+
+          <!-- Navigation Buttons -->
+          <div style="display: flex; justify-content: space-between; gap: var(--spacing-md);">
+            <a href="inspection-general-status.html" class="btn btn--outline">← 점검 항목으로</a>
+            <div style="display: flex; gap: var(--spacing-md);">
+              <button type="button" class="btn btn--ghost" onclick="saveDraft()">임시저장</button>
+              <button type="button" class="btn btn--primary" onclick="saveAndNext()">저장 후 다음</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 임시저장
+    function saveDraft() {
+      alert('임시저장되었습니다 (UI만 구현)');
+    }
+
+    // 저장 후 점검 항목으로 이동
+    function saveAndNext() {
+      if (confirm('일반현황을 저장하고 점검 항목으로 이동하시겠습니까?')) {
+        alert('저장되었습니다 (UI만 구현)');
+        window.location.href = 'inspection-general-status.html';
+      }
+    }
+
+    // 사진 업로드 이벤트 (UI만)
+    document.getElementById('photoUpload').addEventListener('change', function(e) {
+      if (e.target.files.length > 0) {
+        alert(`${e.target.files.length}개의 파일이 선택되었습니다 (실제 업로드는 미구현)`);
+      }
+    });
+  </script>
+</body>
+</html>

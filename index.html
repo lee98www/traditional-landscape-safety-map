@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>전통조경 안전지도 시범서비스</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <style>
+    /* 메인 화면 전용 스타일 - 디자인 시안 기준 */
+    .main-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: #EBF3FF;
+    }
+
+    /* 헤더 - 시안 기준: 흰색 배경, 로고는 연한 파란색 배경 */
+    .main-page .header {
+      position: relative;
+      background-color: #FFFFFF;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+    }
+
+    .main-page .header__logo {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 20px;
+      background-color: #E8F4FD;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333333;
+      text-decoration: none;
+    }
+
+    /* 메인 콘텐츠 영역 */
+    .main-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      padding: 60px 40px;
+    }
+
+    /* 메뉴 카드 - 디자인 시안 정확히 재현 */
+    .menu-card {
+      position: relative;
+      width: 340px;
+      height: 400px;
+      background-color: #FFFFFF;
+      border: 2px solid #4A90E2;
+      border-radius: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 40px 40px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .menu-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(74, 144, 226, 0.2);
+    }
+
+    .menu-card__title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #333333;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .menu-card__arrow {
+      width: 44px;
+      height: 44px;
+      background-color: #0052CC;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      transition: all 0.2s ease;
+    }
+
+    .menu-card:hover .menu-card__arrow {
+      background-color: #003D99;
+      transform: scale(1.05);
+    }
+
+    .menu-card__arrow svg {
+      width: 20px;
+      height: 20px;
+      color: #FFFFFF;
+    }
+
+    .menu-card__icon {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-card__icon img {
+      width: 180px;
+      height: 180px;
+      object-fit: contain;
+    }
+
+    /* 아이콘 없을 때 SVG 대체 */
+    .menu-card__icon-svg {
+      width: 160px;
+      height: 160px;
+    }
+
+    /* Footer - 디자인 시안 기준 */
+    .main-page .footer {
+      background-color: #1A1A1A;
+      color: #FFFFFF;
+      padding: 20px 32px;
+    }
+
+    .footer__content {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .footer__links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+
+    .footer__link {
+      color: #888888;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer__link:hover {
+      color: #FFFFFF;
+    }
+
+    .footer__separator {
+      color: #555555;
+    }
+
+    .footer__info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .footer__info-item {
+      color: #777777;
+      font-size: 11px;
+    }
+
+    .footer__info-separator {
+      color: #555555;
+      font-size: 11px;
+    }
+
+    .footer__copyright {
+      color: #555555;
+      font-size: 11px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .main-content {
+        gap: 32px;
+      }
+
+      .menu-card {
+        width: 300px;
+        height: 360px;
+      }
+
+      .menu-card__title {
+        font-size: 20px;
+      }
+
+      .menu-card__icon img {
+        width: 150px;
+        height: 150px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .main-content {
+        flex-direction: column;
+        gap: 24px;
+        padding: 40px 24px;
+      }
+
+      .menu-card {
+        width: 100%;
+        max-width: 340px;
+        height: 360px;
+      }
+
+      .menu-card__icon img {
+        width: 140px;
+        height: 140px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main-page .header {
+        padding: 0 16px;
+      }
+
+      .main-page .header__logo {
+        font-size: 13px;
+        padding: 6px 14px;
+      }
+
+      .menu-card {
+        height: 320px;
+        padding: 36px 28px 32px;
+        border-radius: 24px;
+      }
+
+      .menu-card__title {
+        font-size: 18px;
+        margin-bottom: 16px;
+      }
+
+      .menu-card__arrow {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 20px;
+      }
+
+      .menu-card__icon img {
+        width: 120px;
+        height: 120px;
+      }
+
+      .main-page .footer {
+        padding: 16px;
+      }
+
+      .footer__info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+
+      .footer__info-separator {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body class="main-page">
+  <!-- Header -->
+  <header class="header">
+    <a href="index.html" class="header__logo">전통조경 안전지도 시범서비스</a>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Card 1: 안전 관리 이력 확인 -->
+    <a href="history-site-select.html" class="menu-card">
+      <h2 class="menu-card__title">안전 관리 이력 확인</h2>
+      <div class="menu-card__arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </div>
+      <div class="menu-card__icon">
+        <img src="assets/icons/clipboard.png" alt="안전 관리 이력 확인" onerror="this.style.display='none'">
+      </div>
+    </a>
+
+    <!-- Card 2: 안전 점검 실시 -->
+    <a href="login.html" class="menu-card">
+      <h2 class="menu-card__title">안전 점검 실시</h2>
+      <div class="menu-card__arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </div>
+      <div class="menu-card__icon">
+        <img src="assets/icons/worker.png" alt="안전 점검 실시" onerror="this.style.display='none'">
+      </div>
+    </a>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__content">
+      <div class="footer__links">
+        <a href="#" class="footer__link">이용안내</a>
+        <span class="footer__separator">|</span>
+        <a href="#" class="footer__link">저작권정책</a>
+      </div>
+      <div class="footer__info">
+        <span class="footer__info-item">OO시 OO구 OO로 123, OO타워 12층</span>
+        <span class="footer__info-separator">|</span>
+        <span class="footer__info-item">전화번호: 02-000-0000</span>
+      </div>
+      <p class="footer__copyright">© 2025.OOO SERVICE. ALL RIGHTS RESERVED.</p>
+    </div>
+  </footer>
+</body>
+</html>

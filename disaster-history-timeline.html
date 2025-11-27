@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>재해 이력 타임라인 - 전통조경 안전지도 시범서비스</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", sans-serif;
+      background-color: #EAF2FE; min-height: 100vh; display: flex; flex-direction: column;
+    }
+    .header {
+      background-color: #FFFFFF; height: 80px; display: flex;
+      align-items: center; justify-content: space-between; padding: 0 40px;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+    }
+    .header__logo { font-size: 18px; font-weight: 600; color: #003E9C; text-decoration: none; }
+    .page-title { font-size: 18px; font-weight: 600; color: #171719; }
+    .logout-button {
+      padding: 8px 16px; background-color: #EF4444; color: #FFFFFF; border: none;
+      border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    .main-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 60px 40px; }
+    .content-box {
+      width: 100%; max-width: 740px; background-color: #FFFFFF;
+      border: 1.5px solid #0066FF; border-radius: 30px; padding: 40px;
+    }
+    .footer {
+      background-color: #1A1A1A; color: #FFFFFF; padding: 32px 40px;
+    }
+    .footer-content { max-width: 1440px; margin: 0 auto; }
+    .footer-links { display: flex; gap: 24px; margin-bottom: 16px; }
+    .footer-links a { color: #CCCCCC; text-decoration: none; font-size: 14px; }
+    .footer-info p { color: #999999; font-size: 13px; line-height: 1.6; }
+    .footer-copyright { color: #666666; font-size: 12px; margin-top: 12px; }
+    .year-selector {
+      display: flex; gap: 8px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 8px;
+    }
+    .year-btn {
+      padding: 8px 20px; border: 1.5px solid #E5E7EB; border-radius: 20px;
+      background-color: #FFFFFF; font-size: 14px; font-weight: 500;
+      color: #6B7280; cursor: pointer; white-space: nowrap;
+    }
+    .year-btn.active { background-color: #0066FF; color: #FFFFFF; border-color: #0066FF; }
+    .timeline-visual {
+      display: flex; align-items: center; gap: 4px; margin-bottom: 32px;
+      padding: 20px; background-color: #F9FAFB; border-radius: 12px;
+    }
+    .timeline-dot {
+      width: 12px; height: 12px; border-radius: 50%; background-color: #E5E7EB;
+    }
+    .timeline-dot.active { background-color: #EF4444; }
+    .timeline-line { flex: 1; height: 2px; background-color: #E5E7EB; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="index.html" class="header__logo">전통조경 안전지도 시범서비스</a>
+    <h1 class="page-title">재해 이력 타임라인</h1>
+    <button class="logout-button" onclick="window.location.href='index.html'">로그아웃</button>
+  </header>
+  <main class="main-container">
+    <div class="content-box">
+      <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 24px;">재해 이력 타임라인</h2>
+      <div class="year-selector">
+        <button class="year-btn">2020</button>
+        <button class="year-btn">2021</button>
+        <button class="year-btn">2022</button>
+        <button class="year-btn">2023</button>
+        <button class="year-btn active">2024</button>
+      </div>
+      <div class="timeline-visual">
+        <div class="timeline-dot"></div>
+        <div class="timeline-line"></div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-line"></div>
+        <div class="timeline-dot active"></div>
+        <div class="timeline-line"></div>
+        <div class="timeline-dot active"></div>
+        <div class="timeline-line"></div>
+        <div class="timeline-dot"></div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="padding: 20px; background-color: #FEF2F2; border-radius: 12px; border-left: 4px solid #EF4444;">
+          <div style="font-size: 14px; color: #EF4444; font-weight: 600; margin-bottom: 4px;">2024.07.15</div>
+          <div style="font-size: 16px; font-weight: 600; color: #171719;">집중호우로 인한 석축 균열</div>
+        </div>
+        <div style="padding: 20px; background-color: #FEF2F2; border-radius: 12px; border-left: 4px solid #EF4444;">
+          <div style="font-size: 14px; color: #EF4444; font-weight: 600; margin-bottom: 4px;">2024.03.20</div>
+          <div style="font-size: 16px; font-weight: 600; color: #171719;">동절기 동파 피해</div>
+        </div>
+      </div>
+      <button onclick="window.location.href='safety-history-disaster.html'"
+        style="width: 100%; margin-top: 24px; padding: 14px; background-color: #0066FF; color: #FFFFFF; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
+        상세 이력 보기
+      </button>
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="#">이용안내</a>
+        <a href="#">저작권정책</a>
+      </div>
+      <div class="footer-info">
+        <p>OO시 OO구 OO로 123, OO타워 12층</p>
+        <p>전화번호: 02-000-0000</p>
+      </div>
+      <p class="footer-copyright">© 2025.OOO SERVICE. ALL RIGHTS RESERVED.</p>
+    </div>
+  </footer>
+</body>
+</html>

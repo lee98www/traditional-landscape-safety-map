@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="전통 조경 안전지도 - 안전 관리 이력 확인 시스템">
+    <title>전통 조경 안전지도</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Main Container -->
+    <div class="app-container">
+
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <h1 class="app-title">전통 조경 안전지도</h1>
+                <span class="app-subtitle">Traditional Landscape Safety Map</span>
+            </div>
+            <nav class="header-nav">
+                <button class="nav-btn active" data-page="main">
+                    <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 2L2 8v10h6v-6h4v6h6V8L10 2z"/>
+                    </svg>
+                    홈
+                </button>
+                <button class="nav-btn" data-page="history">
+                    <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9V7h2v6z"/>
+                    </svg>
+                    이력 확인
+                </button>
+                <button class="nav-btn" data-page="settings">
+                    <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 6a4 4 0 100 8 4 4 0 000-8zM2 10a8 8 0 1116 0 8 8 0 01-16 0z"/>
+                    </svg>
+                    설정
+                </button>
+            </nav>
+            <div class="header-right">
+                <button class="notification-btn" aria-label="알림">
+                    <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 2a6 6 0 00-6 6v4l-2 2v1h16v-1l-2-2V8a6 6 0 00-6-6zm-1 15h2v1h-2v-1z"/>
+                    </svg>
+                    <span class="notification-badge">3</span>
+                </button>
+                <div class="user-menu">
+                    <button class="user-btn" aria-label="사용자 메뉴">
+                        <span class="user-avatar">관</span>
+                        <span class="user-name">관리자</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Main Screen -->
+            <section class="page active" id="main-page">
+                <div class="hero-section">
+                    <div class="hero-content">
+                        <h2 class="hero-title">전통 조경 안전 관리 시스템</h2>
+                        <p class="hero-description">
+                            문화재 및 전통 조경의 안전 관리 이력을 체계적으로 관리하고<br>
+                            재해 예방 및 수리 이력을 효율적으로 추적할 수 있습니다.
+                        </p>
+                        <div class="hero-actions">
+                            <button class="btn btn-primary btn-lg" onclick="navigateToHistory()">
+                                <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z"/>
+                                </svg>
+                                안전 관리 이력 확인
+                            </button>
+                            <button class="btn btn-secondary btn-lg">
+                                <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M10 2L2 10h3v6h10v-6h3L10 2z"/>
+                                </svg>
+                                새 이력 등록
+                            </button>
+                        </div>
+                    </div>
+                    <div class="hero-image">
+                        <div class="stats-card">
+                            <div class="stat-item">
+                                <span class="stat-label">관리 대상지</span>
+                                <span class="stat-value">127</span>
+                                <span class="stat-unit">개소</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">총 재해 이력</span>
+                                <span class="stat-value">45</span>
+                                <span class="stat-unit">건</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">수리 완료</span>
+                                <span class="stat-value">38</span>
+                                <span class="stat-unit">건</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Access Cards -->
+                <div class="quick-access-section">
+                    <h3 class="section-title">빠른 접근</h3>
+                    <div class="card-grid">
+                        <div class="quick-card" onclick="navigateToHistory()">
+                            <div class="quick-card-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="white">
+                                    <path d="M16 4a12 12 0 100 24 12 12 0 000-24zm0 20a8 8 0 110-16 8 8 0 010 16z"/>
+                                </svg>
+                            </div>
+                            <h4 class="quick-card-title">대상지 검색</h4>
+                            <p class="quick-card-desc">관리 대상지를 검색하고<br>상세 정보를 확인합니다</p>
+                        </div>
+
+                        <div class="quick-card">
+                            <div class="quick-card-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="white">
+                                    <path d="M16 4L4 14v14h8v-8h8v8h8V14L16 4z"/>
+                                </svg>
+                            </div>
+                            <h4 class="quick-card-title">재해 이력</h4>
+                            <p class="quick-card-desc">재해 발생 이력을 조회하고<br>관리합니다</p>
+                        </div>
+
+                        <div class="quick-card">
+                            <div class="quick-card-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="white">
+                                    <path d="M16 4a2 2 0 012 2v8h8a2 2 0 010 4h-8v8a2 2 0 01-4 0v-8H6a2 2 0 010-4h8V6a2 2 0 012-2z"/>
+                                </svg>
+                            </div>
+                            <h4 class="quick-card-title">수리 이력</h4>
+                            <p class="quick-card-desc">수리 및 보수 이력을<br>추적합니다</p>
+                        </div>
+
+                        <div class="quick-card">
+                            <div class="quick-card-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="white">
+                                    <path d="M8 6h16a2 2 0 012 2v16a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2zm2 4v4h4v-4h-4zm6 0v4h4v-4h-4zm-6 6v4h4v-4h-4zm6 0v4h4v-4h-4z"/>
+                                </svg>
+                            </div>
+                            <h4 class="quick-card-title">통계 분석</h4>
+                            <p class="quick-card-desc">안전 관리 데이터를<br>분석합니다</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="recent-section">
+                    <div class="section-header">
+                        <h3 class="section-title">최근 활동</h3>
+                        <button class="btn btn-text">전체보기</button>
+                    </div>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon danger">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M10 2L2 18h16L10 2zm0 5v5h0v-5zm0 7v2h0v-2z"/>
+                                </svg>
+                            </div>
+                            <div class="activity-content">
+                                <h4 class="activity-title">창덕궁 후원 낙석 재해 발생</h4>
+                                <p class="activity-desc">2024.11.20 - 긴급 점검 필요</p>
+                            </div>
+                            <span class="activity-time">2시간 전</span>
+                        </div>
+
+                        <div class="activity-item">
+                            <div class="activity-icon success">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M7 10l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <div class="activity-content">
+                                <h4 class="activity-title">경복궁 석조물 수리 완료</h4>
+                                <p class="activity-desc">2024.11.18 - 최종 검수 완료</p>
+                            </div>
+                            <span class="activity-time">2일 전</span>
+                        </div>
+
+                        <div class="activity-item">
+                            <div class="activity-icon info">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9V7h2v6z"/>
+                                </svg>
+                            </div>
+                            <div class="activity-content">
+                                <h4 class="activity-title">종묘 정기 점검 실시</h4>
+                                <p class="activity-desc">2024.11.15 - 이상 없음</p>
+                            </div>
+                            <span class="activity-time">9일 전</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- History Page -->
+            <section class="page" id="history-page">
+                <div class="page-header">
+                    <div>
+                        <h2 class="page-title">안전 관리 이력 확인</h2>
+                        <p class="page-subtitle">대상지를 선택하여 상세 정보를 확인하세요</p>
+                    </div>
+                    <button class="btn btn-primary">
+                        <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 4a2 2 0 012 2v2h2a2 2 0 010 4h-2v2a2 2 0 01-4 0v-2H6a2 2 0 010-4h2V6a2 2 0 012-2z"/>
+                        </svg>
+                        새 이력 등록
+                    </button>
+                </div>
+
+                <!-- Search Section -->
+                <div class="search-section">
+                    <div class="search-bar">
+                        <svg class="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
+                        </svg>
+                        <input
+                            type="text"
+                            class="search-input"
+                            placeholder="대상지명, 위치, 관리번호로 검색..."
+                            id="siteSearch"
+                        >
+                        <button class="search-clear" id="searchClear" style="display: none;">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                <path d="M4 4l8 8m0-8L4 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="filter-group">
+                        <button class="filter-btn active" data-filter="all">전체</button>
+                        <button class="filter-btn" data-filter="palace">궁궐</button>
+                        <button class="filter-btn" data-filter="temple">사찰</button>
+                        <button class="filter-btn" data-filter="garden">정원</button>
+                        <button class="filter-btn" data-filter="other">기타</button>
+                    </div>
+                </div>
+
+                <!-- Site List -->
+                <div class="site-grid" id="siteGrid">
+                    <!-- Site cards will be generated by JavaScript -->
+                </div>
+
+                <!-- Site Detail Modal -->
+                <div class="modal" id="siteDetailModal">
+                    <div class="modal-backdrop" onclick="closeModal()"></div>
+                    <div class="modal-content modal-large">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="modalTitle">대상지 상세 정보</h3>
+                            <button class="modal-close" onclick="closeModal()" aria-label="닫기">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M6 6l12 12m0-12L6 18"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="modalBody">
+                            <!-- Content will be loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Page -->
+            <section class="page" id="settings-page">
+                <div class="page-header">
+                    <h2 class="page-title">설정</h2>
+                    <p class="page-subtitle">시스템 설정 및 사용자 정보를 관리합니다</p>
+                </div>
+
+                <div class="settings-grid">
+                    <div class="settings-card">
+                        <h3 class="settings-title">시스템 설정</h3>
+                        <div class="settings-list">
+                            <div class="setting-item">
+                                <label class="setting-label">
+                                    <span>알림 받기</span>
+                                    <input type="checkbox" class="toggle-switch" checked>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <label class="setting-label">
+                                    <span>다크 모드</span>
+                                    <input type="checkbox" class="toggle-switch" id="darkModeToggle">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p class="footer-text">© 2024 전통 조경 안전지도. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">이용약관</a>
+                    <a href="#" class="footer-link">개인정보처리방침</a>
+                    <a href="#" class="footer-link">문의하기</a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <svg class="toast-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9V7h2v6z"/>
+        </svg>
+        <span class="toast-message" id="toastMessage">알림 메시지</span>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

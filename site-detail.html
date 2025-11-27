@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>대상지 상세 정보 - 전통조경 안전지도 시범서비스</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 지도 배경 전체 화면 */
+    .map-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://maps.googleapis.com/maps/api/staticmap?center=37.5829,126.9917&zoom=17&size=1920x1080&maptype=satellite&key=') no-repeat center center;
+      background-size: cover;
+      background-color: #2D4A3E;
+      z-index: 0;
+    }
+
+    /* 지도 플레이스홀더 (실제 지도 대신) */
+    .map-placeholder {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #2D5016 0%, #1A3A0F 50%, #0F2608 100%);
+      z-index: 0;
+    }
+
+    .map-placeholder::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image:
+        radial-gradient(circle at 30% 40%, rgba(74, 124, 89, 0.4) 0%, transparent 40%),
+        radial-gradient(circle at 70% 60%, rgba(45, 80, 22, 0.5) 0%, transparent 35%),
+        radial-gradient(circle at 50% 30%, rgba(100, 140, 100, 0.3) 0%, transparent 30%);
+    }
+
+    /* 로고 - 좌측 상단 */
+    .logo {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 100;
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 24px;
+      background-color: #E8F4FD;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333333;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      background-color: #D0E8F9;
+      transform: translateY(-1px);
+    }
+
+    /* 좌측 메뉴 버튼들 - 설계서 p.5 기준 4개 */
+    .side-menu {
+      position: fixed;
+      top: 80px;
+      left: 20px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 160px;
+      padding: 14px 18px;
+      background-color: #FFFFFF;
+      border: 2px solid #E0E0E0;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333333;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu-btn:hover {
+      background-color: #F0F7FF;
+      border-color: #0052CC;
+      transform: translateX(4px);
+    }
+
+    .menu-btn--active {
+      background-color: #0052CC;
+      border-color: #0052CC;
+      color: #FFFFFF;
+    }
+
+    .menu-btn--active:hover {
+      background-color: #003D99;
+    }
+
+    .menu-btn__icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    /* 모달 오버레이 */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-overlay--active {
+      display: flex;
+    }
+
+    /* 모달 컨텐츠 */
+    .modal {
+      position: relative;
+      width: 90%;
+      max-width: 900px;
+      max-height: 85vh;
+      background-color: #FFFFFF;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      background-color: #4A7A8C;
+      color: #FFFFFF;
+    }
+
+    .modal__title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .modal__close {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      border-radius: 8px;
+      color: #FFFFFF;
+      font-size: 20px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .modal__close:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .modal__body {
+      padding: 24px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    /* 기본 정보 테이블 */
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .info-table__section {
+      margin-bottom: 24px;
+    }
+
+    .info-table__section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      padding: 12px 0;
+      border-bottom: 2px solid #4A7A8C;
+      margin-bottom: 12px;
+    }
+
+    .info-table__row {
+      display: flex;
+      border-bottom: 1px solid #E5E5E5;
+    }
+
+    .info-table__label {
+      width: 140px;
+      padding: 12px 16px;
+      background-color: #F5F8FA;
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
+      flex-shrink: 0;
+    }
+
+    .info-table__value {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #333;
+    }
+
+    .info-table__checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .info-table__checkbox {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #333;
+    }
+
+    .info-table__checkbox input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* 점검 이력 - 포인트 리스트 */
+    .inspection-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .inspection-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background-color: #F9FAFB;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .inspection-item:hover {
+      background-color: #EEF4FF;
+      transform: translateX(4px);
+    }
+
+    .inspection-item__icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .inspection-item__icon--report {
+      background-color: #DBEAFE;
+    }
+
+    .inspection-item__icon--photo {
+      background-color: #D1FAE5;
+    }
+
+    .inspection-item__icon--matterport {
+      background-color: #FEE2E2;
+    }
+
+    .inspection-item__content {
+      flex: 1;
+    }
+
+    .inspection-item__title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .inspection-item__desc {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .inspection-item__arrow {
+      font-size: 18px;
+      color: #999;
+    }
+
+    /* 이력 이미지 표시 영역 */
+    .history-image {
+      width: 100%;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .history-image__placeholder {
+      display: inline-block;
+      padding: 60px 80px;
+      background-color: #F5F5F5;
+      border: 2px dashed #CCC;
+      border-radius: 12px;
+      color: #888;
+      font-size: 14px;
+    }
+
+    /* 점검 이력 지도 포인트 마커 - 설계서 p.7 */
+    .map-markers {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 50;
+      pointer-events: none;
+      display: none;
+    }
+
+    .map-markers--active {
+      display: block;
+    }
+
+    .map-marker {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      background-color: #FF6B35;
+      border: 3px solid #FFFFFF;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      pointer-events: auto;
+      transform: translate(-50%, -50%);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #FFFFFF;
+      font-weight: 700;
+    }
+
+    .map-marker:hover {
+      transform: translate(-50%, -50%) scale(1.2);
+      background-color: #E85A2A;
+    }
+
+    .map-marker--active {
+      background-color: #0052CC;
+      transform: translate(-50%, -50%) scale(1.3);
+    }
+
+    /* 점검 이력 팝업 - 설계서 p.7 ④ */
+    .inspection-popup {
+      position: fixed;
+      z-index: 150;
+      background-color: #FFFFFF;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      min-width: 200px;
+      display: none;
+      overflow: hidden;
+    }
+
+    .inspection-popup--active {
+      display: block;
+    }
+
+    .inspection-popup__header {
+      padding: 12px 16px;
+      background-color: #4A7A8C;
+      color: #FFFFFF;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .inspection-popup__body {
+      padding: 8px 0;
+    }
+
+    .inspection-popup__item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .inspection-popup__item:hover {
+      background-color: #F0F7FF;
+    }
+
+    .inspection-popup__item-icon {
+      font-size: 18px;
+    }
+
+    /* 반응형 */
+    @media (max-width: 768px) {
+      .logo {
+        font-size: 12px;
+        padding: 8px 16px;
+      }
+
+      .side-menu {
+        top: 70px;
+        left: 10px;
+      }
+
+      .menu-btn {
+        width: 140px;
+        padding: 12px 14px;
+        font-size: 13px;
+      }
+
+      .modal {
+        width: 95%;
+        max-height: 90vh;
+      }
+
+      .info-table__label {
+        width: 100px;
+        padding: 10px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 지도 배경 -->
+  <div class="map-placeholder"></div>
+
+  <!-- 점검 이력 지도 마커들 - 설계서 p.7 ③ -->
+  <div class="map-markers" id="mapMarkers">
+    <div class="map-marker" data-id="1" style="top: 35%; left: 45%;" onclick="showInspectionPopup(event, 1)">1</div>
+    <div class="map-marker" data-id="2" style="top: 45%; left: 55%;" onclick="showInspectionPopup(event, 2)">2</div>
+    <div class="map-marker" data-id="3" style="top: 55%; left: 48%;" onclick="showInspectionPopup(event, 3)">3</div>
+    <div class="map-marker" data-id="4" style="top: 40%; left: 60%;" onclick="showInspectionPopup(event, 4)">4</div>
+    <div class="map-marker" data-id="5" style="top: 50%; left: 40%;" onclick="showInspectionPopup(event, 5)">5</div>
+  </div>
+
+  <!-- 점검 이력 팝업 - 설계서 p.7 ④ -->
+  <div class="inspection-popup" id="inspectionPopup">
+    <div class="inspection-popup__header" id="popupHeader">점검 포인트 1</div>
+    <div class="inspection-popup__body">
+      <div class="inspection-popup__item" onclick="alert('안전 점검 보고서를 표시합니다.')">
+        <span class="inspection-popup__item-icon">📋</span>
+        안전 점검 보고서
+      </div>
+      <div class="inspection-popup__item" onclick="alert('점검 사진을 표시합니다.')">
+        <span class="inspection-popup__item-icon">📷</span>
+        사진
+      </div>
+      <div class="inspection-popup__item" onclick="alert('메타포트로 이동합니다.')">
+        <span class="inspection-popup__item-icon">🔗</span>
+        메타포트
+      </div>
+    </div>
+  </div>
+
+  <!-- 로고 -->
+  <a href="index.html" class="logo">전통조경 안전지도 시범서비스</a>
+
+  <!-- 좌측 메뉴 - 설계서 p.5 기준 4개 버튼 -->
+  <div class="side-menu">
+    <button class="menu-btn" data-modal="basic" id="btnBasic">
+      <svg class="menu-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="16" x2="12" y2="12"/>
+        <line x1="12" y1="8" x2="12.01" y2="8"/>
+      </svg>
+      기본 정보
+    </button>
+    <button class="menu-btn" data-modal="inspection" id="btnInspection">
+      <svg class="menu-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 11l3 3L22 4"/>
+        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+      </svg>
+      점검 이력
+    </button>
+    <button class="menu-btn" data-modal="disaster" id="btnDisaster">
+      <svg class="menu-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      재해 이력
+    </button>
+    <button class="menu-btn" data-modal="repair" id="btnRepair">
+      <svg class="menu-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+      </svg>
+      수리 이력
+    </button>
+  </div>
+
+  <!-- 기본 정보 모달 -->
+  <div class="modal-overlay" id="modalBasic">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 class="modal__title">기본 정보</h2>
+        <button class="modal__close" onclick="closeModal('modalBasic')">&times;</button>
+      </div>
+      <div class="modal__body">
+        <div class="info-table__section">
+          <div class="info-table__section-title">국가유산 개요</div>
+          <div class="info-table__row">
+            <span class="info-table__label">국가유산명</span>
+            <span class="info-table__value" id="modalSiteName">창덕궁 낙선재 권역</span>
+          </div>
+          <div class="info-table__row">
+            <span class="info-table__label">국가유산유형</span>
+            <span class="info-table__value">사적</span>
+          </div>
+          <div class="info-table__row">
+            <span class="info-table__label">소재지</span>
+            <span class="info-table__value" id="modalLocation">서울특별시 종로구 율곡로 99-0</span>
+          </div>
+          <div class="info-table__row">
+            <span class="info-table__label">소유자/관리자</span>
+            <span class="info-table__value">국가유산청 창덕궁관리소</span>
+          </div>
+        </div>
+
+        <div class="info-table__section">
+          <div class="info-table__section-title">국가유산 관리</div>
+          <div class="info-table__row">
+            <span class="info-table__label">종합정비계획</span>
+            <span class="info-table__value">●</span>
+          </div>
+          <div class="info-table__row">
+            <span class="info-table__label">정기조사</span>
+            <span class="info-table__value">●</span>
+          </div>
+          <div class="info-table__row">
+            <span class="info-table__label">돌봄사업</span>
+            <span class="info-table__value">-</span>
+          </div>
+          <div class="info-table__row">
+            <span class="info-table__label">모니터링</span>
+            <span class="info-table__value">●</span>
+          </div>
+          <div class="info-table__row">
+            <span class="info-table__label">국가유산지킴이</span>
+            <span class="info-table__value">●</span>
+          </div>
+        </div>
+
+        <div class="info-table__section">
+          <div class="info-table__section-title">주변환경</div>
+          <div class="info-table__row">
+            <span class="info-table__label">범람위험요소</span>
+            <span class="info-table__value">
+              <div class="info-table__checkbox-group">
+                <label class="info-table__checkbox"><input type="checkbox"> 강, 하천</label>
+                <label class="info-table__checkbox"><input type="checkbox"> 계곡</label>
+                <label class="info-table__checkbox"><input type="checkbox"> 저수지</label>
+                <label class="info-table__checkbox"><input type="checkbox"> 바다</label>
+                <label class="info-table__checkbox"><input type="checkbox"> 기타</label>
+              </div>
+            </span>
+          </div>
+          <div class="info-table__row">
+            <span class="info-table__label">인접지형</span>
+            <span class="info-table__value">
+              <div class="info-table__checkbox-group">
+                <label class="info-table__checkbox"><input type="checkbox"> 경사</label>
+                <label class="info-table__checkbox"><input type="checkbox" checked> 옹벽</label>
+                <label class="info-table__checkbox"><input type="checkbox" checked> 전도위험</label>
+                <label class="info-table__checkbox"><input type="checkbox"> 절개지</label>
+                <label class="info-table__checkbox"><input type="checkbox"> 기타</label>
+              </div>
+            </span>
+          </div>
+          <div class="info-table__row">
+            <span class="info-table__label">주변 영향</span>
+            <span class="info-table__value">
+              <div class="info-table__checkbox-group">
+                <label class="info-table__checkbox"><input type="checkbox"> 습해</label>
+                <label class="info-table__checkbox"><input type="checkbox"> 공해</label>
+                <label class="info-table__checkbox"><input type="checkbox"> 염해</label>
+                <label class="info-table__checkbox"><input type="checkbox"> 진동</label>
+                <label class="info-table__checkbox"><input type="checkbox"> 기타</label>
+              </div>
+            </span>
+          </div>
+          <div class="info-table__row">
+            <span class="info-table__label">고저차</span>
+            <span class="info-table__value">
+              <div class="info-table__checkbox-group">
+                <label class="info-table__checkbox"><input type="checkbox" checked> 낮음</label>
+                <label class="info-table__checkbox"><input type="checkbox"> 높음</label>
+              </div>
+            </span>
+          </div>
+          <div class="info-table__row">
+            <span class="info-table__label">수리조건</span>
+            <span class="info-table__value">
+              <div class="info-table__checkbox-group">
+                <label class="info-table__checkbox"><input type="checkbox" checked> dry</label>
+                <label class="info-table__checkbox"><input type="checkbox"> damp</label>
+                <label class="info-table__checkbox"><input type="checkbox"> wet</label>
+                <label class="info-table__checkbox"><input type="checkbox"> dripping</label>
+                <label class="info-table__checkbox"><input type="checkbox"> flowing</label>
+              </div>
+            </span>
+          </div>
+          <div class="info-table__row">
+            <span class="info-table__label">강우이력</span>
+            <span class="info-table__value">해당 지역 최근 10개년 최대 일강우강도 누년 평균값과 최근 2개년 최대 강우량</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 점검 이력 모달 -->
+  <div class="modal-overlay" id="modalInspection">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 class="modal__title">점검 이력</h2>
+        <button class="modal__close" onclick="closeModal('modalInspection')">&times;</button>
+      </div>
+      <div class="modal__body">
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">지도에서 점검 이력 포인트를 선택하거나 아래 항목을 클릭하세요.</p>
+        <div class="inspection-list">
+          <div class="inspection-item" onclick="alert('안전 점검 보고서를 표시합니다.')">
+            <div class="inspection-item__icon inspection-item__icon--report">📋</div>
+            <div class="inspection-item__content">
+              <div class="inspection-item__title">안전 점검 보고서</div>
+              <div class="inspection-item__desc">2024-11-20 정기점검 보고서</div>
+            </div>
+            <div class="inspection-item__arrow">→</div>
+          </div>
+          <div class="inspection-item" onclick="alert('점검 사진을 표시합니다.')">
+            <div class="inspection-item__icon inspection-item__icon--photo">📷</div>
+            <div class="inspection-item__content">
+              <div class="inspection-item__title">사진</div>
+              <div class="inspection-item__desc">사진기록, 지점별 사진</div>
+            </div>
+            <div class="inspection-item__arrow">→</div>
+          </div>
+          <div class="inspection-item" onclick="alert('메타포트 링크로 이동합니다.')">
+            <div class="inspection-item__icon inspection-item__icon--matterport">🔗</div>
+            <div class="inspection-item__content">
+              <div class="inspection-item__title">메타포트</div>
+              <div class="inspection-item__desc">3D 스캔 뷰어로 이동</div>
+            </div>
+            <div class="inspection-item__arrow">→</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 재해 이력 모달 -->
+  <div class="modal-overlay" id="modalDisaster">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 class="modal__title">재해 이력</h2>
+        <button class="modal__close" onclick="closeModal('modalDisaster')">&times;</button>
+      </div>
+      <div class="modal__body">
+        <div class="history-image">
+          <div class="history-image__placeholder">
+            재해 이력 이미지가 표시됩니다.<br><br>
+            (이미지만 표출)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 수리 이력 모달 -->
+  <div class="modal-overlay" id="modalRepair">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 class="modal__title">수리 이력</h2>
+        <button class="modal__close" onclick="closeModal('modalRepair')">&times;</button>
+      </div>
+      <div class="modal__body">
+        <div class="history-image">
+          <div class="history-image__placeholder">
+            수리 이력 이미지가 표시됩니다.<br><br>
+            (이미지만 표출)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // URL 파라미터
+    const urlParams = new URLSearchParams(window.location.search);
+    const siteId = urlParams.get('site') || '1';
+
+    // 대상지 데이터
+    const sites = {
+      1: {
+        name: '주합루',
+        location: '서울 종로구 와룡동 2-71 (창덕궁 후원)',
+        lat: 37.5829,
+        lng: 126.9917
+      },
+      2: {
+        name: '연경당',
+        location: '서울 종로구 와룡동 2-71 (창덕궁 후원)',
+        lat: 37.5825,
+        lng: 126.9932
+      },
+      3: {
+        name: '낙선재',
+        location: '서울 종로구 와룡동 2-71 (창덕궁)',
+        lat: 37.5795,
+        lng: 126.9920
+      },
+      4: {
+        name: '부용정',
+        location: '서울 종로구 와룡동 2-71 (창덕궁 후원)',
+        lat: 37.5831,
+        lng: 126.9915
+      },
+      5: {
+        name: '존덕정',
+        location: '서울 종로구 와룡동 2-71 (창덕궁 후원)',
+        lat: 37.5838,
+        lng: 126.9925
+      }
+    };
+
+    const site = sites[siteId] || sites[1];
+
+    // 모달 내 정보 업데이트
+    document.getElementById('modalSiteName').textContent = '창덕궁 ' + site.name + ' 권역';
+    document.getElementById('modalLocation').textContent = site.location;
+
+    // 메뉴 버튼 클릭 이벤트
+    document.querySelectorAll('.menu-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const modalId = this.dataset.modal;
+
+        // 점검 이력 버튼 클릭 시 지도에 마커 표시 (설계서 p.7)
+        if (modalId === 'inspection') {
+          toggleMapMarkers(true);
+          // 모달 대신 마커만 표시
+          document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('menu-btn--active'));
+          this.classList.add('menu-btn--active');
+          return;
+        } else {
+          toggleMapMarkers(false);
+          hideInspectionPopup();
+        }
+
+        openModal('modal' + modalId.charAt(0).toUpperCase() + modalId.slice(1));
+
+        // 활성화 상태 토글
+        document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('menu-btn--active'));
+        this.classList.add('menu-btn--active');
+      });
+    });
+
+    // 점검 이력 마커 표시/숨김 (설계서 p.7 ②)
+    function toggleMapMarkers(show) {
+      const markers = document.getElementById('mapMarkers');
+      if (show) {
+        markers.classList.add('map-markers--active');
+      } else {
+        markers.classList.remove('map-markers--active');
+      }
+    }
+
+    // 점검 이력 팝업 표시 (설계서 p.7 ④)
+    function showInspectionPopup(event, pointId) {
+      event.stopPropagation();
+      const popup = document.getElementById('inspectionPopup');
+      const header = document.getElementById('popupHeader');
+
+      // 팝업 헤더 업데이트
+      header.textContent = '점검 포인트 ' + pointId;
+
+      // 마커 활성화 상태
+      document.querySelectorAll('.map-marker').forEach(m => m.classList.remove('map-marker--active'));
+      event.target.classList.add('map-marker--active');
+
+      // 팝업 위치 설정
+      const rect = event.target.getBoundingClientRect();
+      popup.style.left = (rect.right + 10) + 'px';
+      popup.style.top = rect.top + 'px';
+
+      popup.classList.add('inspection-popup--active');
+    }
+
+    // 점검 이력 팝업 숨김
+    function hideInspectionPopup() {
+      const popup = document.getElementById('inspectionPopup');
+      popup.classList.remove('inspection-popup--active');
+      document.querySelectorAll('.map-marker').forEach(m => m.classList.remove('map-marker--active'));
+    }
+
+    // 지도 클릭 시 팝업 닫기
+    document.querySelector('.map-placeholder').addEventListener('click', function() {
+      hideInspectionPopup();
+    });
+
+    // 모달 열기
+    function openModal(modalId) {
+      document.getElementById(modalId).classList.add('modal-overlay--active');
+    }
+
+    // 모달 닫기
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('modal-overlay--active');
+      document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('menu-btn--active'));
+    }
+
+    // 오버레이 클릭으로 모달 닫기
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.classList.remove('modal-overlay--active');
+          document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('menu-btn--active'));
+        }
+      });
+    });
+
+    // ESC 키로 모달 닫기
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+          overlay.classList.remove('modal-overlay--active');
+        });
+        document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('menu-btn--active'));
+      }
+    });
+  </script>
+</body>
+</html>

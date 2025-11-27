@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>안전 점검 실시 - 대상지 선택 | 전통조경 안전지도 시범서비스</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <style>
+    /* 대상지 선택 페이지 - 디자인 시안 기준 */
+    .site-select-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: #EBF3FF;
+    }
+
+    /* Header - 디자인 시안 기준 */
+    .header {
+      position: relative;
+      background-color: #FFFFFF;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+
+    .header__logo {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 20px;
+      background-color: #E8F4FD;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333333;
+      text-decoration: none;
+    }
+
+    .header__title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 18px;
+      font-weight: 600;
+      color: #333333;
+    }
+
+    .header__right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-logout {
+      padding: 8px 16px;
+      background-color: transparent;
+      color: #666666;
+      border: 1px solid #D0D0D0;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background-color: #F5F5F5;
+      color: #333333;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    /* 점검 유형 뱃지 */
+    .inspection-type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background-color: #E8F4FD;
+      color: #0052CC;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+
+    /* Search Section */
+    .search-section {
+      width: 100%;
+      max-width: 560px;
+      margin-bottom: 16px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background-color: #FFFFFF;
+      border-radius: 28px;
+      padding: 6px 6px 6px 20px;
+      border: 2px solid #4A90E2;
+      border-left-width: 4px;
+      border-top-width: 4px;
+    }
+
+    .search-icon {
+      width: 20px;
+      height: 20px;
+      color: #999999;
+      flex-shrink: 0;
+    }
+
+    .search-input {
+      flex: 1;
+      height: 40px;
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      color: #333333;
+      padding: 0 12px;
+    }
+
+    .search-input::placeholder {
+      color: #999999;
+    }
+
+    .search-input:focus {
+      outline: none;
+    }
+
+    .search-btn {
+      height: 40px;
+      padding: 0 20px;
+      background-color: transparent;
+      color: #0052CC;
+      border: none;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .search-btn:hover {
+      color: #003D99;
+    }
+
+    /* Site List Section - 항상 표시 */
+    .site-list-section {
+      width: 100%;
+      max-width: 560px;
+      background-color: #FFFFFF;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .site-list-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #E0E0E0;
+    }
+
+    .site-list-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #333333;
+      margin: 0;
+    }
+
+    .site-list-count {
+      font-size: 13px;
+      color: #666666;
+    }
+
+    .site-list {
+      display: flex;
+      flex-direction: column;
+      margin-top: 8px;
+    }
+
+    .site-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid #F0F0F0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .site-item:last-child {
+      border-bottom: none;
+    }
+
+    .site-item:hover {
+      background-color: #F8FBFF;
+      margin: 0 -12px;
+      padding-left: 12px;
+      padding-right: 12px;
+      border-radius: 8px;
+    }
+
+    .site-thumbnail {
+      width: 60px;
+      height: 60px;
+      background-color: #F5F5F5;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .site-thumbnail-placeholder {
+      width: 28px;
+      height: 28px;
+      color: #CCCCCC;
+    }
+
+    .site-info {
+      flex: 1;
+    }
+
+    .site-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333333;
+      margin-bottom: 4px;
+    }
+
+    .site-address {
+      font-size: 12px;
+      color: #666666;
+      margin-bottom: 2px;
+    }
+
+    .site-coords {
+      font-size: 11px;
+      color: #999999;
+    }
+
+    .site-arrow {
+      width: 18px;
+      height: 18px;
+      color: #CCCCCC;
+    }
+
+    /* Footer */
+    .footer {
+      background-color: #1A1A1A;
+      color: #FFFFFF;
+      padding: 20px 32px;
+    }
+
+    .footer__content {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .footer__links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+
+    .footer__link {
+      color: #888888;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer__link:hover {
+      color: #FFFFFF;
+    }
+
+    .footer__separator {
+      color: #555555;
+    }
+
+    .footer__info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .footer__info-item {
+      color: #777777;
+      font-size: 11px;
+    }
+
+    .footer__copyright {
+      color: #555555;
+      font-size: 11px;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .header {
+        padding: 0 16px;
+      }
+
+      .header__logo {
+        font-size: 13px;
+        padding: 6px 14px;
+      }
+
+      .header__title {
+        font-size: 16px;
+      }
+
+      .main-content {
+        padding: 24px 16px;
+      }
+
+      .search-box {
+        padding: 4px 4px 4px 16px;
+        border-radius: 24px;
+      }
+
+      .site-list-section {
+        padding: 20px 16px;
+        border-radius: 12px;
+      }
+
+      .site-item {
+        padding: 14px 0;
+        gap: 12px;
+      }
+
+      .site-thumbnail {
+        width: 52px;
+        height: 52px;
+      }
+
+      .footer {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body class="site-select-page">
+  <!-- Header -->
+  <header class="header">
+    <a href="index.html" class="header__logo">전통조경 안전지도 시범서비스</a>
+    <h1 class="header__title">안전 점검 실시</h1>
+    <div class="header__right">
+      <button class="btn-logout" onclick="location.href='login.html'">로그아웃</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- 점검 유형 뱃지 -->
+    <div class="inspection-type-badge" id="inspectionTypeBadge">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 11l3 3L22 4"/>
+        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+      </svg>
+      <span id="inspectionTypeText">정기점검</span>
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-section">
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input type="text" class="search-input" placeholder="대상지명을 입력해 주세요." id="searchInput">
+        <button class="search-btn" id="searchBtn">검색</button>
+      </div>
+    </div>
+
+    <!-- Site List - 항상 표시 -->
+    <div class="site-list-section">
+      <div class="site-list-header">
+        <h2 class="site-list-title">대상지 리스트</h2>
+        <span class="site-list-count" id="siteCount">5개</span>
+      </div>
+      <div class="site-list" id="siteList">
+        <!-- 주합루 (창덕궁 후원) -->
+        <a href="inspection-target.html?site=1" class="site-item" data-name="주합루" data-lat="37.5829" data-lng="126.9917">
+          <div class="site-thumbnail">
+            <svg class="site-thumbnail-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>
+          </div>
+          <div class="site-info">
+            <div class="site-name">주합루</div>
+            <div class="site-address">서울 종로구 와룡동 2-71 (창덕궁 후원)</div>
+            <div class="site-coords">37.5829°N, 126.9917°E</div>
+          </div>
+          <svg class="site-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </a>
+
+        <!-- 연경당 (창덕궁 후원) -->
+        <a href="inspection-target.html?site=2" class="site-item" data-name="연경당" data-lat="37.5825" data-lng="126.9932">
+          <div class="site-thumbnail">
+            <svg class="site-thumbnail-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>
+          </div>
+          <div class="site-info">
+            <div class="site-name">연경당</div>
+            <div class="site-address">서울 종로구 와룡동 2-71 (창덕궁 후원)</div>
+            <div class="site-coords">37.5825°N, 126.9932°E</div>
+          </div>
+          <svg class="site-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </a>
+
+        <!-- 낙선재 (창덕궁) -->
+        <a href="inspection-target.html?site=3" class="site-item" data-name="낙선재" data-lat="37.5795" data-lng="126.9920">
+          <div class="site-thumbnail">
+            <svg class="site-thumbnail-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>
+          </div>
+          <div class="site-info">
+            <div class="site-name">낙선재</div>
+            <div class="site-address">서울 종로구 와룡동 2-71 (창덕궁)</div>
+            <div class="site-coords">37.5795°N, 126.9920°E</div>
+          </div>
+          <svg class="site-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </a>
+
+        <!-- 부용정 (창덕궁 후원) -->
+        <a href="inspection-target.html?site=4" class="site-item" data-name="부용정" data-lat="37.5831" data-lng="126.9915">
+          <div class="site-thumbnail">
+            <svg class="site-thumbnail-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>
+          </div>
+          <div class="site-info">
+            <div class="site-name">부용정</div>
+            <div class="site-address">서울 종로구 와룡동 2-71 (창덕궁 후원)</div>
+            <div class="site-coords">37.5831°N, 126.9915°E</div>
+          </div>
+          <svg class="site-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </a>
+
+        <!-- 존덕정 (창덕궁 후원) -->
+        <a href="inspection-target.html?site=5" class="site-item" data-name="존덕정" data-lat="37.5838" data-lng="126.9925">
+          <div class="site-thumbnail">
+            <svg class="site-thumbnail-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>
+          </div>
+          <div class="site-info">
+            <div class="site-name">존덕정</div>
+            <div class="site-address">서울 종로구 와룡동 2-71 (창덕궁 후원)</div>
+            <div class="site-coords">37.5838°N, 126.9925°E</div>
+          </div>
+          <svg class="site-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__content">
+      <div class="footer__links">
+        <a href="#" class="footer__link">이용안내</a>
+        <span class="footer__separator">|</span>
+        <a href="#" class="footer__link">저작권정책</a>
+      </div>
+      <div class="footer__info">
+        <span class="footer__info-item">OO시 OO구 OO로 123, OO타워 12층</span>
+        <span class="footer__info-item">전화번호: 02-000-0000</span>
+      </div>
+      <p class="footer__copyright">© 2025.OOO SERVICE. ALL RIGHTS RESERVED.</p>
+    </div>
+  </footer>
+
+  <script>
+    // URL 파라미터에서 점검 유형 가져오기
+    const urlParams = new URLSearchParams(window.location.search);
+    const inspectionType = urlParams.get('type') || 'regular';
+
+    // 점검 유형 표시
+    const typeText = inspectionType === 'regular' ? '정기점검' : '상시점검';
+    document.getElementById('inspectionTypeText').textContent = typeText;
+
+    // 검색 기능
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const siteItems = document.querySelectorAll('.site-item');
+    const siteCount = document.getElementById('siteCount');
+
+    function filterSites() {
+      const query = searchInput.value.toLowerCase().trim();
+      let visibleCount = 0;
+
+      siteItems.forEach(item => {
+        const name = item.dataset.name.toLowerCase();
+        if (query === '' || name.includes(query)) {
+          item.style.display = 'flex';
+          visibleCount++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+
+      siteCount.textContent = visibleCount + '개';
+    }
+
+    searchBtn.addEventListener('click', filterSites);
+    searchInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        filterSites();
+      }
+    });
+    searchInput.addEventListener('input', filterSites);
+
+    // 대상지 선택 시 점검 유형 파라미터 전달
+    siteItems.forEach(item => {
+      const href = item.getAttribute('href');
+      item.setAttribute('href', href + '&type=' + inspectionType);
+    });
+  </script>
+</body>
+</html>

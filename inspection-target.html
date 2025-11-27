@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>안전 점검 실시 - 점검 대상 선택 | 전통조경 안전지도 시범서비스</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <style>
+    /* 점검 대상 선택 페이지 - 디자인 시안 기준 */
+    .target-select-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: #EBF3FF;
+    }
+
+    /* Header - 디자인 시안 기준 */
+    .header {
+      position: relative;
+      background-color: #FFFFFF;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+
+    .header__logo {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 20px;
+      background-color: #E8F4FD;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333333;
+      text-decoration: none;
+    }
+
+    .header__title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 18px;
+      font-weight: 600;
+      color: #333333;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px 120px;
+    }
+
+    /* 조경요소 선택 카드 - 디자인 시안: 파란색 테두리(좌측/상단 강조) */
+    .target-card {
+      width: 100%;
+      max-width: 600px;
+      background-color: #FFFFFF;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: 2px solid #4A90E2;
+      border-left-width: 4px;
+      border-top-width: 4px;
+    }
+
+    /* 조경요소 그리드 - 디자인 시안 기준 */
+    .target-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .target-btn {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #FFFFFF;
+      border: 1px solid #D0D0D0;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #333333;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .target-btn:hover {
+      background-color: #E8F4FD;
+      border-color: #4A90E2;
+      color: #0052CC;
+    }
+
+    .target-btn.selected {
+      background-color: #0052CC;
+      border-color: #0052CC;
+      color: #FFFFFF;
+    }
+
+    .target-btn.disabled {
+      background-color: #F5F5F5;
+      border-color: #E0E0E0;
+      color: #999999;
+      cursor: not-allowed;
+    }
+
+    .target-btn.disabled:hover {
+      background-color: #F5F5F5;
+      border-color: #E0E0E0;
+      color: #999999;
+    }
+
+    /* Navigation Buttons - 디자인 시안 기준 */
+    .nav-buttons {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background-color: #EBF3FF;
+      z-index: 100;
+    }
+
+    .btn-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-prev {
+      background-color: #FFFFFF;
+      color: #0052CC;
+      border: 2px solid #0052CC;
+    }
+
+    .btn-prev:hover {
+      background-color: #E8F4FD;
+    }
+
+    .btn-next {
+      background-color: #0052CC;
+      color: #FFFFFF;
+      border: none;
+    }
+
+    .btn-next:hover {
+      background-color: #003D99;
+    }
+
+    .btn-next:disabled {
+      background-color: #CCCCCC;
+      cursor: not-allowed;
+    }
+
+    .btn-nav svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Footer - 디자인 시안 기준 */
+    .footer {
+      background-color: #1A1A1A;
+      color: #FFFFFF;
+      padding: 20px 32px;
+    }
+
+    .footer__content {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .footer__links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+
+    .footer__link {
+      color: #888888;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer__link:hover {
+      color: #FFFFFF;
+    }
+
+    .footer__separator {
+      color: #555555;
+    }
+
+    .footer__info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .footer__info-item {
+      color: #777777;
+      font-size: 11px;
+    }
+
+    .footer__info-separator {
+      color: #555555;
+      font-size: 11px;
+    }
+
+    .footer__copyright {
+      color: #555555;
+      font-size: 11px;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .target-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .target-btn {
+        height: 56px;
+        font-size: 13px;
+      }
+
+      .target-card {
+        padding: 24px 20px;
+        border-radius: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header {
+        padding: 0 16px;
+      }
+
+      .header__logo {
+        font-size: 13px;
+        padding: 6px 14px;
+      }
+
+      .header__title {
+        font-size: 16px;
+      }
+
+      .main-content {
+        padding: 24px 16px 100px;
+      }
+
+      .nav-buttons {
+        padding: 12px 16px;
+      }
+
+      .btn-nav {
+        padding: 10px 18px;
+        font-size: 13px;
+      }
+
+      .footer {
+        padding: 16px;
+      }
+
+      .footer__info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+
+      .footer__info-separator {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body class="target-select-page">
+  <!-- Header -->
+  <header class="header">
+    <a href="index.html" class="header__logo">전통조경 안전지도 시범서비스</a>
+    <h1 class="header__title">안전 점검 실시</h1>
+    <div style="width: 180px;"></div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="target-card">
+      <div class="target-grid">
+        <button type="button" class="target-btn" data-target="비탈면">비탈면</button>
+        <button type="button" class="target-btn" data-target="지반">지반</button>
+        <button type="button" class="target-btn" data-target="석축 및 옹벽">석축 및 옹벽</button>
+        <button type="button" class="target-btn" data-target="다리">다리</button>
+        <button type="button" class="target-btn" data-target="지당">지당</button>
+        <button type="button" class="target-btn" data-target="문">문</button>
+        <button type="button" class="target-btn" data-target="담장">담장</button>
+        <button type="button" class="target-btn" data-target="굴뚝">굴뚝</button>
+        <button type="button" class="target-btn" data-target="배수시설">배수시설</button>
+        <button type="button" class="target-btn" data-target="수목: 단일목">수목: 단일목</button>
+        <button type="button" class="target-btn" data-target="수목: 군락">수목: 군락</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Navigation Buttons -->
+  <div class="nav-buttons">
+    <button type="button" class="btn-nav btn-prev" onclick="goBack()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5"/>
+        <path d="M12 19l-7-7 7-7"/>
+      </svg>
+      이전
+    </button>
+    <button type="button" class="btn-nav btn-next" id="btnNext" disabled onclick="goNext()">
+      다음
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14"/>
+        <path d="M12 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__content">
+      <div class="footer__links">
+        <a href="#" class="footer__link">이용안내</a>
+        <span class="footer__separator">|</span>
+        <a href="#" class="footer__link">저작권정책</a>
+      </div>
+      <div class="footer__info">
+        <span class="footer__info-item">OO시 OO구 OO로 123, OO타워 12층</span>
+        <span class="footer__info-item">전화번호: 02-000-0000</span>
+      </div>
+      <p class="footer__copyright">© 2025.OOO SERVICE. ALL RIGHTS RESERVED.</p>
+    </div>
+  </footer>
+
+  <script>
+    // URL 파라미터
+    const urlParams = new URLSearchParams(window.location.search);
+    const siteId = urlParams.get('site') || '1';
+    const inspectionType = urlParams.get('type') || 'regular';
+
+    let selectedTarget = null;
+
+    // 조경요소 버튼 클릭 처리
+    document.querySelectorAll('.target-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        // 이전 선택 해제
+        document.querySelectorAll('.target-btn').forEach(b => b.classList.remove('selected'));
+
+        // 현재 선택
+        this.classList.add('selected');
+        selectedTarget = this.dataset.target;
+
+        // 다음 버튼 활성화
+        document.getElementById('btnNext').disabled = false;
+      });
+    });
+
+    // 이전 버튼
+    function goBack() {
+      window.location.href = `inspection-site-select.html?type=${inspectionType}`;
+    }
+
+    // 다음 버튼
+    function goNext() {
+      if (selectedTarget) {
+        window.location.href = `inspection-general.html?site=${siteId}&type=${inspectionType}&target=${encodeURIComponent(selectedTarget)}`;
+      }
+    }
+  </script>
+</body>
+</html>

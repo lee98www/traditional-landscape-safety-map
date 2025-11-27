@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>홈 - 전통 조경 안전 지도 서비스</title>
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <style>
+    .dashboard__content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - var(--header-height));
+      padding: var(--spacing-xl);
+    }
+
+    .dashboard__welcome {
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .dashboard__title {
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .dashboard__subtitle {
+      font-size: var(--font-size-base);
+      color: var(--color-text-secondary);
+    }
+
+    .dashboard__actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-xl);
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .dashboard__card {
+      background: var(--color-bg-white);
+      border-radius: var(--radius-2xl);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      box-shadow: var(--shadow-md);
+      text-decoration: none;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dashboard__card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .dashboard__card-header {
+      padding: var(--spacing-lg) var(--spacing-xl);
+      color: var(--color-text-white);
+      font-weight: var(--font-weight-bold);
+      font-size: var(--font-size-xl);
+      text-align: center;
+    }
+
+    .dashboard__card--pink .dashboard__card-header {
+      background-color: var(--color-pink);
+    }
+
+    .dashboard__card--purple .dashboard__card-header {
+      background-color: var(--color-purple);
+    }
+
+    .dashboard__card--teal .dashboard__card-header {
+      background-color: var(--color-teal);
+    }
+
+    .dashboard__card-body {
+      padding: var(--spacing-2xl);
+      text-align: center;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dashboard__card-icon {
+      font-size: 64px;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .dashboard__card-title {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .dashboard__card-desc {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      line-height: var(--line-height-relaxed);
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard__actions {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard__actions {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard__card {
+        min-height: 240px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <div class="header">
+      <a href="dashboard.html" class="header__logo" style="text-decoration: none; color: inherit;">전통 조경 안전 지도</a>
+      <div class="header__user">
+        <span class="header__username" id="userName">사용자님</span>
+        <button class="btn btn--small btn--ghost" onclick="handleLogout()">로그아웃</button>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <ul class="sidebar__menu">
+        <li class="sidebar__item">
+          <a href="dashboard.html" class="sidebar__link sidebar__link--active">
+            🏠 홈
+          </a>
+        </li>
+        <li class="sidebar__item">
+          <a href="site-selection.html" class="sidebar__link">
+            📋 안전 관리 이력 조회
+          </a>
+        </li>
+        <li class="sidebar__item">
+          <a href="inspection-site-selection.html" class="sidebar__link">
+            ✓ 안전 점검 실시
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main main--with-sidebar">
+      <div class="dashboard__content">
+        <div class="dashboard__welcome">
+          <h1 class="dashboard__title">전통 조경 안전 지도 서비스</h1>
+          <p class="dashboard__subtitle">원하시는 서비스를 선택해주세요</p>
+        </div>
+
+        <div class="dashboard__actions">
+          <!-- 생활안전지도 -->
+          <a href="site-selection.html" class="dashboard__card dashboard__card--pink">
+            <div class="dashboard__card-header">생활안전지도</div>
+            <div class="dashboard__card-body">
+              <div class="dashboard__card-icon">🗺️</div>
+              <p class="dashboard__card-desc">스스로 우리의 안전정보 저장!</p>
+            </div>
+          </a>
+
+          <!-- 지역안전통합 -->
+          <a href="inspection-site-selection.html" class="dashboard__card dashboard__card--purple">
+            <div class="dashboard__card-header">지역안전통합</div>
+            <div class="dashboard__card-body">
+              <div class="dashboard__card-icon">🏛️</div>
+              <p class="dashboard__card-desc">우리 동네 안전정보는?</p>
+            </div>
+          </a>
+
+          <!-- 시설물안전정보 -->
+          <a href="site-detail.html" class="dashboard__card dashboard__card--teal">
+            <div class="dashboard__card-header">시설물안전정보</div>
+            <div class="dashboard__card-body">
+              <div class="dashboard__card-icon">🏢</div>
+              <p class="dashboard__card-desc">이 건물은 안전할까?</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Display user name (skip login check for testing)
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    if (userData.name) {
+      document.getElementById('userName').textContent = `${userData.name}님`;
+    } else {
+      document.getElementById('userName').textContent = '테스트 사용자님';
+    }
+
+    // Handle logout
+    function handleLogout() {
+      if (confirm('로그아웃하시겠습니까?')) {
+        localStorage.removeItem('userData');
+        localStorage.removeItem('isLoggedIn');
+        window.location.href = 'index.html';
+      }
+    }
+
+  </script>
+</body>
+</html>

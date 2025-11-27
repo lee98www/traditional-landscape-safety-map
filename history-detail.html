@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>안전 관리 이력 확인 - 대상지 상세 정보 | 전통조경 안전지도 시범서비스</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <style>
+    /* 상세 페이지 - 디자인 시안 기준 */
+    .detail-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: #EBF3FF;
+    }
+
+    /* Main Content - 전체 화면 지도 */
+    .main-content {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 지도 컨테이너 */
+    .map-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #e5e3df;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* 플로팅 사이드바 - 디자인 시안: 파란색 테두리(좌측/상단 강조) */
+    .floating-sidebar {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      width: 220px;
+      background-color: #FFFFFF;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      z-index: 100;
+      border: 2px solid #4A90E2;
+      border-left-width: 4px;
+      border-top-width: 4px;
+    }
+
+    .sidebar__header {
+      padding: 12px 16px;
+    }
+
+    .sidebar__logo {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      background-color: #E8F4FD;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #333333;
+      text-decoration: none;
+    }
+
+    .sidebar__menu {
+      padding: 8px 0;
+    }
+
+    .sidebar__link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: #333333;
+      font-size: 14px;
+      font-weight: 400;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .sidebar__link:hover {
+      background-color: #E8F4FD;
+    }
+
+    .sidebar__link--active {
+      background-color: #E8F4FD;
+      color: #0052CC;
+      font-weight: 500;
+      border-left: 4px solid #0052CC;
+      padding-left: 12px;
+    }
+
+    .sidebar__icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar__icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* 사이드바 내부 필터 (수리 이력 하위) */
+    .sidebar__filter {
+      display: none;
+      padding: 8px 16px 12px 40px;
+      background-color: #F8FAFC;
+      border-top: 1px solid #E8F4FD;
+    }
+
+    .sidebar__filter.active {
+      display: block;
+    }
+
+    .sidebar__filter-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+      font-size: 12px;
+      color: #555;
+    }
+
+    .sidebar__filter-option input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+      accent-color: #0052CC;
+      cursor: pointer;
+    }
+
+    .sidebar__filter-option label {
+      cursor: pointer;
+    }
+
+    .sidebar__filter-option:hover label {
+      color: #0052CC;
+    }
+
+    /* 정보 오버레이 - 설계서 p.6: 팝업으로 크게 표출 */
+    .info-overlay {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .info-overlay.active {
+      display: flex;
+    }
+
+    .info-content {
+      background-color: #FFFFFF;
+      border-radius: 16px;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow: auto;
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    .info-content__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px;
+      border-bottom: 1px solid #E0E0E0;
+    }
+
+    .info-content__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #333333;
+    }
+
+    .info-content__close {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #666666;
+      border-radius: 8px;
+      transition: background-color 0.2s ease;
+    }
+
+    .info-content__close:hover {
+      background-color: #F5F5F5;
+    }
+
+    .info-content__body {
+      padding: 24px;
+    }
+
+    /* 점검 이력 팝업 - 설계서 p.7: 스팟 클릭 시 표출 */
+    .inspection-popup {
+      display: none;
+      position: absolute;
+      background-color: #FFFFFF;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+      z-index: 150;
+      min-width: 280px;
+      border: 2px solid #4A90E2;
+      border-left-width: 4px;
+      border-top-width: 4px;
+    }
+
+    .inspection-popup.active {
+      display: block;
+    }
+
+    .inspection-popup__title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333333;
+      margin-bottom: 12px;
+    }
+
+    .inspection-popup__links {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .inspection-popup__link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background-color: #F5F5F5;
+      border-radius: 8px;
+      color: #333333;
+      font-size: 13px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .inspection-popup__link:hover {
+      background-color: #E8F4FD;
+      color: #0052CC;
+    }
+
+    /* 우측 하단 범례 팝업 - 설계서: 재해이력/수리이력용 */
+    .legend-popup {
+      display: none;
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background-color: #FFFFFF;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      z-index: 150;
+      min-width: 200px;
+      border: 2px solid #4A90E2;
+      border-left-width: 4px;
+      border-top-width: 4px;
+    }
+
+    .legend-popup.active {
+      display: block;
+    }
+
+    .legend-popup__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .legend-popup__title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333333;
+    }
+
+    .legend-popup__toggle {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #666;
+      border-radius: 4px;
+    }
+
+    .legend-popup__toggle:hover {
+      background-color: #F5F5F5;
+    }
+
+    .legend-popup__content {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .legend-popup__item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #333333;
+    }
+
+    .legend-popup__color {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    /* 필터는 사이드바 내부로 이동됨 - .sidebar__filter 참조 */
+
+    /* 재해/수리 구역 표시는 Google Maps Polygon/Rectangle 사용 */
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .floating-sidebar {
+        width: 200px;
+      }
+
+      .info-content {
+        max-width: 95%;
+      }
+
+      .legend-popup {
+        bottom: 10px;
+        right: 10px;
+        min-width: 160px;
+      }
+
+      .filter-popup {
+        top: auto;
+        bottom: 10px;
+        right: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .floating-sidebar {
+        top: 8px;
+        left: 8px;
+        width: 180px;
+      }
+
+      .sidebar__link {
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body class="detail-page">
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- 지도 컨테이너 -->
+    <div class="map-container">
+      <div id="map"></div>
+    </div>
+
+    <!-- 지도 위 컬러 그래픽 오버레이는 Google Maps Polygon으로 대체됨 -->
+
+    <!-- 플로팅 사이드바 - 설계서 p.5 기준: 4개 메뉴 -->
+    <aside class="floating-sidebar">
+      <div class="sidebar__header">
+        <a href="index.html" class="sidebar__logo">전통조경 안전지도 시범서비스</a>
+      </div>
+      <nav class="sidebar__menu">
+        <a class="sidebar__link" id="menuBasic" onclick="selectMenu('basic')">
+          <span class="sidebar__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+          </span>
+          <span>기본 정보</span>
+        </a>
+        <a class="sidebar__link" id="menuInspection" onclick="selectMenu('inspection')">
+          <span class="sidebar__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+              <polyline points="14,2 14,8 20,8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10,9 9,9 8,9"/>
+            </svg>
+          </span>
+          <span>점검 이력</span>
+        </a>
+        <a class="sidebar__link" id="menuDisaster" onclick="selectMenu('disaster')">
+          <span class="sidebar__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+          </span>
+          <span>재해 이력</span>
+        </a>
+        <a class="sidebar__link" id="menuRepair" onclick="selectMenu('repair')">
+          <span class="sidebar__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+            </svg>
+          </span>
+          <span>수리 이력</span>
+        </a>
+        <!-- 수리 이력 필터 - 사이드바 내부 (수리 이력 메뉴 바로 아래) -->
+        <div class="sidebar__filter" id="repairFilterInSidebar">
+          <div class="sidebar__filter-option">
+            <input type="checkbox" id="filterAll2" checked onchange="applyFilter('all')">
+            <label for="filterAll2">전체 보기</label>
+          </div>
+          <div class="sidebar__filter-option">
+            <input type="checkbox" id="filterComplete2" checked onchange="applyFilter('complete')">
+            <label for="filterComplete2">보수 완료</label>
+          </div>
+          <div class="sidebar__filter-option">
+            <input type="checkbox" id="filterProgress2" checked onchange="applyFilter('progress')">
+            <label for="filterProgress2">보수 진행중</label>
+          </div>
+          <div class="sidebar__filter-option">
+            <input type="checkbox" id="filterPlanned2" checked onchange="applyFilter('planned')">
+            <label for="filterPlanned2">보수 예정</label>
+          </div>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- 점검 이력 팝업 - 설계서 p.7: 스팟 클릭 시 표출 -->
+    <div class="inspection-popup" id="inspectionPopup">
+      <h3 class="inspection-popup__title">석축 A구간 점검 이력</h3>
+      <div class="inspection-popup__links">
+        <a href="javascript:void(0)" class="inspection-popup__link" onclick="showInspectionReport()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14,2 14,8 20,8"/>
+          </svg>
+          안전점검보고서
+        </a>
+        <a href="javascript:void(0)" class="inspection-popup__link" onclick="showInspectionPhotos()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21,15 16,10 5,21"/>
+          </svg>
+          사진 보기
+        </a>
+        <a href="javascript:void(0)" class="inspection-popup__link" onclick="showMetaport()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 2a14.5 14.5 0 000 20 14.5 14.5 0 000-20"/>
+            <path d="M2 12h20"/>
+          </svg>
+          메타포트 보기
+        </a>
+      </div>
+    </div>
+
+    <!-- 재해 이력 범례 팝업 - 설계서: 우측 하단 -->
+    <div class="legend-popup" id="disasterLegend">
+      <div class="legend-popup__header">
+        <h3 class="legend-popup__title">재해 이력 범례</h3>
+        <button class="legend-popup__toggle" onclick="toggleLegend('disaster')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="legend-popup__content">
+        <div class="legend-popup__item">
+          <div class="legend-popup__color" style="background-color: #D32F2F;"></div>
+          <span>10회 이상 발생</span>
+        </div>
+        <div class="legend-popup__item">
+          <div class="legend-popup__color" style="background-color: #FF9800;"></div>
+          <span>5회 이상 발생</span>
+        </div>
+        <div class="legend-popup__item">
+          <div class="legend-popup__color" style="background-color: #FFD54F;"></div>
+          <span>1회 이상 발생</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 수리 이력 범례 팝업 - 설계서: 우측 하단 -->
+    <div class="legend-popup" id="repairLegend">
+      <div class="legend-popup__header">
+        <h3 class="legend-popup__title">수리 이력 범례</h3>
+        <button class="legend-popup__toggle" onclick="toggleLegend('repair')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="legend-popup__content">
+        <div class="legend-popup__item">
+          <div class="legend-popup__color" style="background-color: #9C27B0;"></div>
+          <span>10회 이상</span>
+        </div>
+        <div class="legend-popup__item">
+          <div class="legend-popup__color" style="background-color: #5E35B1;"></div>
+          <span>5회 이상</span>
+        </div>
+        <div class="legend-popup__item">
+          <div class="legend-popup__color" style="background-color: #42A5F5;"></div>
+          <span>1회 이상</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 수리 이력 필터는 사이드바 내부로 이동됨 -->
+
+    <!-- 정보 오버레이 - 설계서 p.6: 팝업으로 문서 이미지 크게 표출 -->
+    <div class="info-overlay" id="infoOverlay">
+      <div class="info-content">
+        <div class="info-content__header">
+          <h2 class="info-content__title" id="infoTitle">기본 정보</h2>
+          <button class="info-content__close" onclick="closeInfoOverlay()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div class="info-content__body" id="infoBody">
+          <!-- 동적으로 콘텐츠 로드 -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Google Maps API -->
+  <script>
+    // 사이트 정보
+    const sites = {
+      1: { name: '주합루', lat: 37.5802, lng: 126.9918 },
+      2: { name: '연경당', lat: 37.5788, lng: 126.9932 },
+      3: { name: '낙선재', lat: 37.5794, lng: 126.9910 }
+    };
+
+    // URL 파라미터에서 사이트 ID 가져오기
+    const urlParams = new URLSearchParams(window.location.search);
+    const siteId = urlParams.get('site') || '3';
+    const currentSite = sites[siteId] || sites[3];
+
+    let map;
+    let marker;
+    let inspectionMarkers = [];
+    let currentMenu = null;
+    let disasterPolygons = [];
+    let repairPolygons = [];
+
+    // 지도 초기화
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: currentSite.lat, lng: currentSite.lng },
+        zoom: 18,
+        mapTypeId: 'satellite',
+        mapTypeControl: false,
+        fullscreenControl: false,
+        streetViewControl: false,
+        zoomControl: true,
+        zoomControlOptions: {
+          position: google.maps.ControlPosition.RIGHT_CENTER
+        }
+      });
+
+      marker = new google.maps.Marker({
+        position: { lat: currentSite.lat, lng: currentSite.lng },
+        map: map,
+        title: currentSite.name
+      });
+
+      map.addListener('click', function() {
+        hideInspectionPopup();
+      });
+    }
+
+    // 모든 오버레이/팝업 숨기기
+    function hideAllOverlays() {
+      document.getElementById('disasterLegend').classList.remove('active');
+      document.getElementById('repairLegend').classList.remove('active');
+      document.getElementById('repairFilterInSidebar').classList.remove('active');
+      hideInspectionPopup();
+
+      // 재해 구역 폴리곤 숨기기
+      disasterPolygons.forEach(p => p.setMap(null));
+
+      // 수리 구역 폴리곤 숨기기
+      repairPolygons.forEach(p => p.setMap(null));
+
+      // 점검 이력 마커 숨기기
+      inspectionMarkers.forEach(m => m.setMap(null));
+      inspectionMarkers = [];
+    }
+
+    // 메뉴 선택 함수 - 설계서 기준
+    function selectMenu(type) {
+      // 모든 메뉴 활성화 해제
+      document.querySelectorAll('.sidebar__link').forEach(link => {
+        link.classList.remove('sidebar__link--active');
+      });
+
+      // 선택한 메뉴 활성화
+      const menuId = 'menu' + type.charAt(0).toUpperCase() + type.slice(1);
+      const selectedMenu = document.getElementById(menuId);
+      if (selectedMenu) {
+        selectedMenu.classList.add('sidebar__link--active');
+      }
+
+      // 기존 오버레이 모두 숨기기
+      hideAllOverlays();
+      currentMenu = type;
+
+      // 메뉴별 동작 처리
+      switch(type) {
+        case 'basic':
+          // 기본 정보 - 설계서 p.6: 팝업으로 문서 이미지 크게 표출
+          showBasicInfo();
+          break;
+        case 'inspection':
+          // 점검 이력 - 설계서 p.7: 지도에 스팟 표출, 클릭 시 팝업
+          showInspectionHistory();
+          break;
+        case 'disaster':
+          // 재해 이력 - 컬러 그래픽 + 우측 하단 범례 팝업
+          showDisasterHistory();
+          break;
+        case 'repair':
+          // 수리 이력 - 컬러 그래픽 + 우측 하단 범례 + 필터란
+          showRepairHistory();
+          break;
+      }
+    }
+
+    // 기본 정보 - 설계서 p.6: 팝업으로 문서 이미지 크게 표출
+    function showBasicInfo() {
+      const overlay = document.getElementById('infoOverlay');
+      const title = document.getElementById('infoTitle');
+      const body = document.getElementById('infoBody');
+
+      title.textContent = '기본 정보';
+      body.innerHTML = `
+        <div style="background: #f8f9fa; border-radius: 12px; overflow: hidden;">
+          <!-- 기본정보 문서 이미지 형태 -->
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+            <tr style="background: #0052CC; color: white;">
+              <th colspan="6" style="padding: 16px; text-align: left; font-size: 16px;">□ 기본정보</th>
+              <th colspan="2" style="padding: 16px; text-align: right;">점검일: 2024년 11월</th>
+            </tr>
+            <tr style="background: #E8F4FD;">
+              <td rowspan="4" style="padding: 12px; border: 1px solid #ddd; font-weight: 600; width: 80px; text-align: center;">국가<br>유산<br>개요</td>
+              <td style="padding: 12px; border: 1px solid #ddd; font-weight: 500; width: 100px;">국가유산명</td>
+              <td colspan="2" style="padding: 12px; border: 1px solid #ddd;">창덕궁 ${currentSite.name} 권역</td>
+              <td rowspan="4" style="padding: 12px; border: 1px solid #ddd; font-weight: 600; width: 80px; text-align: center;">국가<br>유산<br>관리</td>
+              <td style="padding: 12px; border: 1px solid #ddd; font-weight: 500;">종합정비계획</td>
+              <td colspan="2" style="padding: 12px; border: 1px solid #ddd;">☑ 수립</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px; border: 1px solid #ddd; font-weight: 500;">국가유산유형</td>
+              <td colspan="2" style="padding: 12px; border: 1px solid #ddd;">사적</td>
+              <td style="padding: 12px; border: 1px solid #ddd; font-weight: 500;">정기조사</td>
+              <td colspan="2" style="padding: 12px; border: 1px solid #ddd;">☑ 실시</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px; border: 1px solid #ddd; font-weight: 500;">소재지</td>
+              <td colspan="2" style="padding: 12px; border: 1px solid #ddd;">서울특별시 종로구 율곡로 99</td>
+              <td style="padding: 12px; border: 1px solid #ddd; font-weight: 500;">돌봄사업</td>
+              <td colspan="2" style="padding: 12px; border: 1px solid #ddd;">☑ 대상</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px; border: 1px solid #ddd; font-weight: 500;">소유자/관리자</td>
+              <td colspan="2" style="padding: 12px; border: 1px solid #ddd;">국가유산청 창덕궁관리소</td>
+              <td style="padding: 12px; border: 1px solid #ddd; font-weight: 500;">모니터링</td>
+              <td colspan="2" style="padding: 12px; border: 1px solid #ddd;">☐ 실시</td>
+            </tr>
+          </table>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; padding: 20px;">
+            <div>
+              <p style="font-size: 12px; color: #666; margin-bottom: 8px;">| 국가유산 대표 이미지</p>
+              <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; height: 150px; display: flex; align-items: center; justify-content: center;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <path d="M21 15l-5-5L5 21"/>
+                </svg>
+              </div>
+            </div>
+            <div>
+              <p style="font-size: 12px; color: #666; margin-bottom: 8px;">| 지도 현황</p>
+              <div style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); border-radius: 8px; height: 150px; display: flex; align-items: center; justify-content: center;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+              </div>
+            </div>
+            <div>
+              <p style="font-size: 12px; color: #666; margin-bottom: 8px;">| 관리등급</p>
+              <div style="background: #f5f5f5; border-radius: 8px; height: 150px; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 72px; font-weight: 700; color: #0052CC;">B</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      overlay.classList.add('active');
+    }
+
+    // 점검 이력 - 설계서 p.7: 지도에 스팟 마커 표시
+    function showInspectionHistory() {
+      inspectionMarkers.forEach(m => m.setMap(null));
+      inspectionMarkers = [];
+
+      const spots = [
+        { lat: currentSite.lat + 0.0002, lng: currentSite.lng + 0.0001, title: '석축 A구간' },
+        { lat: currentSite.lat - 0.0001, lng: currentSite.lng + 0.0003, title: '담장 B구간' },
+        { lat: currentSite.lat + 0.0001, lng: currentSite.lng - 0.0002, title: '옹벽 C구간' },
+        { lat: currentSite.lat - 0.0002, lng: currentSite.lng - 0.0001, title: '계단 D구간' }
+      ];
+
+      if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+        return;
+      }
+
+      spots.forEach((spot) => {
+        const spotMarker = new google.maps.Marker({
+          position: { lat: spot.lat, lng: spot.lng },
+          map: map,
+          title: spot.title,
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 12,
+            fillColor: '#FF9800',
+            fillOpacity: 1,
+            strokeColor: '#FFFFFF',
+            strokeWeight: 3
+          }
+        });
+
+        spotMarker.addListener('click', function() {
+          document.querySelector('.inspection-popup__title').textContent = spot.title + ' 점검 이력';
+          showInspectionPopup();
+        });
+
+        inspectionMarkers.push(spotMarker);
+      });
+    }
+
+    // 재해 이력 - Google Maps Polygon으로 좌표 고정 표시 (실제 영역 형태)
+    function showDisasterHistory() {
+      if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+        return;
+      }
+
+      const baseLat = currentSite.lat;
+      const baseLng = currentSite.lng;
+
+      // 재해 구역 데이터 - 더 크고 광범위하게, 개수도 증가
+      const disasterZones = [
+        {
+          label: '침수 피해 A',
+          color: '#FF5722',
+          paths: [
+            { lat: baseLat + 0.00065, lng: baseLng - 0.00035 },
+            { lat: baseLat + 0.00070, lng: baseLng + 0.00015 },
+            { lat: baseLat + 0.00060, lng: baseLng + 0.00045 },
+            { lat: baseLat + 0.00040, lng: baseLng + 0.00055 },
+            { lat: baseLat + 0.00020, lng: baseLng + 0.00045 },
+            { lat: baseLat + 0.00010, lng: baseLng + 0.00025 },
+            { lat: baseLat + 0.00015, lng: baseLng - 0.00005 },
+            { lat: baseLat + 0.00030, lng: baseLng - 0.00025 },
+            { lat: baseLat + 0.00050, lng: baseLng - 0.00040 }
+          ]
+        },
+        {
+          label: '침수 피해 B',
+          color: '#FF5722',
+          paths: [
+            { lat: baseLat - 0.00045, lng: baseLng + 0.00065 },
+            { lat: baseLat - 0.00030, lng: baseLng + 0.00080 },
+            { lat: baseLat - 0.00050, lng: baseLng + 0.00095 },
+            { lat: baseLat - 0.00070, lng: baseLng + 0.00085 },
+            { lat: baseLat - 0.00075, lng: baseLng + 0.00065 }
+          ]
+        },
+        {
+          label: '균열 발생 A',
+          color: '#F44336',
+          paths: [
+            { lat: baseLat - 0.00015, lng: baseLng + 0.00015 },
+            { lat: baseLat - 0.00008, lng: baseLng + 0.00045 },
+            { lat: baseLat - 0.00020, lng: baseLng + 0.00075 },
+            { lat: baseLat - 0.00035, lng: baseLng + 0.00085 },
+            { lat: baseLat - 0.00050, lng: baseLng + 0.00075 },
+            { lat: baseLat - 0.00058, lng: baseLng + 0.00055 },
+            { lat: baseLat - 0.00055, lng: baseLng + 0.00030 },
+            { lat: baseLat - 0.00045, lng: baseLng + 0.00015 },
+            { lat: baseLat - 0.00030, lng: baseLng + 0.00010 }
+          ]
+        },
+        {
+          label: '균열 발생 B',
+          color: '#F44336',
+          paths: [
+            { lat: baseLat + 0.00030, lng: baseLng - 0.00075 },
+            { lat: baseLat + 0.00040, lng: baseLng - 0.00055 },
+            { lat: baseLat + 0.00025, lng: baseLng - 0.00045 },
+            { lat: baseLat + 0.00010, lng: baseLng - 0.00055 },
+            { lat: baseLat + 0.00005, lng: baseLng - 0.00070 },
+            { lat: baseLat + 0.00015, lng: baseLng - 0.00085 }
+          ]
+        },
+        {
+          label: '세굴 A',
+          color: '#FF9800',
+          paths: [
+            { lat: baseLat + 0.00010, lng: baseLng + 0.00060 },
+            { lat: baseLat + 0.00025, lng: baseLng + 0.00075 },
+            { lat: baseLat + 0.00015, lng: baseLng + 0.00095 },
+            { lat: baseLat - 0.00005, lng: baseLng + 0.00105 },
+            { lat: baseLat - 0.00020, lng: baseLng + 0.00095 },
+            { lat: baseLat - 0.00015, lng: baseLng + 0.00070 }
+          ]
+        },
+        {
+          label: '세굴 B',
+          color: '#FF9800',
+          paths: [
+            { lat: baseLat - 0.00060, lng: baseLng - 0.00025 },
+            { lat: baseLat - 0.00050, lng: baseLng - 0.00010 },
+            { lat: baseLat - 0.00065, lng: baseLng + 0.00005 },
+            { lat: baseLat - 0.00080, lng: baseLng - 0.00005 },
+            { lat: baseLat - 0.00085, lng: baseLng - 0.00025 }
+          ]
+        },
+        {
+          label: '붕괴 위험 A',
+          color: '#9C27B0',
+          paths: [
+            { lat: baseLat - 0.00025, lng: baseLng - 0.00055 },
+            { lat: baseLat - 0.00015, lng: baseLng - 0.00040 },
+            { lat: baseLat - 0.00008, lng: baseLng - 0.00045 },
+            { lat: baseLat - 0.00015, lng: baseLng - 0.00065 },
+            { lat: baseLat - 0.00025, lng: baseLng - 0.00080 },
+            { lat: baseLat - 0.00040, lng: baseLng - 0.00075 },
+            { lat: baseLat - 0.00045, lng: baseLng - 0.00060 }
+          ]
+        },
+        {
+          label: '붕괴 위험 B',
+          color: '#9C27B0',
+          paths: [
+            { lat: baseLat + 0.00055, lng: baseLng + 0.00065 },
+            { lat: baseLat + 0.00065, lng: baseLng + 0.00075 },
+            { lat: baseLat + 0.00050, lng: baseLng + 0.00090 },
+            { lat: baseLat + 0.00035, lng: baseLng + 0.00085 },
+            { lat: baseLat + 0.00030, lng: baseLng + 0.00070 }
+          ]
+        },
+        {
+          label: '지반 침하',
+          color: '#E91E63',
+          paths: [
+            { lat: baseLat - 0.00070, lng: baseLng - 0.00075 },
+            { lat: baseLat - 0.00055, lng: baseLng - 0.00065 },
+            { lat: baseLat - 0.00065, lng: baseLng - 0.00045 },
+            { lat: baseLat - 0.00080, lng: baseLng - 0.00050 },
+            { lat: baseLat - 0.00090, lng: baseLng - 0.00070 }
+          ]
+        }
+      ];
+
+      // 폴리곤 생성 (텍스트 라벨 없이)
+      disasterZones.forEach(zone => {
+        const polygon = new google.maps.Polygon({
+          paths: zone.paths,
+          map: map,
+          fillColor: zone.color,
+          fillOpacity: 0.45,
+          strokeColor: zone.color,
+          strokeOpacity: 0.9,
+          strokeWeight: 2.5
+        });
+
+        disasterPolygons.push(polygon);
+      });
+
+      // 우측 하단 범례 팝업 표시
+      document.getElementById('disasterLegend').classList.add('active');
+    }
+
+    // 수리 이력 - Google Maps Polygon으로 좌표 고정 표시 (실제 영역 형태)
+    function showRepairHistory() {
+      if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+        return;
+      }
+
+      const baseLat = currentSite.lat;
+      const baseLng = currentSite.lng;
+
+      // 수리 구역 데이터 - 더 크고 광범위하게, 개수도 증가
+      const repairZones = [
+        {
+          id: 'complete',
+          label: '보수 완료 A',
+          color: '#4CAF50',
+          paths: [
+            { lat: baseLat + 0.00030, lng: baseLng - 0.00065 },
+            { lat: baseLat + 0.00045, lng: baseLng - 0.00045 },
+            { lat: baseLat + 0.00035, lng: baseLng - 0.00020 },
+            { lat: baseLat + 0.00020, lng: baseLng - 0.00010 },
+            { lat: baseLat + 0.00005, lng: baseLng - 0.00015 },
+            { lat: baseLat - 0.00010, lng: baseLng - 0.00030 },
+            { lat: baseLat - 0.00015, lng: baseLng - 0.00050 },
+            { lat: baseLat + 0.00010, lng: baseLng - 0.00070 }
+          ]
+        },
+        {
+          id: 'complete',
+          label: '보수 완료 B',
+          color: '#4CAF50',
+          paths: [
+            { lat: baseLat - 0.00080, lng: baseLng + 0.00030 },
+            { lat: baseLat - 0.00065, lng: baseLng + 0.00045 },
+            { lat: baseLat - 0.00075, lng: baseLng + 0.00060 },
+            { lat: baseLat - 0.00090, lng: baseLng + 0.00055 },
+            { lat: baseLat - 0.00095, lng: baseLng + 0.00035 }
+          ]
+        },
+        {
+          id: 'complete',
+          label: '보수 완료 C',
+          color: '#4CAF50',
+          paths: [
+            { lat: baseLat + 0.00075, lng: baseLng + 0.00045 },
+            { lat: baseLat + 0.00080, lng: baseLng + 0.00060 },
+            { lat: baseLat + 0.00065, lng: baseLng + 0.00075 },
+            { lat: baseLat + 0.00050, lng: baseLng + 0.00070 },
+            { lat: baseLat + 0.00055, lng: baseLng + 0.00050 }
+          ]
+        },
+        {
+          id: 'progress',
+          label: '보수 중 A',
+          color: '#2196F3',
+          paths: [
+            { lat: baseLat - 0.00040, lng: baseLng - 0.00010 },
+            { lat: baseLat - 0.00025, lng: baseLng + 0.00015 },
+            { lat: baseLat - 0.00045, lng: baseLng + 0.00040 },
+            { lat: baseLat - 0.00060, lng: baseLng + 0.00050 },
+            { lat: baseLat - 0.00075, lng: baseLng + 0.00035 },
+            { lat: baseLat - 0.00080, lng: baseLng + 0.00010 },
+            { lat: baseLat - 0.00070, lng: baseLng - 0.00015 },
+            { lat: baseLat - 0.00055, lng: baseLng - 0.00020 }
+          ]
+        },
+        {
+          id: 'progress',
+          label: '보수 중 B',
+          color: '#2196F3',
+          paths: [
+            { lat: baseLat + 0.00045, lng: baseLng - 0.00090 },
+            { lat: baseLat + 0.00055, lng: baseLng - 0.00075 },
+            { lat: baseLat + 0.00045, lng: baseLng - 0.00060 },
+            { lat: baseLat + 0.00030, lng: baseLng - 0.00065 },
+            { lat: baseLat + 0.00025, lng: baseLng - 0.00085 }
+          ]
+        },
+        {
+          id: 'planned',
+          label: '보수 예정 A',
+          color: '#FFA726',
+          paths: [
+            { lat: baseLat + 0.00015, lng: baseLng + 0.00055 },
+            { lat: baseLat + 0.00030, lng: baseLng + 0.00065 },
+            { lat: baseLat + 0.00040, lng: baseLng + 0.00090 },
+            { lat: baseLat + 0.00025, lng: baseLng + 0.00105 },
+            { lat: baseLat + 0.00005, lng: baseLng + 0.00100 },
+            { lat: baseLat - 0.00010, lng: baseLng + 0.00080 },
+            { lat: baseLat - 0.00005, lng: baseLng + 0.00060 }
+          ]
+        },
+        {
+          id: 'planned',
+          label: '보수 예정 B',
+          color: '#FFA726',
+          paths: [
+            { lat: baseLat - 0.00035, lng: baseLng - 0.00085 },
+            { lat: baseLat - 0.00025, lng: baseLng - 0.00070 },
+            { lat: baseLat - 0.00040, lng: baseLng - 0.00055 },
+            { lat: baseLat - 0.00055, lng: baseLng - 0.00065 },
+            { lat: baseLat - 0.00060, lng: baseLng - 0.00080 }
+          ]
+        },
+        {
+          id: 'planned',
+          label: '보수 예정 C',
+          color: '#FFA726',
+          paths: [
+            { lat: baseLat + 0.00085, lng: baseLng - 0.00020 },
+            { lat: baseLat + 0.00090, lng: baseLng - 0.00005 },
+            { lat: baseLat + 0.00080, lng: baseLng + 0.00015 },
+            { lat: baseLat + 0.00065, lng: baseLng + 0.00010 },
+            { lat: baseLat + 0.00070, lng: baseLng - 0.00015 }
+          ]
+        }
+      ];
+
+      // 폴리곤 생성 (텍스트 라벨 없이)
+      repairZones.forEach(zone => {
+        const polygon = new google.maps.Polygon({
+          paths: zone.paths,
+          map: map,
+          fillColor: zone.color,
+          fillOpacity: 0.45,
+          strokeColor: zone.color,
+          strokeOpacity: 0.9,
+          strokeWeight: 2.5
+        });
+        polygon.zoneId = zone.id;
+
+        repairPolygons.push(polygon);
+      });
+
+      // 우측 하단 범례 팝업 표시
+      document.getElementById('repairLegend').classList.add('active');
+
+      // 사이드바 내 필터 표시
+      document.getElementById('repairFilterInSidebar').classList.add('active');
+    }
+
+    // 범례 팝업 토글
+    function toggleLegend(type) {
+      if (type === 'disaster') {
+        document.getElementById('disasterLegend').classList.remove('active');
+      } else if (type === 'repair') {
+        document.getElementById('repairLegend').classList.remove('active');
+      }
+    }
+
+    // 필터 적용 (사이드바 내부 필터 사용)
+    function applyFilter(filter) {
+      if (filter === 'all') {
+        const isChecked = document.getElementById('filterAll2').checked;
+        repairPolygons.forEach(p => p.setMap(isChecked ? map : null));
+        // 전체 선택시 개별 체크박스도 동기화
+        document.getElementById('filterComplete2').checked = isChecked;
+        document.getElementById('filterProgress2').checked = isChecked;
+        document.getElementById('filterPlanned2').checked = isChecked;
+      } else {
+        // 개별 필터 적용
+        const filterMap = {
+          'complete': 'filterComplete2',
+          'progress': 'filterProgress2',
+          'planned': 'filterPlanned2'
+        };
+
+        const isChecked = document.getElementById(filterMap[filter]).checked;
+        repairPolygons.forEach(p => {
+          if (p.zoneId === filter) {
+            p.setMap(isChecked ? map : null);
+          }
+        });
+
+        // 전체 체크박스 상태 업데이트
+        const allChecked = document.getElementById('filterComplete2').checked &&
+                          document.getElementById('filterProgress2').checked &&
+                          document.getElementById('filterPlanned2').checked;
+        document.getElementById('filterAll2').checked = allChecked;
+      }
+    }
+
+    // 점검 이력 팝업 표시
+    function showInspectionPopup() {
+      const popup = document.getElementById('inspectionPopup');
+      popup.style.top = '50%';
+      popup.style.left = '50%';
+      popup.style.transform = 'translate(-50%, -50%)';
+      popup.classList.add('active');
+    }
+
+    // 점검 이력 팝업 숨기기
+    function hideInspectionPopup() {
+      document.getElementById('inspectionPopup').classList.remove('active');
+    }
+
+    // 정보 오버레이 닫기
+    function closeInfoOverlay() {
+      document.getElementById('infoOverlay').classList.remove('active');
+    }
+
+    // 안전점검보고서 보기 - 설계서 p.7
+    function showInspectionReport() {
+      hideInspectionPopup();
+      const overlay = document.getElementById('infoOverlay');
+      const title = document.getElementById('infoTitle');
+      const body = document.getElementById('infoBody');
+
+      title.textContent = '안전점검보고서';
+      body.innerHTML = `
+        <div style="background: #f5f5f5; padding: 24px; border-radius: 8px;">
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #333;">석축 A구간 안전점검보고서</h3>
+          <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 16px;">
+            <p style="margin-bottom: 8px;"><strong>점검일자:</strong> 2024.11.15</p>
+            <p style="margin-bottom: 8px;"><strong>점검유형:</strong> 정기점검</p>
+            <p style="margin-bottom: 8px;"><strong>점검자:</strong> 홍길동 (한국전통조경연구원)</p>
+            <p style="margin-bottom: 8px;"><strong>점검대상:</strong> 석축 및 옹벽</p>
+          </div>
+          <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 16px;">
+            <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 12px;">점검결과 요약</h4>
+            <p style="margin-bottom: 8px;"><strong>종합등급:</strong> <span style="color: #FF9800; font-weight: 600;">주의 (경미보수 필요)</span></p>
+            <p style="margin-bottom: 8px;"><strong>예상피해유형:</strong> 침식, 붕괴</p>
+          </div>
+          <div style="background: white; padding: 20px; border-radius: 8px;">
+            <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 12px;">조사자 의견</h4>
+            <p style="line-height: 1.6; color: #666;">석축 전면부 일부 구간에서 균열 및 열화가 관찰되었으며, 누수흔과 채움재 유실이 확인되어 지속적인 모니터링이 필요합니다.</p>
+          </div>
+        </div>
+      `;
+      overlay.classList.add('active');
+    }
+
+    // 사진 보기 - 설계서 p.7
+    function showInspectionPhotos() {
+      hideInspectionPopup();
+      const overlay = document.getElementById('infoOverlay');
+      const title = document.getElementById('infoTitle');
+      const body = document.getElementById('infoBody');
+
+      title.textContent = '점검 사진';
+      body.innerHTML = `
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
+          <div style="background: #f5f5f5; border-radius: 8px; overflow: hidden;">
+            <div style="aspect-ratio: 4/3; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>
+              </svg>
+            </div>
+            <div style="padding: 12px;"><p style="font-size: 13px; font-weight: 500;">석축 전경</p><p style="font-size: 11px; color: #999;">2024.11.15</p></div>
+          </div>
+          <div style="background: #f5f5f5; border-radius: 8px; overflow: hidden;">
+            <div style="aspect-ratio: 4/3; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>
+              </svg>
+            </div>
+            <div style="padding: 12px;"><p style="font-size: 13px; font-weight: 500;">균열 상세</p><p style="font-size: 11px; color: #999;">2024.11.15</p></div>
+          </div>
+          <div style="background: #f5f5f5; border-radius: 8px; overflow: hidden;">
+            <div style="aspect-ratio: 4/3; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); display: flex; align-items: center; justify-content: center;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>
+              </svg>
+            </div>
+            <div style="padding: 12px;"><p style="font-size: 13px; font-weight: 500;">배수공 상태</p><p style="font-size: 11px; color: #999;">2024.11.15</p></div>
+          </div>
+        </div>
+      `;
+      overlay.classList.add('active');
+    }
+
+    // 메타포트 보기 - 설계서 p.7
+    function showMetaport() {
+      hideInspectionPopup();
+      const overlay = document.getElementById('infoOverlay');
+      const title = document.getElementById('infoTitle');
+      const body = document.getElementById('infoBody');
+
+      title.textContent = '메타포트 뷰어';
+      body.innerHTML = `
+        <div style="text-align: center; padding: 40px;">
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 60px 40px; color: white; margin-bottom: 24px;">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 16px;">
+              <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 000 20 14.5 14.5 0 000-20"/><path d="M2 12h20"/>
+            </svg>
+            <h3 style="font-size: 20px; margin-bottom: 8px;">3D 메타포트 뷰어</h3>
+            <p style="font-size: 14px; opacity: 0.9;">석축 A구간 360° 뷰</p>
+          </div>
+          <button style="padding: 12px 24px; background: #0052CC; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer;">메타포트 앱에서 열기</button>
+        </div>
+      `;
+      overlay.classList.add('active');
+    }
+
+    // ESC 키로 오버레이/팝업 닫기
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeInfoOverlay();
+        hideInspectionPopup();
+      }
+    });
+
+    // 오버레이 바깥 클릭 시 닫기
+    document.getElementById('infoOverlay').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeInfoOverlay();
+      }
+    });
+  </script>
+
+  <!-- Config 로드 -->
+  <script src="config.js"></script>
+
+  <!-- Google Maps API 동적 로드 -->
+  <script>
+    (function() {
+      if (typeof CONFIG !== 'undefined' && CONFIG.GOOGLE_MAPS_API_KEY && CONFIG.GOOGLE_MAPS_API_KEY !== 'YOUR_API_KEY_HERE') {
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${CONFIG.GOOGLE_MAPS_API_KEY}&callback=initMap`;
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+      } else {
+        document.addEventListener('DOMContentLoaded', function() {
+          window.gm_authFailure();
+        });
+      }
+    })();
+  </script>
+
+  <!-- API 키 없을 경우 대체 표시 -->
+  <script>
+    window.gm_authFailure = function() {
+      document.getElementById('map').innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; padding: 40px;">
+          <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 24px;">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          <h2 style="font-size: 24px; margin-bottom: 12px;">창덕궁 ${currentSite.name} 권역</h2>
+          <p style="font-size: 14px; opacity: 0.9;">서울특별시 종로구 율곡로 99</p>
+          <p style="font-size: 12px; margin-top: 24px; opacity: 0.7;">지도를 불러오는 중입니다...</p>
+        </div>
+      `;
+    };
+
+    setTimeout(function() {
+      if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+        window.gm_authFailure();
+      }
+    }, 3000);
+  </script>
+</body>
+</html>

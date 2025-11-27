@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>제출 확인 - 전통조경 안전지도 시범서비스</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", sans-serif;
+      background-color: #EAF2FE; min-height: 100vh; display: flex; flex-direction: column;
+    }
+    .header {
+      background-color: #FFFFFF; height: 80px; display: flex;
+      align-items: center; justify-content: space-between; padding: 0 40px;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+    }
+    .header__logo { font-size: 18px; font-weight: 600; color: #003E9C; text-decoration: none; }
+    .page-title { font-size: 18px; font-weight: 600; color: #171719; }
+    .logout-button {
+      padding: 8px 16px; background-color: #EF4444; color: #FFFFFF; border: none;
+      border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    .main-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 60px 40px; }
+    .content-box {
+      width: 100%; max-width: 740px; background-color: #FFFFFF;
+      border: 1.5px solid #0066FF; border-radius: 30px; padding: 40px;
+    }
+    .footer {
+      background-color: #1A1A1A; color: #FFFFFF; padding: 32px 40px;
+    }
+    .footer-content { max-width: 1440px; margin: 0 auto; }
+    .footer-links { display: flex; gap: 24px; margin-bottom: 16px; }
+    .footer-links a { color: #CCCCCC; text-decoration: none; font-size: 14px; }
+    .footer-info p { color: #999999; font-size: 13px; line-height: 1.6; }
+    .footer-copyright { color: #666666; font-size: 12px; margin-top: 12px; }
+    .popup-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5); display: flex;
+      align-items: center; justify-content: center; z-index: 1000;
+    }
+    .popup-card {
+      background-color: #FFFFFF; border-radius: 20px; padding: 40px;
+      max-width: 400px; width: 90%; text-align: center;
+    }
+    .popup-icon { font-size: 64px; margin-bottom: 24px; }
+    .popup-title { font-size: 24px; font-weight: 700; color: #171719; margin-bottom: 12px; }
+    .popup-desc { font-size: 14px; color: #6B7280; margin-bottom: 32px; line-height: 1.6; }
+    .popup-buttons { display: flex; gap: 12px; }
+    .popup-btn {
+      flex: 1; padding: 14px; border-radius: 8px; font-size: 16px;
+      font-weight: 600; cursor: pointer;
+    }
+    .popup-btn-cancel { background-color: #F3F4F6; color: #6B7280; border: none; }
+    .popup-btn-confirm { background-color: #0066FF; color: #FFFFFF; border: none; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="index.html" class="header__logo">전통조경 안전지도 시범서비스</a>
+    <h1 class="page-title">제출 확인</h1>
+    <button class="logout-button" onclick="window.location.href='index.html'">로그아웃</button>
+  </header>
+  <main class="main-container">
+    <div class="popup-overlay">
+      <div class="popup-card">
+        <div class="popup-icon">✅</div>
+        <div class="popup-title">제출하시겠습니까?</div>
+        <div class="popup-desc">
+          점검 결과를 제출하면 수정할 수 없습니다.<br>
+          제출 전 내용을 다시 한번 확인해 주세요.
+        </div>
+        <div class="popup-buttons">
+          <button class="popup-btn popup-btn-cancel" onclick="window.history.back()">취소</button>
+          <button class="popup-btn popup-btn-confirm" onclick="window.location.href='inspection-confirmation.html'">제출</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="#">이용안내</a>
+        <a href="#">저작권정책</a>
+      </div>
+      <div class="footer-info">
+        <p>OO시 OO구 OO로 123, OO타워 12층</p>
+        <p>전화번호: 02-000-0000</p>
+      </div>
+      <p class="footer-copyright">© 2025.OOO SERVICE. ALL RIGHTS RESERVED.</p>
+    </div>
+  </footer>
+</body>
+</html>
