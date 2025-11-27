@@ -19,9 +19,10 @@ build/
 .DS_Store
 Thumbs.db
 
-# Environment variables
+# Environment variables (보안)
 .env
 .env.local
+.env.*.local
 
 # Temporary files
 *.tmp
@@ -30,29 +31,18 @@ Thumbs.db
 # Windows reserved names
 nul
 
-# Design files and reference materials
+# 외부 참고자료 (프로젝트 외부 문서)
 참고자료/
-figma-extracted/
-design-screens/
-*.fig
+
+# 원본 설계 문서 (용량 큼, 별도 공유)
 *.hwpx
 *.xlsx
+*.fig
 
-# Ignore images EXCEPT in assets folder
-*.png
-*.jpg
-*.jpeg
-*.pdf
-!assets/**/*.png
-!assets/**/*.jpg
-!assets/**/*.jpeg
-!assets/**/*.ttf
-
-# Anima generated files
+# Anima/Figma generated files
 .anima/
-
-# Generated/extracted files
-figma*.png
+figma-extracted/
+design-screens/
 figma*.json
 extracted_screens.json
 main_screen_url.json
