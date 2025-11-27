@@ -842,14 +842,14 @@
         </div>
 
         <!-- 예상 피해 유형 -->
-        <div class="report-section">
+        <div class="report-section" id="damageTypeSection">
           <h3 class="report-section__title">예상 피해 유형 (중복가능)</h3>
-          <div class="option-group" style="padding: 12px 0;">
-            <span class="option-item"><span class="check-box checked"></span> <span class="check-label">손상</span></span>
-            <span class="option-item"><span class="check-box"></span> <span class="check-label">침하</span></span>
-            <span class="option-item"><span class="check-box"></span> <span class="check-label">전도</span></span>
-            <span class="option-item"><span class="check-box checked"></span> <span class="check-label">배부름</span></span>
-            <span class="option-item"><span class="check-box"></span> <span class="check-label">붕괴</span></span>
+          <div class="option-group damage-type-options" style="padding: 12px 0;">
+            <span class="option-item" data-type="손상"><span class="check-box"></span> <span class="check-label">손상</span></span>
+            <span class="option-item" data-type="침하"><span class="check-box"></span> <span class="check-label">침하</span></span>
+            <span class="option-item" data-type="전도"><span class="check-box"></span> <span class="check-label">전도</span></span>
+            <span class="option-item" data-type="배부름"><span class="check-box"></span> <span class="check-label">배부름</span></span>
+            <span class="option-item" data-type="붕괴"><span class="check-box"></span> <span class="check-label">붕괴</span></span>
           </div>
         </div>
 
@@ -858,25 +858,29 @@
           <h3 class="report-section__title">종합 판정</h3>
           <div class="report-info" style="margin-bottom: 16px;">
             <span class="report-info__label">조사자 의견</span>
-            <span class="report-info__value">*서로 영향을 주고받는 피해지점을 함께 기입하여 내용 작성 필요 (예: 수목 ③에 의해 석축 전면부 변형)</span>
+            <span class="report-info__value" id="inspectorOpinion">(의견 없음)</span>
           </div>
           <div style="font-size: 13px; font-weight: 500; color: #333; margin-bottom: 12px;">점검 결과에 따른 보수 필요성</div>
           <div class="report-judgment">
-            <div class="report-judgment__item report-judgment__item--selected">
-              <span class="report-judgment__label">관심</span>
+            <div class="report-judgment__item" data-rating="안전">
+              <span class="report-judgment__label">안전</span>
               <span class="report-judgment__desc">(현상유지)</span>
             </div>
-            <div class="report-judgment__item">
+            <div class="report-judgment__item" data-rating="관심">
+              <span class="report-judgment__label">관심</span>
+              <span class="report-judgment__desc">(모니터링)</span>
+            </div>
+            <div class="report-judgment__item" data-rating="주의">
               <span class="report-judgment__label">주의</span>
               <span class="report-judgment__desc">(경미보수)</span>
             </div>
-            <div class="report-judgment__item">
+            <div class="report-judgment__item" data-rating="경계">
               <span class="report-judgment__label">경계</span>
               <span class="report-judgment__desc">(수리)</span>
             </div>
-            <div class="report-judgment__item">
-              <span class="report-judgment__label">즉시 조치</span>
-              <span class="report-judgment__desc"></span>
+            <div class="report-judgment__item" data-rating="위험">
+              <span class="report-judgment__label">위험</span>
+              <span class="report-judgment__desc">(즉시 조치)</span>
             </div>
           </div>
         </div>
@@ -1028,8 +1032,8 @@
         const judgmentItems = document.querySelectorAll('.report-judgment__item');
 
         judgmentItems.forEach(item => {
-          const label = item.querySelector('.report-judgment__label')?.textContent;
-          if (label === rating) {
+          const itemRating = item.getAttribute('data-rating');
+          if (itemRating === rating) {
             item.classList.add('report-judgment__item--selected');
           } else {
             item.classList.remove('report-judgment__item--selected');
@@ -1043,12 +1047,12 @@
       if (inspectionData.final) {
         // 예상 피해 유형
         if (inspectionData.final.damageTypes && inspectionData.final.damageTypes.length > 0) {
-          const damageItems = document.querySelectorAll('.option-item');
+          const damageItems = document.querySelectorAll('.damage-type-options .option-item');
           damageItems.forEach(item => {
-            const label = item.querySelector('.check-label')?.textContent;
+            const damageType = item.getAttribute('data-type');
             const checkbox = item.querySelector('.check-box');
-            if (checkbox && label) {
-              if (inspectionData.final.damageTypes.includes(label)) {
+            if (checkbox && damageType) {
+              if (inspectionData.final.damageTypes.includes(damageType)) {
                 checkbox.classList.add('checked');
               } else {
                 checkbox.classList.remove('checked');
@@ -1058,12 +1062,12 @@
         }
 
         // 조사자 의견
-        if (inspectionData.final.opinion) {
-          const opinionEl = document.querySelector('.report-info__value');
-          // 조사자 의견 항목 찾기
-          const opinionSection = document.querySelector('.report-section:last-of-type .report-info__value');
-          if (opinionSection) {
-            opinionSection.textContent = inspectionData.final.opinion;
+        const opinionEl = document.getElementById('inspectorOpinion');
+        if (opinionEl) {
+          if (inspectionData.final.opinion && inspectionData.final.opinion.trim()) {
+            opinionEl.textContent = inspectionData.final.opinion;
+          } else {
+            opinionEl.textContent = '(의견 없음)';
           }
         }
       }
