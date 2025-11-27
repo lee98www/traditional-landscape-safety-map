@@ -218,61 +218,17 @@
 
     .checklist-table .check-cell input[type="checkbox"],
     .checklist-table .check-cell input[type="radio"] {
-      appearance: none;
-      -webkit-appearance: none;
-      width: 16px;
-      height: 16px;
-      border: 2px solid #B0B0B0;
-      border-radius: 3px;
+      width: 14px;
+      height: 14px;
+      accent-color: var(--color-primary);
       cursor: pointer;
-      transition: all 0.15s ease;
-      position: relative;
-      background-color: #FFFFFF;
-    }
-
-    .checklist-table .check-cell input[type="radio"] {
-      border-radius: 50%;
-    }
-
-    .checklist-table .check-cell input[type="checkbox"]:checked,
-    .checklist-table .check-cell input[type="radio"]:checked {
-      background-color: #0052CC;
-      border-color: #0052CC;
-    }
-
-    .checklist-table .check-cell input[type="checkbox"]:checked::after {
-      content: '';
-      position: absolute;
-      left: 4px;
-      top: 1px;
-      width: 5px;
-      height: 9px;
-      border: solid white;
-      border-width: 0 2px 2px 0;
-      transform: rotate(45deg);
-    }
-
-    .checklist-table .check-cell input[type="radio"]:checked::after {
-      content: '';
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 6px;
-      height: 6px;
-      background-color: white;
-      border-radius: 50%;
-    }
-
-    .checklist-table .check-cell input:hover {
-      border-color: #0052CC;
     }
 
     .checklist-table .check-label {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 2px;
       font-size: 10px;
       cursor: pointer;
     }
@@ -477,7 +433,7 @@
             </tr>
             <tr>
               <td class="item-cell">세굴</td>
-              <td class="check-cell"><label class="check-label"><input type="radio" name="scour" value="없음"> 없음</label></td>
+              <td class="check-cell"><label class="check-label"><input type="radio" name="scour" value="없음" checked> 없음</label></td>
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell dash-cell">-</td>
@@ -486,7 +442,7 @@
             </tr>
             <tr>
               <td class="item-cell">침하</td>
-              <td class="check-cell"><label class="check-label"><input type="radio" name="subsidence" value="없음"> 없음</label></td>
+              <td class="check-cell"><label class="check-label"><input type="radio" name="subsidence" value="없음" checked> 없음</label></td>
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell dash-cell">-</td>
@@ -495,7 +451,7 @@
             </tr>
             <tr>
               <td class="item-cell">우수침투흔</td>
-              <td class="check-cell"><label class="check-label"><input type="radio" name="rainwater" value="없음"> 없음</label></td>
+              <td class="check-cell"><label class="check-label"><input type="radio" name="rainwater" value="없음" checked> 없음</label></td>
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell dash-cell">-</td>
@@ -509,7 +465,7 @@
             <tr>
               <td class="item-cell">균열</td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="crack" value="없음"> 없음</label></td>
-              <td class="check-cell"><label class="check-label"><input type="radio" name="crack" value="경미"> 경미</label></td>
+              <td class="check-cell"><label class="check-label"><input type="radio" name="crack" value="경미" checked> 경미</label></td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="crack" value="약간심각"> 약간 심각</label></td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="crack" value="심각"> 심각</label></td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="crack" value="매우심각"> 매우 심각</label></td>
@@ -518,7 +474,7 @@
             <tr>
               <td class="item-cell">파손·탈락</td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="damage" value="없음"> 없음</label></td>
-              <td class="check-cell"><label class="check-label"><input type="radio" name="damage" value="경미"> 경미</label></td>
+              <td class="check-cell"><label class="check-label"><input type="radio" name="damage" value="경미" checked> 경미</label></td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="damage" value="약간심각"> 약간 심각</label></td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="damage" value="심각"> 심각</label></td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="damage" value="매우심각"> 매우 심각</label></td>
@@ -528,7 +484,7 @@
               <td class="item-cell">열화</td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="deterioration" value="없음"> 없음</label></td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="deterioration" value="경미"> 경미</label></td>
-              <td class="check-cell"><label class="check-label"><input type="radio" name="deterioration" value="약간심각"> 약간 심각</label></td>
+              <td class="check-cell"><label class="check-label"><input type="radio" name="deterioration" value="약간심각" checked> 약간 심각</label></td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="deterioration" value="심각"> 심각</label></td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="deterioration" value="매우심각"> 매우 심각</label></td>
               <td class="remark-cell"></td>
@@ -539,7 +495,7 @@
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell dash-cell">-</td>
-              <td class="check-cell"><label class="check-label"><input type="radio" name="leakage" value="있음"> 있음</label></td>
+              <td class="check-cell"><label class="check-label"><input type="radio" name="leakage" value="있음" checked> 있음</label></td>
               <td class="remark-cell"></td>
             </tr>
             <tr>
@@ -548,7 +504,7 @@
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell dash-cell">-</td>
-              <td class="check-cell"><label class="check-label"><input type="radio" name="filling" value="있음"> 있음</label></td>
+              <td class="check-cell"><label class="check-label"><input type="radio" name="filling" value="있음" checked> 있음</label></td>
               <td class="remark-cell"></td>
             </tr>
             <tr>
@@ -557,12 +513,12 @@
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell dash-cell">-</td>
-              <td class="check-cell"><label class="check-label"><input type="radio" name="joint" value="있음"> 있음</label></td>
+              <td class="check-cell"><label class="check-label"><input type="radio" name="joint" value="있음" checked> 있음</label></td>
               <td class="remark-cell"></td>
             </tr>
             <tr>
               <td class="item-cell">변형</td>
-              <td class="check-cell"><label class="check-label"><input type="radio" name="deformation" value="없음"> 없음</label></td>
+              <td class="check-cell"><label class="check-label"><input type="radio" name="deformation" value="없음" checked> 없음</label></td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="deformation" value="경미"> 경미</label></td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="deformation" value="약간심각"> 약간 심각</label></td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="deformation" value="심각"> 심각</label></td>
@@ -575,7 +531,7 @@
             </tr>
             <tr>
               <td class="item-cell">배수공</td>
-              <td class="check-cell"><label class="check-label"><input type="radio" name="drainage" value="원활"> 원활</label></td>
+              <td class="check-cell"><label class="check-label"><input type="radio" name="drainage" value="원활" checked> 원활</label></td>
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="drainage" value="부분막힘"> 부분 막힘</label></td>
               <td class="check-cell dash-cell">-</td>
@@ -584,7 +540,7 @@
             </tr>
             <tr>
               <td class="item-cell">낙석 흔적</td>
-              <td class="check-cell"><label class="check-label"><input type="radio" name="rockfall" value="없음"> 없음</label></td>
+              <td class="check-cell"><label class="check-label"><input type="radio" name="rockfall" value="없음" checked> 없음</label></td>
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell dash-cell">-</td>
@@ -593,7 +549,7 @@
             </tr>
             <tr>
               <td class="item-cell">지반 침하</td>
-              <td class="check-cell"><label class="check-label"><input type="radio" name="groundSubsidence" value="없음"> 없음</label></td>
+              <td class="check-cell"><label class="check-label"><input type="radio" name="groundSubsidence" value="없음" checked> 없음</label></td>
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell dash-cell">-</td>
@@ -606,7 +562,7 @@
       </div>
 
       <!-- 추가 피해요소 체크리스트 - 통일된 카드 디자인 -->
-      <div class="checklist-card additional-table" id="additionalChecklist" style="display: none;">
+      <div class="checklist-card additional-table" id="additionalChecklist">
         <div class="checklist-card__header">추가 피해요소 점검표</div>
         <div class="checklist-card__body">
         <table class="checklist-table">
@@ -624,20 +580,20 @@
               <td class="check-cell"><label class="check-label"><input type="radio" name="additional_exist" value="없음"> 없음</label></td>
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell dash-cell">-</td>
-              <td class="check-cell"><label class="check-label"><input type="radio" name="additional_exist" value="있음"> 있음</label></td>
+              <td class="check-cell"><label class="check-label"><input type="radio" name="additional_exist" value="있음" checked> 있음</label></td>
               <td class="remark-cell"></td>
             </tr>
             <tr>
               <td class="item-cell">유형</td>
               <td class="check-cell"><label class="check-label"><input type="checkbox" name="additional_type" value="건조물"> 건조물</label></td>
               <td class="check-cell"><label class="check-label"><input type="checkbox" name="additional_type" value="시설물"> 시설물</label></td>
-              <td class="check-cell"><label class="check-label"><input type="checkbox" name="additional_type" value="수목"> 수목</label></td>
-              <td class="check-cell"><label class="check-label"><input type="checkbox" name="additional_type" value="보행로"> 보행로</label></td>
+              <td class="check-cell"><label class="check-label"><input type="checkbox" name="additional_type" value="수목" checked> 수목</label></td>
+              <td class="check-cell"><label class="check-label"><input type="checkbox" name="additional_type" value="보행로" checked> 보행로</label></td>
               <td class="check-cell"><label class="check-label"><input type="checkbox" name="additional_type" value="기타"> 기타(<input type="text" style="width:40px;border:none;border-bottom:1px solid #333;">)</label></td>
             </tr>
             <tr>
               <td class="item-cell">수로</td>
-              <td class="check-cell"><label class="check-label"><input type="radio" name="waterway" value="원활"> 원활</label></td>
+              <td class="check-cell"><label class="check-label"><input type="radio" name="waterway" value="원활" checked> 원활</label></td>
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="waterway" value="막힘"> 막힘</label></td>
@@ -645,7 +601,7 @@
             </tr>
             <tr>
               <td class="item-cell">집수정</td>
-              <td class="check-cell"><label class="check-label"><input type="radio" name="sump" value="원활"> 원활</label></td>
+              <td class="check-cell"><label class="check-label"><input type="radio" name="sump" value="원활" checked> 원활</label></td>
               <td class="check-cell dash-cell">-</td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="sump" value="부분막힘"> 부분 막힘</label></td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="sump" value="막힘"> 막힘</label></td>
@@ -697,49 +653,6 @@
     const target = urlParams.get('target') || '석축 및 옹벽';
     const section = urlParams.get('section') || 'facility';
 
-    // 점검 데이터 수집 및 저장
-    function collectChecklistData() {
-      const checklistData = {
-        facility: [],
-        additional: []
-      };
-
-      // 당해시설 체크리스트 수집
-      document.querySelectorAll('#facilityChecklist .checklist-table tbody tr').forEach(row => {
-        const itemName = row.querySelector('td:nth-child(2)')?.textContent?.trim() || '';
-        const checkedRadio = row.querySelector('input[type="radio"]:checked');
-        const remarkInput = row.querySelector('input[type="text"]');
-
-        if (itemName) {
-          checklistData.facility.push({
-            item: itemName,
-            rating: checkedRadio ? checkedRadio.value : '',
-            remark: remarkInput ? remarkInput.value : ''
-          });
-        }
-      });
-
-      // 추가 피해요소 체크리스트 수집
-      document.querySelectorAll('#additionalChecklist .checklist-table tbody tr').forEach(row => {
-        const itemName = row.querySelector('td:nth-child(2)')?.textContent?.trim() || '';
-        const checkedRadio = row.querySelector('input[type="radio"]:checked');
-        const remarkInput = row.querySelector('input[type="text"]');
-
-        if (itemName) {
-          checklistData.additional.push({
-            item: itemName,
-            rating: checkedRadio ? checkedRadio.value : '',
-            remark: remarkInput ? remarkInput.value : ''
-          });
-        }
-      });
-
-      // sessionStorage에 저장
-      const existingData = JSON.parse(sessionStorage.getItem('inspectionData') || '{}');
-      existingData.checklist = checklistData;
-      sessionStorage.setItem('inspectionData', JSON.stringify(existingData));
-    }
-
     // 서브메뉴 토글
     function toggleSubmenu(id) {
       const submenu = document.getElementById(id + 'Submenu');
@@ -773,13 +686,11 @@
 
     // 이전 버튼
     function goBack() {
-      collectChecklistData();
       window.location.href = `inspection-general.html?site=${siteId}&type=${inspectionType}&target=${encodeURIComponent(target)}`;
     }
 
     // 다음 버튼
     function goNext() {
-      collectChecklistData();
       window.location.href = `inspection-result.html?site=${siteId}&type=${inspectionType}&target=${encodeURIComponent(target)}`;
     }
 

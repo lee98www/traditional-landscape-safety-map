@@ -1,0 +1,35 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "Point": "pt5",
+        "Code": "êµ´ëš",
+        "ì¢…í•©íŒ": "ê²½ê³„(ìˆ˜ë¦¬)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.99363667972035,
+          37.57886229995682
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Point": "pt6",
+        "Code": "êµ´ëš",
+        "ì¢…í•©íŒ": "ìœ„í—˜(ì¦‰ì‹œì¡°ì¹˜)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.99380888956591,
+          37.57898653639754
+        ]
+      }
+    }
+  ]
+}

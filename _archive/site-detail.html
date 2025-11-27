@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>대상지 상세 정보 - 전통조경 안전지도 시범서비스</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 지도 영역 - 전체화면 배경 */
+    #map {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    /* 로고 - 좌측 상단 */
+    .logo {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 100;
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 24px;
+      background-color: #E8F4FD;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333333;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      background-color: #D0E8F9;
+      transform: translateY(-1px);
+    }
+
+    /* 좌측 메뉴 버튼들 - 설계서 p.5 기준 4개 */
+    .side-menu {
+      position: fixed;
+      top: 80px;
+      left: 20px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 160px;
+      padding: 14px 18px;
+      background-color: #FFFFFF;
+      border: 2px solid #E0E0E0;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333333;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu-btn:hover {
+      background-color: #F0F7FF;
+      border-color: #0052CC;
+      transform: translateX(4px);
+    }
+
+    .menu-btn--active {
+      background-color: #0052CC;
+      border-color: #0052CC;
+      color: #FFFFFF;
+    }
+
+    .menu-btn--active:hover {
+      background-color: #003D99;
+    }
+
+    .menu-btn__icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    /* 모달 오버레이 */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-overlay--active {
+      display: flex;
+    }
+
+    /* 모달 컨텐츠 */
+    .modal {
+      position: relative;
+      width: 90%;
+      max-width: 900px;
+      max-height: 85vh;
+      background-color: #FFFFFF;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      background-color: #4A7A8C;
+      color: #FFFFFF;
+    }
+
+    .modal__title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .modal__close {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      border-radius: 8px;
+      color: #FFFFFF;
+      font-size: 20px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .modal__close:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .modal__body {
+      padding: 24px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    /* 기본 정보 테이블 */
+    .info-table__section {
+      margin-bottom: 24px;
+    }
+
+    .info-table__section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      padding: 12px 0;
+      border-bottom: 2px solid #4A7A8C;
+      margin-bottom: 12px;
+    }
+
+    .info-table__row {
+      display: flex;
+      border-bottom: 1px solid #E5E5E5;
+    }
+
+    .info-table__label {
+      width: 140px;
+      padding: 12px 16px;
+      background-color: #F5F8FA;
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
+      flex-shrink: 0;
+    }
+
+    .info-table__value {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #333;
+    }
+
+    .info-table__checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .info-table__checkbox {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #333;
+    }
+
+    .info-table__checkbox input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* 점검 이력 - 포인트 리스트 */
+    .inspection-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .inspection-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background-color: #F9FAFB;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .inspection-item:hover {
+      background-color: #EEF4FF;
+      transform: translateX(4px);
+    }
+
+    .inspection-item__icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .inspection-item__icon--report {
+      background-color: #DBEAFE;
+    }
+
+    .inspection-item__icon--photo {
+      background-color: #D1FAE5;
+    }
+
+    .inspection-item__icon--matterport {
+      background-color: #FEE2E2;
+    }
+
+    .inspection-item__content {
+      flex: 1;
+    }
+
+    .inspection-item__title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .inspection-item__desc {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .inspection-item__arrow {
+      font-size: 18px;
+      color: #999;
+    }
+
+    /* 이력 이미지 표시 영역 */
+    .history-content {
+      padding: 20px;
+    }
+
+    .history-content__text {
+      font-size: 14px;
+      line-height: 1.8;
+      color: #333;
+      padding: 20px;
+      background-color: #F9FAFB;
+      border-radius: 8px;
+      border-left: 4px solid #4A7A8C;
+    }
+
+    /* 점검 이력 팝업 - 설계서 p.7 ④ */
+    .inspection-popup {
+      position: fixed;
+      z-index: 150;
+      background-color: #FFFFFF;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      min-width: 200px;
+      display: none;
+      overflow: hidden;
+    }
+
+    .inspection-popup--active {
+      display: block;
+    }
+
+    .inspection-popup__header {
+      padding: 12px 16px;
+      background-color: #4A7A8C;
+      color: #FFFFFF;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .inspection-popup__body {
+      padding: 8px 0;
+    }
+
+    .inspection-popup__item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .inspection-popup__item:hover {
+      background-color: #F0F7FF;
+    }
+
+    .inspection-popup__item-icon {
+      font-size: 18px;
+    }
+
+    /* 점검 정보 요약 */
+    .inspection-popup__summary {
+      padding: 16px;
+      background-color: #F8FAFC;
+      border-top: 1px solid #E5E7EB;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #374151;
+    }
+
+    .inspection-popup__summary strong {
+      color: #0052CC;
+      font-weight: 600;
+    }
+
+    /* 반응형 */
+    @media (max-width: 768px) {
+      .logo {
+        font-size: 12px;
+        padding: 8px 16px;
+      }
+
+      .side-menu {
+        top: 70px;
+        left: 10px;
+      }
+
+      .menu-btn {
+        width: 140px;
+        padding: 12px 14px;
+        font-size: 13px;
+      }
+
+      .modal {
+        width: 95%;
+        max-height: 90vh;
+      }
+
+      .info-table__label {
+        width: 100px;
+        padding: 10px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Google Maps 지도 영역 -->
+  <div id="map"></div>
+
+  <!-- 점검 이력 팝업 - 설계서 p.7 ④ -->
+  <div class="inspection-popup" id="inspectionPopup">
+    <div class="inspection-popup__header" id="popupHeader">점검 포인트</div>
+    <div class="inspection-popup__body" id="popupBody">
+      <!-- JavaScript로 동적 렌더링 -->
+    </div>
+  </div>
+
+  <!-- 로고 -->
+  <a href="index.html" class="logo">전통조경 안전지도 시범서비스</a>
+
+  <!-- 좌측 메뉴 - 설계서 p.5 기준 4개 버튼 -->
+  <div class="side-menu">
+    <button class="menu-btn" data-modal="basic" id="btnBasic">
+      <svg class="menu-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="16" x2="12" y2="12"/>
+        <line x1="12" y1="8" x2="12.01" y2="8"/>
+      </svg>
+      기본 정보
+    </button>
+    <button class="menu-btn" data-modal="inspection" id="btnInspection">
+      <svg class="menu-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 11l3 3L22 4"/>
+        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+      </svg>
+      점검 이력
+    </button>
+    <button class="menu-btn" data-modal="disaster" id="btnDisaster">
+      <svg class="menu-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      재해 이력
+    </button>
+    <button class="menu-btn" data-modal="repair" id="btnRepair">
+      <svg class="menu-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+      </svg>
+      수리 이력
+    </button>
+  </div>
+
+  <!-- 기본 정보 모달 - 설계서 p.6 기준 -->
+  <div class="modal-overlay" id="modalBasic">
+    <div class="modal" style="max-width: 1000px;">
+      <div class="modal__header">
+        <h2 class="modal__title">기본 정보</h2>
+        <button class="modal__close" onclick="closeModal('modalBasic')">&times;</button>
+      </div>
+      <div class="modal__body" id="basicInfoBody">
+        <!-- 설계서 p.6 기준 테이블 구조 -->
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+          <tr>
+            <td rowspan="4" style="background: #4A7A8C; color: white; text-align: center; padding: 12px; width: 80px; font-weight: 600;">국가<br>유산<br>개요</td>
+            <td style="background: #E8F4FD; padding: 10px 16px; width: 120px; font-weight: 600;">국가유산명</td>
+            <td style="padding: 10px 16px; border: 1px solid #E5E5E5;" id="infoName">창덕궁 낙선재 권역</td>
+            <td rowspan="4" style="background: #4A7A8C; color: white; text-align: center; padding: 12px; width: 80px; font-weight: 600;">국가<br>유산<br>관리</td>
+            <td style="background: #E8F4FD; padding: 10px 16px; width: 120px;">종합정비계획</td>
+            <td style="padding: 10px 16px; border: 1px solid #E5E5E5; text-align: center;"><span style="color: #0052CC; font-size: 18px;">●</span></td>
+          </tr>
+          <tr>
+            <td style="background: #E8F4FD; padding: 10px 16px; font-weight: 600;">국가유산유형</td>
+            <td style="padding: 10px 16px; border: 1px solid #E5E5E5;">사적</td>
+            <td style="background: #E8F4FD; padding: 10px 16px;">정기조사</td>
+            <td style="padding: 10px 16px; border: 1px solid #E5E5E5; text-align: center;"><span style="color: #0052CC; font-size: 18px;">●</span></td>
+          </tr>
+          <tr>
+            <td style="background: #E8F4FD; padding: 10px 16px; font-weight: 600;">소재지</td>
+            <td style="padding: 10px 16px; border: 1px solid #E5E5E5;" id="infoAddress">서울특별시 종로구 율곡로 99-0</td>
+            <td style="background: #E8F4FD; padding: 10px 16px;">돌봄사업</td>
+            <td style="padding: 10px 16px; border: 1px solid #E5E5E5; text-align: center;">-</td>
+          </tr>
+          <tr>
+            <td style="background: #E8F4FD; padding: 10px 16px; font-weight: 600;">소유자/관리자</td>
+            <td style="padding: 10px 16px; border: 1px solid #E5E5E5;">국가유산청 창덕궁관리소</td>
+            <td style="background: #E8F4FD; padding: 10px 16px;">모니터링</td>
+            <td style="padding: 10px 16px; border: 1px solid #E5E5E5; text-align: center;"><span style="color: #0052CC; font-size: 18px;">●</span></td>
+          </tr>
+          <tr>
+            <td colspan="3"></td>
+            <td style="background: #4A7A8C; color: white; text-align: center; padding: 12px; font-weight: 600;"></td>
+            <td style="background: #E8F4FD; padding: 10px 16px;">국가유산지킴이</td>
+            <td style="padding: 10px 16px; border: 1px solid #E5E5E5; text-align: center;"><span style="color: #0052CC; font-size: 18px;">●</span></td>
+          </tr>
+        </table>
+
+        <!-- 주변환경 섹션 -->
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 16px;">
+          <tr>
+            <td rowspan="6" style="background: #4A7A8C; color: white; text-align: center; padding: 12px; width: 80px; font-weight: 600;">주변<br>환경</td>
+            <td style="background: #E8F4FD; padding: 10px 16px; width: 100px; font-weight: 600;">범람위험요소</td>
+            <td style="padding: 10px 16px; border: 1px solid #E5E5E5;" colspan="5">
+              <label style="margin-right: 20px;"><input type="checkbox"> 강, 하천</label>
+              <label style="margin-right: 20px;"><input type="checkbox"> 계곡</label>
+              <label style="margin-right: 20px;"><input type="checkbox"> 저수지</label>
+              <label style="margin-right: 20px;"><input type="checkbox"> 바다</label>
+              <label><input type="checkbox"> 기타</label>
+            </td>
+          </tr>
+          <tr>
+            <td style="background: #E8F4FD; padding: 10px 16px; font-weight: 600;">인접지형</td>
+            <td style="padding: 10px 16px; border: 1px solid #E5E5E5;" colspan="5">
+              <label style="margin-right: 20px;"><input type="checkbox"> 경사</label>
+              <label style="margin-right: 20px;"><input type="checkbox" checked> 옹벽</label>
+              <label style="margin-right: 20px;"><input type="checkbox" checked> 전도위험</label>
+              <label style="margin-right: 20px;"><input type="checkbox"> 절개지</label>
+              <label><input type="checkbox"> 기타</label>
+            </td>
+          </tr>
+          <tr>
+            <td style="background: #E8F4FD; padding: 10px 16px; font-weight: 600;">주변 영향</td>
+            <td style="padding: 10px 16px; border: 1px solid #E5E5E5;" colspan="5">
+              <label style="margin-right: 20px;"><input type="checkbox"> 습해</label>
+              <label style="margin-right: 20px;"><input type="checkbox"> 공해</label>
+              <label style="margin-right: 20px;"><input type="checkbox"> 염해</label>
+              <label style="margin-right: 20px;"><input type="checkbox"> 진동</label>
+              <label><input type="checkbox"> 기타</label>
+            </td>
+          </tr>
+          <tr>
+            <td style="background: #E8F4FD; padding: 10px 16px; font-weight: 600;">고저차</td>
+            <td style="padding: 10px 16px; border: 1px solid #E5E5E5;" colspan="5">
+              당해 국가유산이 주변지형에 비해 &nbsp;&nbsp;
+              <label style="margin-right: 20px;"><input type="checkbox" checked> 낮음</label>
+              <label><input type="checkbox"> 높음</label>
+            </td>
+          </tr>
+          <tr>
+            <td style="background: #E8F4FD; padding: 10px 16px; font-weight: 600;">수리조건</td>
+            <td style="padding: 10px 16px; border: 1px solid #E5E5E5;" colspan="5">
+              <label style="margin-right: 20px;"><input type="checkbox" checked> dry</label>
+              <label style="margin-right: 20px;"><input type="checkbox"> damp</label>
+              <label style="margin-right: 20px;"><input type="checkbox"> wet</label>
+              <label style="margin-right: 20px;"><input type="checkbox"> dripping</label>
+              <label><input type="checkbox"> flowing</label>
+            </td>
+          </tr>
+          <tr>
+            <td style="background: #E8F4FD; padding: 10px 16px; font-weight: 600;">강우이력</td>
+            <td style="padding: 10px 16px; border: 1px solid #E5E5E5;" colspan="5">
+              해당 지역 최근 10개년 최대 일강우강도 누년 평균값과 최근 2개년 최대 강우량
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 점검 이력 모달 -->
+  <div class="modal-overlay" id="modalInspection">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 class="modal__title">점검 이력</h2>
+        <button class="modal__close" onclick="closeModal('modalInspection')">&times;</button>
+      </div>
+      <div class="modal__body">
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">지도에서 점검 이력 포인트를 선택하거나 아래 항목을 클릭하세요.</p>
+        <div class="inspection-list" id="inspectionList">
+          <!-- JavaScript로 동적 렌더링 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 재해 이력 모달 -->
+  <div class="modal-overlay" id="modalDisaster">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 class="modal__title">재해 이력</h2>
+        <button class="modal__close" onclick="closeModal('modalDisaster')">&times;</button>
+      </div>
+      <div class="modal__body">
+        <div class="history-content" id="disasterContent">
+          <!-- JavaScript로 동적 렌더링 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 수리 이력 모달 -->
+  <div class="modal-overlay" id="modalRepair">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 class="modal__title">수리 이력</h2>
+        <button class="modal__close" onclick="closeModal('modalRepair')">&times;</button>
+      </div>
+      <div class="modal__body">
+        <div class="history-content" id="repairContent">
+          <!-- JavaScript로 동적 렌더링 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    // 전역 변수
+    // ============================================================
+    let currentSiteData = null;
+    let currentInspectionData = [];
+    let map = null;
+    let mapMarkers = [];
+
+    // URL 파라미터에서 site ID 가져오기
+    const urlParams = new URLSearchParams(window.location.search);
+    const siteId = parseInt(urlParams.get('site')) || 1;
+
+    // 사이트별 좌표 정보
+    const siteCoordinates = {
+      1: { lat: 37.5795, lng: 126.9920, name: '낙선재' },
+      2: { lat: 37.5829, lng: 126.9917, name: '주합루' },
+      3: { lat: 37.5825, lng: 126.9932, name: '연경당' },
+      4: { lat: 37.5831, lng: 126.9915, name: '부용정' },
+      5: { lat: 37.5838, lng: 126.9925, name: '존덕정' }
+    };
+
+    // ============================================================
+    // Google Maps 초기화
+    // ============================================================
+    function initMap() {
+      const coords = siteCoordinates[siteId] || siteCoordinates[1];
+
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: coords.lat, lng: coords.lng },
+        zoom: 18,
+        mapTypeId: 'satellite',  // 위성지도
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+          style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+          position: google.maps.ControlPosition.TOP_RIGHT
+        },
+        fullscreenControl: false,
+        streetViewControl: false,
+        zoomControl: true,
+        zoomControlOptions: {
+          position: google.maps.ControlPosition.RIGHT_CENTER
+        }
+      });
+
+      // 메인 마커 추가
+      const mainMarker = new google.maps.Marker({
+        position: { lat: coords.lat, lng: coords.lng },
+        map: map,
+        title: coords.name,
+        icon: {
+          url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="18" fill="#0052CC" stroke="white" stroke-width="3"/>
+              <circle cx="20" cy="20" r="6" fill="white"/>
+            </svg>
+          `),
+          scaledSize: new google.maps.Size(40, 40),
+          anchor: new google.maps.Point(20, 20)
+        }
+      });
+
+      // 지도 로드 완료 후 데이터 로딩
+      google.maps.event.addListenerOnce(map, 'idle', function() {
+        loadSiteData();
+      });
+    }
+
+    // ============================================================
+    // 데이터 로딩
+    // ============================================================
+    async function loadSiteData() {
+      try {
+        const response = await fetch('data/sites.json');
+        const data = await response.json();
+
+        // 현재 사이트 데이터 찾기
+        currentSiteData = data.sites.find(s => s.id === siteId);
+
+        if (!currentSiteData) {
+          console.error('사이트 데이터를 찾을 수 없습니다:', siteId);
+          currentSiteData = data.sites[0]; // 첫 번째 사이트 사용
+        }
+
+        currentInspectionData = currentSiteData.inspectionHistory || [];
+
+        // UI 업데이트
+        updateBasicInfo();
+        updateDisasterHistory();
+        updateRepairHistory();
+        updateInspectionList();
+        renderInspectionMarkers();
+
+      } catch (error) {
+        console.error('데이터 로딩 실패:', error);
+        // Fallback 데이터 사용
+        useFallbackData();
+      }
+    }
+
+    // Fallback 데이터 (JSON 로딩 실패 시)
+    function useFallbackData() {
+      currentSiteData = {
+        id: siteId,
+        name: '낙선재 일원',
+        address: '서울특별시 종로구 와룡동 2-71 창덕궁 내',
+        basicInfo: {
+          '지정번호': '사적 제122호',
+          '소재지': '서울특별시 종로구 와룡동 2-71',
+          '관리주체': '문화재청 궁능유적본부'
+        },
+        inspectionHistory: [],
+        disasterHistory: { content: '최근 3년간 특이사항 없음' },
+        repairHistory: { content: '정기 보수 관리 중' }
+      };
+
+      updateBasicInfo();
+      updateDisasterHistory();
+      updateRepairHistory();
+      updateInspectionList();
+      renderInspectionMarkers();
+    }
+
+    // ============================================================
+    // 기본 정보 렌더링
+    // ============================================================
+    function updateBasicInfo() {
+      const container = document.getElementById('basicInfoBody');
+      if (!container || !currentSiteData.basicInfo) return;
+
+      let html = '<div class="info-table__section">';
+      html += '<div class="info-table__section-title">국가유산 개요</div>';
+
+      for (const [key, value] of Object.entries(currentSiteData.basicInfo)) {
+        html += `
+          <div class="info-table__row">
+            <span class="info-table__label">${key}</span>
+            <span class="info-table__value">${value}</span>
+          </div>
+        `;
+      }
+
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
+    // ============================================================
+    // 점검 이력 리스트 렌더링
+    // ============================================================
+    function updateInspectionList() {
+      const container = document.getElementById('inspectionList');
+      if (!container) return;
+
+      if (!currentInspectionData || currentInspectionData.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #999;">점검 이력이 없습니다.</p>';
+        return;
+      }
+
+      let html = '';
+      currentInspectionData.forEach((inspection, index) => {
+        html += `
+          <div class="inspection-item" onclick="highlightMarker(${index + 1})">
+            <div class="inspection-item__icon inspection-item__icon--report">📋</div>
+            <div class="inspection-item__content">
+              <div class="inspection-item__title">${inspection.date} - ${inspection.inspector}</div>
+              <div class="inspection-item__desc">${inspection.type} | ${inspection.element} | ${inspection.result}</div>
+            </div>
+            <div class="inspection-item__arrow">→</div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // ============================================================
+    // 재해 이력 렌더링
+    // ============================================================
+    function updateDisasterHistory() {
+      const container = document.getElementById('disasterContent');
+      if (!container || !currentSiteData.disasterHistory) return;
+
+      container.innerHTML = `
+        <div class="history-content__text">
+          ${currentSiteData.disasterHistory.content}
+        </div>
+      `;
+    }
+
+    // ============================================================
+    // 수리 이력 렌더링
+    // ============================================================
+    function updateRepairHistory() {
+      const container = document.getElementById('repairContent');
+      if (!container || !currentSiteData.repairHistory) return;
+
+      container.innerHTML = `
+        <div class="history-content__text">
+          ${currentSiteData.repairHistory.content}
+        </div>
+      `;
+    }
+
+    // ============================================================
+    // 점검 이력 마커 동적 생성 (Google Maps)
+    // ============================================================
+    function renderInspectionMarkers() {
+      if (!map || !currentInspectionData.length) return;
+
+      // 기존 마커 제거
+      mapMarkers.forEach(marker => marker.setMap(null));
+      mapMarkers = [];
+
+      // 마커 위치 오프셋 (메인 마커 주변에 분산)
+      const offsets = [
+        { lat: 0.0002, lng: -0.0003 },
+        { lat: -0.0002, lng: 0.0002 },
+        { lat: 0.0003, lng: 0.0001 },
+        { lat: -0.0001, lng: -0.0002 },
+        { lat: 0.0001, lng: 0.0003 }
+      ];
+
+      const baseCoords = siteCoordinates[siteId] || siteCoordinates[1];
+
+      currentInspectionData.forEach((inspection, index) => {
+        const offset = offsets[index % offsets.length];
+        const position = {
+          lat: baseCoords.lat + offset.lat,
+          lng: baseCoords.lng + offset.lng
+        };
+
+        const marker = new google.maps.Marker({
+          position: position,
+          map: null, // 초기에는 숨김
+          title: `점검 포인트 ${index + 1}`,
+          label: {
+            text: String(index + 1),
+            color: 'white',
+            fontWeight: 'bold',
+            fontSize: '12px'
+          },
+          icon: {
+            url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                <circle cx="16" cy="16" r="14" fill="#FF6B35" stroke="white" stroke-width="3"/>
+              </svg>
+            `),
+            scaledSize: new google.maps.Size(32, 32),
+            anchor: new google.maps.Point(16, 16),
+            labelOrigin: new google.maps.Point(16, 16)
+          },
+          zIndex: 100
+        });
+
+        // 클릭 이벤트
+        marker.addListener('click', function() {
+          showInspectionPopupOnMap(inspection, index + 1, position);
+        });
+
+        marker.inspectionData = inspection;
+        marker.markerIndex = index + 1;
+        mapMarkers.push(marker);
+      });
+    }
+
+    // 점검 이력 마커 표시/숨김
+    function toggleGoogleMapMarkers(show) {
+      mapMarkers.forEach(marker => {
+        marker.setMap(show ? map : null);
+      });
+    }
+
+    // ============================================================
+    // 점검 이력 팝업 표시 (설계서 p.7 ④) - Google Maps 마커용
+    // ============================================================
+    function showInspectionPopupOnMap(inspection, markerNumber, position) {
+      const popup = document.getElementById('inspectionPopup');
+      const header = document.getElementById('popupHeader');
+      const body = document.getElementById('popupBody');
+
+      // 팝업 헤더 업데이트
+      header.textContent = `점검 포인트 ${markerNumber}`;
+
+      // 팝업 내용 동적 렌더링
+      body.innerHTML = `
+        <div class="inspection-popup__item" onclick="showReport(${inspection.id})">
+          <span class="inspection-popup__item-icon">📋</span>
+          ${inspection.report.title}
+        </div>
+        <div class="inspection-popup__item" onclick="showPhotos(${inspection.id})">
+          <span class="inspection-popup__item-icon">📷</span>
+          사진 (${inspection.photos.length}장)
+        </div>
+        <div class="inspection-popup__item" onclick="openMetafort('${inspection.metafortUrl}')">
+          <span class="inspection-popup__item-icon">🔗</span>
+          메타포트
+        </div>
+        <div class="inspection-popup__summary">
+          <strong>점검일:</strong> ${inspection.date}<br>
+          <strong>점검자:</strong> ${inspection.inspector}<br>
+          <strong>점검유형:</strong> ${inspection.type}<br>
+          <strong>점검결과:</strong> ${inspection.result}<br>
+          <strong>점검요소:</strong> ${inspection.element}<br>
+          <strong>요약:</strong> ${inspection.report.summary}
+        </div>
+      `;
+
+      // 마커 위치를 화면 좌표로 변환
+      const projection = map.getProjection();
+      if (projection) {
+        const point = projection.fromLatLngToPoint(new google.maps.LatLng(position.lat, position.lng));
+        const scale = Math.pow(2, map.getZoom());
+        const worldCoords = new google.maps.Point(point.x * scale, point.y * scale);
+
+        const mapDiv = document.getElementById('map');
+        const mapRect = mapDiv.getBoundingClientRect();
+        const mapCenter = projection.fromLatLngToPoint(map.getCenter());
+        const centerX = mapCenter.x * scale;
+        const centerY = mapCenter.y * scale;
+
+        const screenX = (worldCoords.x - centerX) + mapRect.width / 2 + mapRect.left;
+        const screenY = (worldCoords.y - centerY) + mapRect.height / 2 + mapRect.top;
+
+        popup.style.left = (screenX + 20) + 'px';
+        popup.style.top = (screenY - 50) + 'px';
+      } else {
+        // fallback: 화면 중앙에 표시
+        popup.style.left = '50%';
+        popup.style.top = '40%';
+      }
+
+      popup.classList.add('inspection-popup--active');
+    }
+
+    // 마커 하이라이트 (리스트 아이템 클릭 시)
+    function highlightMarker(markerNumber) {
+      const marker = mapMarkers[markerNumber - 1];
+      if (marker) {
+        google.maps.event.trigger(marker, 'click');
+      }
+    }
+
+    // 보고서 표시
+    function showReport(inspectionId) {
+      const inspection = currentInspectionData.find(i => i.id === inspectionId);
+      if (inspection) {
+        alert(`[${inspection.report.title}]\n\n${inspection.report.summary}\n\n(실제 구현 시 모달로 상세 보고서 표시)`);
+      }
+    }
+
+    // 사진 표시
+    function showPhotos(inspectionId) {
+      const inspection = currentInspectionData.find(i => i.id === inspectionId);
+      if (inspection) {
+        alert(`총 ${inspection.photos.length}장의 사진이 있습니다:\n\n${inspection.photos.join('\n')}\n\n(실제 구현 시 이미지 갤러리 모달 표시)`);
+      }
+    }
+
+    // 메타포트 열기
+    function openMetafort(url) {
+      alert(`메타포트로 이동합니다:\n${url}\n\n(실제 구현 시 새 탭에서 URL 열기)`);
+      // window.open(url, '_blank');
+    }
+
+    // ============================================================
+    // 페이지 로드 시 - Google Maps가 initMap을 callback으로 호출
+    // ============================================================
+    // initMap() 함수 내에서 지도 로드 완료 후 loadSiteData() 호출됨
+
+    // ============================================================
+    // 메뉴 버튼 클릭 이벤트
+    // ============================================================
+    document.querySelectorAll('.menu-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const modalId = this.dataset.modal;
+
+        // 점검 이력 버튼 클릭 시 지도에 마커 표시 (설계서 p.7)
+        if (modalId === 'inspection') {
+          toggleGoogleMapMarkers(true);
+          // 모달도 함께 표시
+          openModal('modalInspection');
+          // 활성화 상태 토글
+          document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('menu-btn--active'));
+          this.classList.add('menu-btn--active');
+          return;
+        } else {
+          toggleGoogleMapMarkers(false);
+          hideInspectionPopup();
+        }
+
+        openModal('modal' + modalId.charAt(0).toUpperCase() + modalId.slice(1));
+
+        // 활성화 상태 토글
+        document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('menu-btn--active'));
+        this.classList.add('menu-btn--active');
+      });
+    });
+
+    // 점검 이력 팝업 숨김
+    function hideInspectionPopup() {
+      const popup = document.getElementById('inspectionPopup');
+      popup.classList.remove('inspection-popup--active');
+    }
+
+    // 지도 클릭 시 팝업 닫기
+    document.getElementById('map').addEventListener('click', function() {
+      hideInspectionPopup();
+    });
+
+    // 모달 열기
+    function openModal(modalId) {
+      document.getElementById(modalId).classList.add('modal-overlay--active');
+    }
+
+    // 모달 닫기
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('modal-overlay--active');
+      document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('menu-btn--active'));
+
+      // 점검 이력 모달 닫을 때 마커도 숨김
+      if (modalId === 'modalInspection') {
+        toggleGoogleMapMarkers(false);
+        hideInspectionPopup();
+      }
+    }
+
+    // 오버레이 클릭으로 모달 닫기
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === this) {
+          const modalId = this.id;
+          closeModal(modalId);
+        }
+      });
+    });
+
+    // ESC 키로 모달 닫기
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+          if (overlay.classList.contains('modal-overlay--active')) {
+            closeModal(overlay.id);
+          }
+        });
+      }
+    });
+
+    // initMap이 window 스코프에 있도록 설정
+    window.initMap = initMap;
+  </script>
+
+  <!-- Google Maps API - initMap 정의 후 로드 -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVpHmM8qjvVqpGergGbXNw3V4fIscaNEE&callback=initMap"></script>
+</body>
+</html>

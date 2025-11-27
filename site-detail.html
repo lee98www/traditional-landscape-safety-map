@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>대상지 상세 정보 - 전통조경 안전지도 시범서비스</title>
+  <title>대상지 상세 정보 | 전통조경 안전지도 시범서비스</title>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,872 +12,1034 @@
 
   <!-- CSS -->
   <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
 
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
-      font-family: 'Noto Sans KR', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      font-family: var(--font-family);
+      height: 100vh;
+      overflow: hidden;
     }
 
-    /* 지도 배경 전체 화면 */
-    .map-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('https://maps.googleapis.com/maps/api/staticmap?center=37.5829,126.9917&zoom=17&size=1920x1080&maptype=satellite&key=') no-repeat center center;
-      background-size: cover;
-      background-color: #2D4A3E;
-      z-index: 0;
-    }
-
-    /* 지도 플레이스홀더 (실제 지도 대신) */
-    .map-placeholder {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #2D5016 0%, #1A3A0F 50%, #0F2608 100%);
-      z-index: 0;
-    }
-
-    .map-placeholder::before {
-      content: '';
+    /* Map Container - 전체 화면 */
+    #map {
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      background-image:
-        radial-gradient(circle at 30% 40%, rgba(74, 124, 89, 0.4) 0%, transparent 40%),
-        radial-gradient(circle at 70% 60%, rgba(45, 80, 22, 0.5) 0%, transparent 35%),
-        radial-gradient(circle at 50% 30%, rgba(100, 140, 100, 0.3) 0%, transparent 30%);
+      right: 0;
+      bottom: 0;
+      z-index: 1;
     }
 
-    /* 로고 - 좌측 상단 */
-    .logo {
-      position: fixed;
+    /* Sidebar */
+    .sidebar {
+      position: absolute;
       top: 20px;
       left: 20px;
       z-index: 100;
+      width: 240px;
+    }
+
+    .sidebar__logo {
       display: inline-flex;
       align-items: center;
-      padding: 10px 24px;
-      background-color: #E8F4FD;
-      border-radius: 24px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #333333;
+      padding: 10px 20px;
+      background-color: var(--color-logo-bg);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-logo-text);
       text-decoration: none;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      transition: all 0.2s;
+      border: 1px solid #D4E8FF;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    .logo:hover {
-      background-color: #D0E8F9;
-      transform: translateY(-1px);
+    .sidebar__logo:hover {
+      background-color: #D4E8FF;
     }
 
-    /* 좌측 메뉴 버튼들 - 설계서 p.5 기준 4개 */
-    .side-menu {
-      position: fixed;
-      top: 80px;
-      left: 20px;
-      z-index: 100;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+    .sidebar__menu {
+      background: var(--color-bg-white);
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      overflow: hidden;
     }
 
-    .menu-btn {
+    .menu-item {
       display: flex;
       align-items: center;
-      gap: 10px;
-      width: 160px;
-      padding: 14px 18px;
-      background-color: #FFFFFF;
-      border: 2px solid #E0E0E0;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #333333;
+      gap: 12px;
+      padding: 14px 20px;
+      font-size: var(--font-size-base);
+      color: var(--color-text-primary);
       cursor: pointer;
-      transition: all 0.2s;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all var(--transition-fast);
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      border-bottom: 1px solid #F0F0F0;
     }
 
-    .menu-btn:hover {
-      background-color: #F0F7FF;
-      border-color: #0052CC;
-      transform: translateX(4px);
+    .menu-item:last-child {
+      border-bottom: none;
     }
 
-    .menu-btn--active {
-      background-color: #0052CC;
-      border-color: #0052CC;
-      color: #FFFFFF;
+    .menu-item:hover {
+      background: #F5F9FC;
     }
 
-    .menu-btn--active:hover {
-      background-color: #003D99;
+    .menu-item.active {
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      font-weight: var(--font-weight-medium);
     }
 
-    .menu-btn__icon {
+    .menu-item__icon {
       width: 20px;
       height: 20px;
       flex-shrink: 0;
     }
 
-    /* 모달 오버레이 */
+    /* Modal Overlay */
     .modal-overlay {
-      display: none;
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
       z-index: 200;
+      display: none;
       justify-content: center;
       align-items: center;
     }
 
-    .modal-overlay--active {
+    .modal-overlay.active {
       display: flex;
     }
 
-    /* 모달 컨텐츠 */
+    /* Modal Content */
     .modal {
-      position: relative;
-      width: 90%;
+      background: var(--color-bg-white);
+      border-radius: 12px;
       max-width: 900px;
       max-height: 85vh;
-      background-color: #FFFFFF;
-      border-radius: 16px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      width: 90%;
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.2);
     }
 
     .modal__header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 20px 24px;
-      background-color: #4A7A8C;
-      color: #FFFFFF;
+      align-items: center;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--color-border-light);
     }
 
     .modal__title {
-      font-size: 18px;
-      font-weight: 600;
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
     }
 
     .modal__close {
       width: 32px;
       height: 32px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255, 255, 255, 0.2);
-      border: none;
-      border-radius: 8px;
-      color: #FFFFFF;
-      font-size: 20px;
-      cursor: pointer;
-      transition: background 0.2s;
+      transition: background var(--transition-fast);
     }
 
     .modal__close:hover {
-      background: rgba(255, 255, 255, 0.3);
+      background: #F0F0F0;
+    }
+
+    .modal__close svg {
+      width: 20px;
+      height: 20px;
     }
 
     .modal__body {
       padding: 24px;
+      max-height: calc(85vh - 60px);
       overflow-y: auto;
-      flex: 1;
     }
 
     /* 기본 정보 테이블 */
     .info-table {
       width: 100%;
       border-collapse: collapse;
+      font-size: var(--font-size-sm);
     }
 
-    .info-table__section {
-      margin-bottom: 24px;
+    .info-table th,
+    .info-table td {
+      padding: 12px 16px;
+      border: 1px solid #E0E0E0;
+      text-align: left;
     }
 
-    .info-table__section-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: #333;
-      padding: 12px 0;
-      border-bottom: 2px solid #4A7A8C;
-      margin-bottom: 12px;
-    }
-
-    .info-table__row {
-      display: flex;
-      border-bottom: 1px solid #E5E5E5;
-    }
-
-    .info-table__label {
+    .info-table th {
+      background: #4A7A8C;
+      color: white;
+      font-weight: var(--font-weight-medium);
       width: 140px;
-      padding: 12px 16px;
-      background-color: #F5F8FA;
-      font-size: 13px;
-      font-weight: 600;
-      color: #555;
-      flex-shrink: 0;
     }
 
-    .info-table__value {
-      flex: 1;
-      padding: 12px 16px;
-      font-size: 13px;
-      color: #333;
+    .info-table td {
+      background: white;
     }
 
-    .info-table__checkbox-group {
+    .info-table .section-header {
+      background: #5A8A9C;
+      color: white;
+      text-align: center;
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .checkbox-group {
       display: flex;
       flex-wrap: wrap;
       gap: 16px;
     }
 
-    .info-table__checkbox {
+    .checkbox-item {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 13px;
-      color: #333;
     }
 
-    .info-table__checkbox input[type="checkbox"] {
+    .checkbox-item input {
       width: 16px;
       height: 16px;
     }
 
-    /* 점검 이력 - 포인트 리스트 */
-    .inspection-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .inspection-item {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 16px;
-      background-color: #F9FAFB;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .inspection-item:hover {
-      background-color: #EEF4FF;
-      transform: translateX(4px);
-    }
-
-    .inspection-item__icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      flex-shrink: 0;
-    }
-
-    .inspection-item__icon--report {
-      background-color: #DBEAFE;
-    }
-
-    .inspection-item__icon--photo {
-      background-color: #D1FAE5;
-    }
-
-    .inspection-item__icon--matterport {
-      background-color: #FEE2E2;
-    }
-
-    .inspection-item__content {
-      flex: 1;
-    }
-
-    .inspection-item__title {
-      font-size: 15px;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 4px;
-    }
-
-    .inspection-item__desc {
-      font-size: 13px;
-      color: #666;
-    }
-
-    .inspection-item__arrow {
-      font-size: 18px;
-      color: #999;
-    }
-
-    /* 이력 이미지 표시 영역 */
-    .history-image {
-      width: 100%;
-      text-align: center;
-      padding: 40px 20px;
-    }
-
-    .history-image__placeholder {
+    .check-mark {
       display: inline-block;
-      padding: 60px 80px;
-      background-color: #F5F5F5;
-      border: 2px dashed #CCC;
-      border-radius: 12px;
-      color: #888;
-      font-size: 14px;
+      width: 12px;
+      height: 12px;
+      background: var(--color-primary);
+      border-radius: 50%;
+      margin-right: 6px;
     }
 
-    /* 점검 이력 지도 포인트 마커 - 설계서 p.7 */
-    .map-markers {
-      position: fixed;
+    /* 이력 오버레이 (재해/수리) */
+    .history-overlay {
+      position: absolute;
       top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      left: 260px;
+      right: 0;
+      bottom: 0;
       z-index: 50;
       pointer-events: none;
       display: none;
     }
 
-    .map-markers--active {
+    .history-overlay.active {
       display: block;
     }
 
-    .map-marker {
+    /* 상단 필터 바 */
+    .filter-bar {
       position: absolute;
-      width: 32px;
-      height: 32px;
-      background-color: #FF6B35;
-      border: 3px solid #FFFFFF;
-      border-radius: 50%;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-      cursor: pointer;
-      pointer-events: auto;
-      transform: translate(-50%, -50%);
-      transition: all 0.2s;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.95);
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       display: flex;
+      gap: 16px;
       align-items: center;
-      justify-content: center;
+      pointer-events: auto;
+    }
+
+    .filter-select {
+      padding: 8px 12px;
+      border: 1px solid #DDD;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* 범례 */
+    .legend {
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+      background: var(--color-bg-white);
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      padding: 16px;
+      min-width: 160px;
+      pointer-events: auto;
+    }
+
+    .legend__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
       font-size: 14px;
-      color: #FFFFFF;
-      font-weight: 700;
+      font-weight: var(--font-weight-semibold);
     }
 
-    .map-marker:hover {
-      transform: translate(-50%, -50%) scale(1.2);
-      background-color: #E85A2A;
+    .legend__toggle {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
     }
 
-    .map-marker--active {
-      background-color: #0052CC;
-      transform: translate(-50%, -50%) scale(1.3);
-    }
-
-    /* 점검 이력 팝업 - 설계서 p.7 ④ */
-    .inspection-popup {
-      position: fixed;
-      z-index: 150;
-      background-color: #FFFFFF;
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-      min-width: 200px;
-      display: none;
-      overflow: hidden;
-    }
-
-    .inspection-popup--active {
-      display: block;
-    }
-
-    .inspection-popup__header {
-      padding: 12px 16px;
-      background-color: #4A7A8C;
-      color: #FFFFFF;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .inspection-popup__body {
-      padding: 8px 0;
-    }
-
-    .inspection-popup__item {
+    .legend__item {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 12px 16px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .legend__item:last-child {
+      margin-bottom: 0;
+    }
+
+    .legend__color {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+    }
+
+    /* 재해 범례 색상 */
+    .legend__color--disaster-high { background: #E53935; }
+    .legend__color--disaster-mid { background: #FB8C00; }
+    .legend__color--disaster-low { background: #FFD54F; }
+
+    /* 수리 범례 색상 */
+    .legend__color--repair-high { background: #8E24AA; }
+    .legend__color--repair-mid { background: #AB47BC; }
+    .legend__color--repair-low { background: #CE93D8; }
+
+    /* 경고 배너 */
+    .warning-banner {
+      position: absolute;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 13px;
+      pointer-events: auto;
+    }
+
+    /* 점검 이력 팝업 */
+    .inspection-popup {
+      position: absolute;
+      background: var(--color-bg-white);
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      padding: 16px;
+      min-width: 200px;
+      z-index: 150;
+      display: none;
+    }
+
+    .inspection-popup.active {
+      display: block;
+    }
+
+    .popup-item {
+      padding: 10px 16px;
       cursor: pointer;
-      transition: background 0.2s;
+      border-radius: 6px;
       font-size: 14px;
-      color: #333;
+      transition: background var(--transition-fast);
     }
 
-    .inspection-popup__item:hover {
-      background-color: #F0F7FF;
+    .popup-item:hover {
+      background: #F5F5F5;
     }
 
-    .inspection-popup__item-icon {
-      font-size: 18px;
+    /* 점검 이력 마커들 */
+    .inspection-markers {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 60;
+      display: none;
     }
 
-    /* 반응형 */
-    @media (max-width: 768px) {
-      .logo {
-        font-size: 12px;
-        padding: 8px 16px;
-      }
+    .inspection-markers.active {
+      display: block;
+    }
 
-      .side-menu {
-        top: 70px;
-        left: 10px;
-      }
+    /* 수리 이력 서브메뉴 */
+    .repair-submenu {
+      background: var(--color-bg-white);
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-top: 8px;
+      overflow: hidden;
+      display: none;
+    }
 
-      .menu-btn {
-        width: 140px;
-        padding: 12px 14px;
-        font-size: 13px;
-      }
+    .repair-submenu.active {
+      display: block;
+    }
 
-      .modal {
-        width: 95%;
-        max-height: 90vh;
-      }
+    .submenu-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--color-text-primary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      border-bottom: 1px solid #F0F0F0;
+    }
 
-      .info-table__label {
-        width: 100px;
-        padding: 10px 12px;
-      }
+    .submenu-item:last-child {
+      border-bottom: none;
+    }
+
+    .submenu-item:hover {
+      background: #F5F9FC;
+    }
+
+    .submenu-item.active {
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+    }
+
+    .submenu-item__radio {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #CCC;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .submenu-item.active .submenu-item__radio {
+      border-color: var(--color-primary);
+    }
+
+    .submenu-item__radio-inner {
+      width: 8px;
+      height: 8px;
+      background: var(--color-primary);
+      border-radius: 50%;
+      display: none;
+    }
+
+    .submenu-item.active .submenu-item__radio-inner {
+      display: block;
     }
   </style>
 </head>
 <body>
-  <!-- 지도 배경 -->
-  <div class="map-placeholder"></div>
+  <!-- Google Map -->
+  <div id="map"></div>
 
-  <!-- 점검 이력 지도 마커들 - 설계서 p.7 ③ -->
-  <div class="map-markers" id="mapMarkers">
-    <div class="map-marker" data-id="1" style="top: 35%; left: 45%;" onclick="showInspectionPopup(event, 1)">1</div>
-    <div class="map-marker" data-id="2" style="top: 45%; left: 55%;" onclick="showInspectionPopup(event, 2)">2</div>
-    <div class="map-marker" data-id="3" style="top: 55%; left: 48%;" onclick="showInspectionPopup(event, 3)">3</div>
-    <div class="map-marker" data-id="4" style="top: 40%; left: 60%;" onclick="showInspectionPopup(event, 4)">4</div>
-    <div class="map-marker" data-id="5" style="top: 50%; left: 40%;" onclick="showInspectionPopup(event, 5)">5</div>
-  </div>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <a href="index.html" class="sidebar__logo">전통조경 안전지도 시범서비스</a>
 
-  <!-- 점검 이력 팝업 - 설계서 p.7 ④ -->
-  <div class="inspection-popup" id="inspectionPopup">
-    <div class="inspection-popup__header" id="popupHeader">점검 포인트 1</div>
-    <div class="inspection-popup__body">
-      <div class="inspection-popup__item" onclick="alert('안전 점검 보고서를 표시합니다.')">
-        <span class="inspection-popup__item-icon">📋</span>
-        안전 점검 보고서
-      </div>
-      <div class="inspection-popup__item" onclick="alert('점검 사진을 표시합니다.')">
-        <span class="inspection-popup__item-icon">📷</span>
-        사진
-      </div>
-      <div class="inspection-popup__item" onclick="alert('메타포트로 이동합니다.')">
-        <span class="inspection-popup__item-icon">🔗</span>
-        메타포트
-      </div>
+    <div class="sidebar__menu">
+      <button class="menu-item" onclick="showBasicInfo()">
+        <svg class="menu-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 16v-4"/>
+          <path d="M12 8h.01"/>
+        </svg>
+        기본 정보
+      </button>
+      <button class="menu-item" onclick="showInspectionHistory()">
+        <svg class="menu-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        점검 이력
+      </button>
+      <button class="menu-item" onclick="showDisasterHistory()">
+        <svg class="menu-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+        재해 이력
+      </button>
+      <button class="menu-item" onclick="showRepairHistory()">
+        <svg class="menu-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+        </svg>
+        수리 이력
+      </button>
     </div>
-  </div>
 
-  <!-- 로고 -->
-  <a href="index.html" class="logo">전통조경 안전지도 시범서비스</a>
-
-  <!-- 좌측 메뉴 - 설계서 p.5 기준 4개 버튼 -->
-  <div class="side-menu">
-    <button class="menu-btn" data-modal="basic" id="btnBasic">
-      <svg class="menu-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10"/>
-        <line x1="12" y1="16" x2="12" y2="12"/>
-        <line x1="12" y1="8" x2="12.01" y2="8"/>
-      </svg>
-      기본 정보
-    </button>
-    <button class="menu-btn" data-modal="inspection" id="btnInspection">
-      <svg class="menu-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M9 11l3 3L22 4"/>
-        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-      </svg>
-      점검 이력
-    </button>
-    <button class="menu-btn" data-modal="disaster" id="btnDisaster">
-      <svg class="menu-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-        <line x1="12" y1="9" x2="12" y2="13"/>
-        <line x1="12" y1="17" x2="12.01" y2="17"/>
-      </svg>
-      재해 이력
-    </button>
-    <button class="menu-btn" data-modal="repair" id="btnRepair">
-      <svg class="menu-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
-      </svg>
-      수리 이력
-    </button>
+    <!-- 수리 이력 서브메뉴 -->
+    <div class="repair-submenu" id="repairSubmenu">
+      <button class="submenu-item" onclick="selectRepairFilter('flood')">
+        <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
+        범람 위험 요소
+      </button>
+      <button class="submenu-item" onclick="selectRepairFilter('terrain')">
+        <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
+        인접 지형
+      </button>
+      <button class="submenu-item" onclick="selectRepairFilter('surrounding')">
+        <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
+        주변 영향
+      </button>
+      <button class="submenu-item" onclick="selectRepairFilter('elevation')">
+        <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
+        고저차
+      </button>
+      <button class="submenu-item" onclick="selectRepairFilter('hydraulic')">
+        <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
+        수리 조건
+      </button>
+      <button class="submenu-item" onclick="selectRepairFilter('rainfall')">
+        <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
+        강우 이력
+      </button>
+    </div>
   </div>
 
   <!-- 기본 정보 모달 -->
-  <div class="modal-overlay" id="modalBasic">
+  <div class="modal-overlay" id="basicInfoModal">
     <div class="modal">
       <div class="modal__header">
         <h2 class="modal__title">기본 정보</h2>
-        <button class="modal__close" onclick="closeModal('modalBasic')">&times;</button>
+        <button class="modal__close" onclick="closeModal('basicInfoModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18"/>
+            <path d="M6 6l12 12"/>
+          </svg>
+        </button>
       </div>
       <div class="modal__body">
-        <div class="info-table__section">
-          <div class="info-table__section-title">국가유산 개요</div>
-          <div class="info-table__row">
-            <span class="info-table__label">국가유산명</span>
-            <span class="info-table__value" id="modalSiteName">창덕궁 낙선재 권역</span>
-          </div>
-          <div class="info-table__row">
-            <span class="info-table__label">국가유산유형</span>
-            <span class="info-table__value">사적</span>
-          </div>
-          <div class="info-table__row">
-            <span class="info-table__label">소재지</span>
-            <span class="info-table__value" id="modalLocation">서울특별시 종로구 율곡로 99-0</span>
-          </div>
-          <div class="info-table__row">
-            <span class="info-table__label">소유자/관리자</span>
-            <span class="info-table__value">국가유산청 창덕궁관리소</span>
-          </div>
-        </div>
-
-        <div class="info-table__section">
-          <div class="info-table__section-title">국가유산 관리</div>
-          <div class="info-table__row">
-            <span class="info-table__label">종합정비계획</span>
-            <span class="info-table__value">●</span>
-          </div>
-          <div class="info-table__row">
-            <span class="info-table__label">정기조사</span>
-            <span class="info-table__value">●</span>
-          </div>
-          <div class="info-table__row">
-            <span class="info-table__label">돌봄사업</span>
-            <span class="info-table__value">-</span>
-          </div>
-          <div class="info-table__row">
-            <span class="info-table__label">모니터링</span>
-            <span class="info-table__value">●</span>
-          </div>
-          <div class="info-table__row">
-            <span class="info-table__label">국가유산지킴이</span>
-            <span class="info-table__value">●</span>
-          </div>
-        </div>
-
-        <div class="info-table__section">
-          <div class="info-table__section-title">주변환경</div>
-          <div class="info-table__row">
-            <span class="info-table__label">범람위험요소</span>
-            <span class="info-table__value">
-              <div class="info-table__checkbox-group">
-                <label class="info-table__checkbox"><input type="checkbox"> 강, 하천</label>
-                <label class="info-table__checkbox"><input type="checkbox"> 계곡</label>
-                <label class="info-table__checkbox"><input type="checkbox"> 저수지</label>
-                <label class="info-table__checkbox"><input type="checkbox"> 바다</label>
-                <label class="info-table__checkbox"><input type="checkbox"> 기타</label>
+        <table class="info-table">
+          <tr>
+            <th rowspan="4" class="section-header">국가<br>유산<br>개요</th>
+            <th>국가유산명</th>
+            <td>창덕궁 낙선재 권역</td>
+            <th rowspan="5" class="section-header">국가<br>유산<br>관리</th>
+            <th>종합정비계획</th>
+            <td><span class="check-mark"></span></td>
+          </tr>
+          <tr>
+            <th>국가유산유형</th>
+            <td>사적</td>
+            <th>정기조사</th>
+            <td><span class="check-mark"></span></td>
+          </tr>
+          <tr>
+            <th>소재지</th>
+            <td>서울특별시 종로구 율곡로 99-0</td>
+            <th>돌봄사업</th>
+            <td>-</td>
+          </tr>
+          <tr>
+            <th>소유자/관리자</th>
+            <td>국가유산청 창덕궁관리소</td>
+            <th>모니터링</th>
+            <td><span class="check-mark"></span></td>
+          </tr>
+          <tr>
+            <th rowspan="6" class="section-header">주변<br>환경</th>
+            <th>범람위험요소</th>
+            <td colspan="2">
+              <div class="checkbox-group">
+                <label class="checkbox-item"><input type="checkbox" checked disabled> 강, 하천</label>
+                <label class="checkbox-item"><input type="checkbox" disabled> 계곡</label>
+                <label class="checkbox-item"><input type="checkbox" disabled> 저수지</label>
+                <label class="checkbox-item"><input type="checkbox" disabled> 바다</label>
+                <label class="checkbox-item"><input type="checkbox" disabled> 기타</label>
               </div>
-            </span>
-          </div>
-          <div class="info-table__row">
-            <span class="info-table__label">인접지형</span>
-            <span class="info-table__value">
-              <div class="info-table__checkbox-group">
-                <label class="info-table__checkbox"><input type="checkbox"> 경사</label>
-                <label class="info-table__checkbox"><input type="checkbox" checked> 옹벽</label>
-                <label class="info-table__checkbox"><input type="checkbox" checked> 전도위험</label>
-                <label class="info-table__checkbox"><input type="checkbox"> 절개지</label>
-                <label class="info-table__checkbox"><input type="checkbox"> 기타</label>
+            </td>
+            <th>국가유산지킴이</th>
+            <td><span class="check-mark"></span></td>
+          </tr>
+          <tr>
+            <th>인접지형</th>
+            <td colspan="4">
+              <div class="checkbox-group">
+                <label class="checkbox-item"><input type="checkbox" checked disabled> 경사</label>
+                <label class="checkbox-item"><input type="checkbox" disabled> 옹벽</label>
+                <label class="checkbox-item"><input type="checkbox" checked disabled> 전도위험</label>
+                <label class="checkbox-item"><input type="checkbox" disabled> 절개지</label>
+                <label class="checkbox-item"><input type="checkbox" disabled> 기타</label>
               </div>
-            </span>
-          </div>
-          <div class="info-table__row">
-            <span class="info-table__label">주변 영향</span>
-            <span class="info-table__value">
-              <div class="info-table__checkbox-group">
-                <label class="info-table__checkbox"><input type="checkbox"> 습해</label>
-                <label class="info-table__checkbox"><input type="checkbox"> 공해</label>
-                <label class="info-table__checkbox"><input type="checkbox"> 염해</label>
-                <label class="info-table__checkbox"><input type="checkbox"> 진동</label>
-                <label class="info-table__checkbox"><input type="checkbox"> 기타</label>
+            </td>
+          </tr>
+          <tr>
+            <th>주변 영향</th>
+            <td colspan="4">
+              <div class="checkbox-group">
+                <label class="checkbox-item"><input type="checkbox" disabled> 습해</label>
+                <label class="checkbox-item"><input type="checkbox" disabled> 공해</label>
+                <label class="checkbox-item"><input type="checkbox" disabled> 염해</label>
+                <label class="checkbox-item"><input type="checkbox" disabled> 진동</label>
+                <label class="checkbox-item"><input type="checkbox" disabled> 기타</label>
               </div>
-            </span>
-          </div>
-          <div class="info-table__row">
-            <span class="info-table__label">고저차</span>
-            <span class="info-table__value">
-              <div class="info-table__checkbox-group">
-                <label class="info-table__checkbox"><input type="checkbox" checked> 낮음</label>
-                <label class="info-table__checkbox"><input type="checkbox"> 높음</label>
+            </td>
+          </tr>
+          <tr>
+            <th>고저차</th>
+            <td colspan="4">
+              당해 국가유산이 주변지형에 비해 &nbsp;
+              <label class="checkbox-item"><input type="checkbox" checked disabled> 낮음</label>
+              <label class="checkbox-item"><input type="checkbox" disabled> 높음</label>
+            </td>
+          </tr>
+          <tr>
+            <th>수리조건</th>
+            <td colspan="4">
+              <div class="checkbox-group">
+                <label class="checkbox-item"><input type="checkbox" checked disabled> dry</label>
+                <label class="checkbox-item"><input type="checkbox" disabled> damp</label>
+                <label class="checkbox-item"><input type="checkbox" disabled> wet</label>
+                <label class="checkbox-item"><input type="checkbox" disabled> dripping</label>
+                <label class="checkbox-item"><input type="checkbox" disabled> flowing</label>
               </div>
-            </span>
-          </div>
-          <div class="info-table__row">
-            <span class="info-table__label">수리조건</span>
-            <span class="info-table__value">
-              <div class="info-table__checkbox-group">
-                <label class="info-table__checkbox"><input type="checkbox" checked> dry</label>
-                <label class="info-table__checkbox"><input type="checkbox"> damp</label>
-                <label class="info-table__checkbox"><input type="checkbox"> wet</label>
-                <label class="info-table__checkbox"><input type="checkbox"> dripping</label>
-                <label class="info-table__checkbox"><input type="checkbox"> flowing</label>
-              </div>
-            </span>
-          </div>
-          <div class="info-table__row">
-            <span class="info-table__label">강우이력</span>
-            <span class="info-table__value">해당 지역 최근 10개년 최대 일강우강도 누년 평균값과 최근 2개년 최대 강우량</span>
-          </div>
-        </div>
+            </td>
+          </tr>
+          <tr>
+            <th>강우이력</th>
+            <td colspan="4">해당 지역 최근 10개년 최대 일강우강도 누년 평균값과 최근 2개년 최대 강우량</td>
+          </tr>
+        </table>
       </div>
     </div>
   </div>
 
-  <!-- 점검 이력 모달 -->
-  <div class="modal-overlay" id="modalInspection">
-    <div class="modal">
-      <div class="modal__header">
-        <h2 class="modal__title">점검 이력</h2>
-        <button class="modal__close" onclick="closeModal('modalInspection')">&times;</button>
+  <!-- 재해 이력 오버레이 -->
+  <div class="history-overlay" id="disasterOverlay">
+    <div class="filter-bar">
+      <select class="filter-select">
+        <option>전통조경요소</option>
+        <option>석축</option>
+        <option>옹벽</option>
+        <option>담장</option>
+        <option>수목</option>
+      </select>
+      <select class="filter-select">
+        <option>재해</option>
+        <option>호우</option>
+        <option>강풍</option>
+        <option>태풍</option>
+      </select>
+      <select class="filter-select">
+        <option>연도</option>
+        <option>2023</option>
+        <option>2022</option>
+        <option>2021</option>
+        <option>2020</option>
+      </select>
+    </div>
+    <div class="warning-banner">
+      ※ 본 지도의 조사 영역과 결과는 실제 조사 결과가 아닌 이해를 돕기 위한 예시 이미지 입니다
+    </div>
+    <div class="legend" id="disasterLegend">
+      <div class="legend__header">
+        재해 이력 범례
+        <svg class="legend__toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 15l-6-6-6 6"/>
+        </svg>
       </div>
-      <div class="modal__body">
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">지도에서 점검 이력 포인트를 선택하거나 아래 항목을 클릭하세요.</p>
-        <div class="inspection-list">
-          <div class="inspection-item" onclick="alert('안전 점검 보고서를 표시합니다.')">
-            <div class="inspection-item__icon inspection-item__icon--report">📋</div>
-            <div class="inspection-item__content">
-              <div class="inspection-item__title">안전 점검 보고서</div>
-              <div class="inspection-item__desc">2024-11-20 정기점검 보고서</div>
-            </div>
-            <div class="inspection-item__arrow">→</div>
-          </div>
-          <div class="inspection-item" onclick="alert('점검 사진을 표시합니다.')">
-            <div class="inspection-item__icon inspection-item__icon--photo">📷</div>
-            <div class="inspection-item__content">
-              <div class="inspection-item__title">사진</div>
-              <div class="inspection-item__desc">사진기록, 지점별 사진</div>
-            </div>
-            <div class="inspection-item__arrow">→</div>
-          </div>
-          <div class="inspection-item" onclick="alert('메타포트 링크로 이동합니다.')">
-            <div class="inspection-item__icon inspection-item__icon--matterport">🔗</div>
-            <div class="inspection-item__content">
-              <div class="inspection-item__title">메타포트</div>
-              <div class="inspection-item__desc">3D 스캔 뷰어로 이동</div>
-            </div>
-            <div class="inspection-item__arrow">→</div>
-          </div>
-        </div>
+      <div class="legend__item">
+        <span class="legend__color legend__color--disaster-high"></span>
+        10회 이상 발생
+      </div>
+      <div class="legend__item">
+        <span class="legend__color legend__color--disaster-mid"></span>
+        5회 이상 발생
+      </div>
+      <div class="legend__item">
+        <span class="legend__color legend__color--disaster-low"></span>
+        1회 이상 발생
       </div>
     </div>
   </div>
 
-  <!-- 재해 이력 모달 -->
-  <div class="modal-overlay" id="modalDisaster">
-    <div class="modal">
-      <div class="modal__header">
-        <h2 class="modal__title">재해 이력</h2>
-        <button class="modal__close" onclick="closeModal('modalDisaster')">&times;</button>
+  <!-- 수리 이력 오버레이 -->
+  <div class="history-overlay" id="repairOverlay">
+    <div class="warning-banner">
+      ※ 본 지도의 조사 영역과 결과는 실제 조사 결과가 아닌 이해를 돕기 위한 예시 이미지 입니다
+    </div>
+    <div class="legend" id="repairLegend">
+      <div class="legend__header">
+        수리 이력 범례
+        <svg class="legend__toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 15l-6-6-6 6"/>
+        </svg>
       </div>
-      <div class="modal__body">
-        <div class="history-image">
-          <div class="history-image__placeholder">
-            재해 이력 이미지가 표시됩니다.<br><br>
-            (이미지만 표출)
-          </div>
-        </div>
+      <div class="legend__item">
+        <span class="legend__color legend__color--repair-high"></span>
+        10회 이상
+      </div>
+      <div class="legend__item">
+        <span class="legend__color legend__color--repair-mid"></span>
+        5회 이상
+      </div>
+      <div class="legend__item">
+        <span class="legend__color legend__color--repair-low"></span>
+        1회 이상
       </div>
     </div>
   </div>
 
-  <!-- 수리 이력 모달 -->
-  <div class="modal-overlay" id="modalRepair">
-    <div class="modal">
-      <div class="modal__header">
-        <h2 class="modal__title">수리 이력</h2>
-        <button class="modal__close" onclick="closeModal('modalRepair')">&times;</button>
-      </div>
-      <div class="modal__body">
-        <div class="history-image">
-          <div class="history-image__placeholder">
-            수리 이력 이미지가 표시됩니다.<br><br>
-            (이미지만 표출)
-          </div>
-        </div>
-      </div>
-    </div>
+  <!-- 점검 이력 팝업 -->
+  <div class="inspection-popup" id="inspectionPopup">
+    <div class="popup-item" onclick="showReport()">안전 점검 보고서</div>
+    <div class="popup-item" onclick="showPhotos()">사진</div>
+    <div class="popup-item" onclick="openMetafort()">메타포트</div>
   </div>
+
+  <!-- Config -->
+  <script src="config.js"></script>
+
+  <!-- 데이터 로더 및 GIS 렌더러 -->
+  <script src="js/data-loader.js"></script>
+  <script src="js/gis-renderer.js"></script>
 
   <script>
-    // URL 파라미터
-    const urlParams = new URLSearchParams(window.location.search);
-    const siteId = urlParams.get('site') || '1';
+    let map;
+    let mainMarker;
+    let inspectionMarkers = [];
+    let polygons = [];
+    let currentMode = null;
+    let inspectionsData = [];
 
-    // 대상지 데이터
-    const sites = {
-      1: {
-        name: '주합루',
-        location: '서울 종로구 와룡동 2-71 (창덕궁 후원)',
-        lat: 37.5829,
-        lng: 126.9917
-      },
-      2: {
-        name: '연경당',
-        location: '서울 종로구 와룡동 2-71 (창덕궁 후원)',
-        lat: 37.5825,
-        lng: 126.9932
-      },
-      3: {
-        name: '낙선재',
-        location: '서울 종로구 와룡동 2-71 (창덕궁)',
-        lat: 37.5795,
-        lng: 126.9920
-      },
-      4: {
-        name: '부용정',
-        location: '서울 종로구 와룡동 2-71 (창덕궁 후원)',
-        lat: 37.5831,
-        lng: 126.9915
-      },
-      5: {
-        name: '존덕정',
-        location: '서울 종로구 와룡동 2-71 (창덕궁 후원)',
-        lat: 37.5838,
-        lng: 126.9925
-      }
-    };
+    // 대상지 좌표 (창덕궁 낙선재)
+    const siteInfo = DataLoader.getSiteInfo();
+    const siteLocation = siteInfo.center;
 
-    const site = sites[siteId] || sites[1];
+    // 재해 이력 폴리곤 데이터 - 매우 작은 크기, 좁은 범위 (중심: 37.5795, 126.9910)
+    const disasterPolygons = [
+      // 고위험 (빨강) - 4개
+      { paths: [
+        { lat: 37.57962, lng: 126.99065 }, { lat: 37.57968, lng: 126.99072 },
+        { lat: 37.57963, lng: 126.99078 }, { lat: 37.57957, lng: 126.99070 }
+      ], color: '#E53935', level: 'high' },
+      { paths: [
+        { lat: 37.57985, lng: 126.99120 }, { lat: 37.57990, lng: 126.99125 }, { lat: 37.57992, lng: 126.99132 },
+        { lat: 37.57986, lng: 126.99135 }, { lat: 37.57982, lng: 126.99128 }
+      ], color: '#E53935', level: 'high' },
+      { paths: [
+        { lat: 37.57925, lng: 126.99085 }, { lat: 37.57932, lng: 126.99088 },
+        { lat: 37.57930, lng: 126.99095 }, { lat: 37.57923, lng: 126.99092 }
+      ], color: '#E53935', level: 'high' },
+      { paths: [
+        { lat: 37.57970, lng: 126.99145 }, { lat: 37.57976, lng: 126.99148 }, { lat: 37.57978, lng: 126.99154 },
+        { lat: 37.57972, lng: 126.99156 }, { lat: 37.57968, lng: 126.99150 }
+      ], color: '#E53935', level: 'high' },
+      // 중위험 (주황) - 4개
+      { paths: [
+        { lat: 37.57945, lng: 126.99105 }, { lat: 37.57952, lng: 126.99108 },
+        { lat: 37.57950, lng: 126.99115 }, { lat: 37.57943, lng: 126.99112 }
+      ], color: '#FB8C00', level: 'mid' },
+      { paths: [
+        { lat: 37.57998, lng: 126.99095 }, { lat: 37.58003, lng: 126.99100 }, { lat: 37.58000, lng: 126.99107 },
+        { lat: 37.57995, lng: 126.99102 }
+      ], color: '#FB8C00', level: 'mid' },
+      { paths: [
+        { lat: 37.57938, lng: 126.99135 }, { lat: 37.57944, lng: 126.99138 }, { lat: 37.57946, lng: 126.99145 },
+        { lat: 37.57940, lng: 126.99147 }, { lat: 37.57936, lng: 126.99140 }
+      ], color: '#FB8C00', level: 'mid' },
+      { paths: [
+        { lat: 37.57978, lng: 126.99078 }, { lat: 37.57984, lng: 126.99082 },
+        { lat: 37.57982, lng: 126.99088 }, { lat: 37.57976, lng: 126.99085 }
+      ], color: '#FB8C00', level: 'mid' },
+      // 저위험 (노랑) - 4개
+      { paths: [
+        { lat: 37.57955, lng: 126.99125 }, { lat: 37.57960, lng: 126.99128 },
+        { lat: 37.57958, lng: 126.99134 }, { lat: 37.57953, lng: 126.99131 }
+      ], color: '#FFD54F', level: 'low' },
+      { paths: [
+        { lat: 37.57990, lng: 126.99060 }, { lat: 37.57995, lng: 126.99063 }, { lat: 37.57993, lng: 126.99070 },
+        { lat: 37.57988, lng: 126.99067 }
+      ], color: '#FFD54F', level: 'low' },
+      { paths: [
+        { lat: 37.57918, lng: 126.99115 }, { lat: 37.57924, lng: 126.99118 }, { lat: 37.57926, lng: 126.99124 },
+        { lat: 37.57920, lng: 126.99126 }, { lat: 37.57916, lng: 126.99120 }
+      ], color: '#FFD54F', level: 'low' },
+      { paths: [
+        { lat: 37.57968, lng: 126.99098 }, { lat: 37.57973, lng: 126.99102 },
+        { lat: 37.57970, lng: 126.99108 }, { lat: 37.57965, lng: 126.99104 }
+      ], color: '#FFD54F', level: 'low' }
+    ];
 
-    // 모달 내 정보 업데이트
-    document.getElementById('modalSiteName').textContent = '창덕궁 ' + site.name + ' 권역';
-    document.getElementById('modalLocation').textContent = site.location;
+    // 수리 이력 폴리곤 데이터 - 매우 작은 크기, 좁은 범위 (중심: 37.5795, 126.9910)
+    const repairPolygons = [
+      // 수리 필요 높음 (보라) - 4개
+      { paths: [
+        { lat: 37.57942, lng: 126.99075 }, { lat: 37.57948, lng: 126.99080 },
+        { lat: 37.57945, lng: 126.99087 }, { lat: 37.57939, lng: 126.99082 }
+      ], color: '#8E24AA', level: 'high' },
+      { paths: [
+        { lat: 37.57975, lng: 126.99110 }, { lat: 37.57980, lng: 126.99115 }, { lat: 37.57982, lng: 126.99122 },
+        { lat: 37.57976, lng: 126.99124 }, { lat: 37.57972, lng: 126.99117 }
+      ], color: '#8E24AA', level: 'high' },
+      { paths: [
+        { lat: 37.57995, lng: 126.99082 }, { lat: 37.58000, lng: 126.99085 },
+        { lat: 37.57998, lng: 126.99092 }, { lat: 37.57993, lng: 126.99089 }
+      ], color: '#8E24AA', level: 'high' },
+      { paths: [
+        { lat: 37.57932, lng: 126.99140 }, { lat: 37.57938, lng: 126.99143 }, { lat: 37.57940, lng: 126.99150 },
+        { lat: 37.57934, lng: 126.99152 }, { lat: 37.57930, lng: 126.99145 }
+      ], color: '#8E24AA', level: 'high' },
+      // 수리 필요 중간 (연보라) - 4개
+      { paths: [
+        { lat: 37.57958, lng: 126.99092 }, { lat: 37.57964, lng: 126.99095 },
+        { lat: 37.57962, lng: 126.99102 }, { lat: 37.57956, lng: 126.99099 }
+      ], color: '#AB47BC', level: 'mid' },
+      { paths: [
+        { lat: 37.57988, lng: 126.99135 }, { lat: 37.57993, lng: 126.99138 }, { lat: 37.57990, lng: 126.99145 },
+        { lat: 37.57985, lng: 126.99142 }
+      ], color: '#AB47BC', level: 'mid' },
+      { paths: [
+        { lat: 37.57922, lng: 126.99102 }, { lat: 37.57928, lng: 126.99105 }, { lat: 37.57930, lng: 126.99112 },
+        { lat: 37.57924, lng: 126.99114 }, { lat: 37.57920, lng: 126.99107 }
+      ], color: '#AB47BC', level: 'mid' },
+      { paths: [
+        { lat: 37.57965, lng: 126.99058 }, { lat: 37.57970, lng: 126.99062 },
+        { lat: 37.57968, lng: 126.99068 }, { lat: 37.57963, lng: 126.99065 }
+      ], color: '#AB47BC', level: 'mid' },
+      // 수리 필요 낮음 (연한 보라) - 4개
+      { paths: [
+        { lat: 37.57948, lng: 126.99118 }, { lat: 37.57953, lng: 126.99122 },
+        { lat: 37.57950, lng: 126.99128 }, { lat: 37.57945, lng: 126.99125 }
+      ], color: '#CE93D8', level: 'low' },
+      { paths: [
+        { lat: 37.57982, lng: 126.99068 }, { lat: 37.57987, lng: 126.99072 }, { lat: 37.57985, lng: 126.99078 },
+        { lat: 37.57980, lng: 126.99075 }
+      ], color: '#CE93D8', level: 'low' },
+      { paths: [
+        { lat: 37.57935, lng: 126.99125 }, { lat: 37.57940, lng: 126.99128 }, { lat: 37.57942, lng: 126.99135 },
+        { lat: 37.57936, lng: 126.99137 }, { lat: 37.57933, lng: 126.99130 }
+      ], color: '#CE93D8', level: 'low' },
+      { paths: [
+        { lat: 37.58002, lng: 126.99115 }, { lat: 37.58007, lng: 126.99118 }, { lat: 37.58005, lng: 126.99125 },
+        { lat: 37.58000, lng: 126.99122 }
+      ], color: '#CE93D8', level: 'low' }
+    ];
 
-    // 메뉴 버튼 클릭 이벤트
-    document.querySelectorAll('.menu-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const modalId = this.dataset.modal;
-
-        // 점검 이력 버튼 클릭 시 지도에 마커 표시 (설계서 p.7)
-        if (modalId === 'inspection') {
-          toggleMapMarkers(true);
-          // 모달 대신 마커만 표시
-          document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('menu-btn--active'));
-          this.classList.add('menu-btn--active');
-          return;
-        } else {
-          toggleMapMarkers(false);
-          hideInspectionPopup();
-        }
-
-        openModal('modal' + modalId.charAt(0).toUpperCase() + modalId.slice(1));
-
-        // 활성화 상태 토글
-        document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('menu-btn--active'));
-        this.classList.add('menu-btn--active');
+    // Google Maps 초기화
+    async function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: siteLocation,
+        zoom: siteInfo.zoom,
+        mapTypeId: 'satellite',
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
       });
-    });
 
-    // 점검 이력 마커 표시/숨김 (설계서 p.7 ②)
-    function toggleMapMarkers(show) {
-      const markers = document.getElementById('mapMarkers');
-      if (show) {
-        markers.classList.add('map-markers--active');
+      // GIS 렌더러 초기화
+      GISRenderer.init(map);
+
+      // 점검표 데이터 로드
+      inspectionsData = await DataLoader.loadAllInspections();
+      console.log(`점검표 ${inspectionsData.length}개 로드 완료`);
+
+      // GIS 레이어 로드 (배경)
+      const gisData = await DataLoader.loadAllGIS();
+      await GISRenderer.renderAllLayers(gisData);
+      console.log('GIS 레이어 로드 완료');
+    }
+
+    // 메뉴 활성화 상태 업데이트
+    function setActiveMenu(index) {
+      const menuItems = document.querySelectorAll('.menu-item');
+      menuItems.forEach((item, i) => {
+        item.classList.toggle('active', i === index);
+      });
+    }
+
+    // 모든 오버레이 숨기기
+    function hideAllOverlays() {
+      document.getElementById('disasterOverlay').classList.remove('active');
+      document.getElementById('repairOverlay').classList.remove('active');
+      document.getElementById('repairSubmenu').classList.remove('active');
+      clearPolygons();
+      clearInspectionMarkers();
+      currentMode = null;
+    }
+
+    // 기본 정보 표시
+    function showBasicInfo() {
+      hideAllOverlays();
+      setActiveMenu(0);
+      document.getElementById('basicInfoModal').classList.add('active');
+    }
+
+    // 점검 이력 표시
+    function showInspectionHistory() {
+      hideAllOverlays();
+      setActiveMenu(1);
+      currentMode = 'inspection';
+
+      // 실제 점검표 데이터로 마커 생성
+      if (inspectionsData && inspectionsData.length > 0) {
+        GISRenderer.addAllInspectionMarkers(inspectionsData, (inspection) => {
+          // 클릭 시 inspection-confirm.html로 이동
+          window.location.href = `inspection-confirm.html?id=${inspection.id}`;
+        });
       } else {
-        markers.classList.remove('map-markers--active');
+        console.warn('점검표 데이터가 없습니다.');
       }
     }
 
-    // 점검 이력 팝업 표시 (설계서 p.7 ④)
-    function showInspectionPopup(event, pointId) {
-      event.stopPropagation();
+    // 점검 이력 팝업 표시
+    function showInspectionPopup(x, y, point) {
       const popup = document.getElementById('inspectionPopup');
-      const header = document.getElementById('popupHeader');
-
-      // 팝업 헤더 업데이트
-      header.textContent = '점검 포인트 ' + pointId;
-
-      // 마커 활성화 상태
-      document.querySelectorAll('.map-marker').forEach(m => m.classList.remove('map-marker--active'));
-      event.target.classList.add('map-marker--active');
-
-      // 팝업 위치 설정
-      const rect = event.target.getBoundingClientRect();
-      popup.style.left = (rect.right + 10) + 'px';
-      popup.style.top = rect.top + 'px';
-
-      popup.classList.add('inspection-popup--active');
+      popup.style.left = x + 'px';
+      popup.style.top = y + 'px';
+      popup.classList.add('active');
+      popup.dataset.pointId = point.id;
     }
 
-    // 점검 이력 팝업 숨김
-    function hideInspectionPopup() {
-      const popup = document.getElementById('inspectionPopup');
-      popup.classList.remove('inspection-popup--active');
-      document.querySelectorAll('.map-marker').forEach(m => m.classList.remove('map-marker--active'));
+    // 점검 이력 마커 제거
+    function clearInspectionMarkers() {
+      GISRenderer.clearMarkers();
+      document.getElementById('inspectionPopup').classList.remove('active');
     }
 
-    // 지도 클릭 시 팝업 닫기
-    document.querySelector('.map-placeholder').addEventListener('click', function() {
-      hideInspectionPopup();
-    });
+    // 재해 이력 표시
+    function showDisasterHistory() {
+      hideAllOverlays();
+      setActiveMenu(2);
+      currentMode = 'disaster';
+      document.getElementById('disasterOverlay').classList.add('active');
 
-    // 모달 열기
-    function openModal(modalId) {
-      document.getElementById(modalId).classList.add('modal-overlay--active');
+      // 폴리곤 생성
+      disasterPolygons.forEach(data => {
+        const polygon = new google.maps.Polygon({
+          paths: data.paths,
+          strokeColor: data.color,
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: data.color,
+          fillOpacity: 0.5,
+          map: map
+        });
+        polygons.push(polygon);
+      });
+    }
+
+    // 수리 이력 표시
+    function showRepairHistory() {
+      hideAllOverlays();
+      setActiveMenu(3);
+      currentMode = 'repair';
+      document.getElementById('repairOverlay').classList.add('active');
+      document.getElementById('repairSubmenu').classList.add('active');
+
+      // 폴리곤 생성
+      repairPolygons.forEach(data => {
+        const polygon = new google.maps.Polygon({
+          paths: data.paths,
+          strokeColor: data.color,
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: data.color,
+          fillOpacity: 0.5,
+          map: map
+        });
+        polygons.push(polygon);
+      });
+    }
+
+    // 수리 이력 서브메뉴 필터 선택
+    function selectRepairFilter(filterType) {
+      // 모든 서브메뉴 아이템 비활성화
+      document.querySelectorAll('.submenu-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      // 클릭한 아이템 활성화
+      event.currentTarget.classList.add('active');
+
+      // 필터 타입에 따른 동작 (추후 데이터 연동 시 구현)
+      console.log('선택된 필터:', filterType);
+    }
+
+    // 폴리곤 제거
+    function clearPolygons() {
+      polygons.forEach(polygon => polygon.setMap(null));
+      polygons = [];
     }
 
     // 모달 닫기
     function closeModal(modalId) {
-      document.getElementById(modalId).classList.remove('modal-overlay--active');
-      document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('menu-btn--active'));
+      document.getElementById(modalId).classList.remove('active');
+      setActiveMenu(-1);
     }
 
-    // 오버레이 클릭으로 모달 닫기
+    // 보고서 표시
+    function showReport() {
+      alert('안전 점검 보고서를 표시합니다.');
+      document.getElementById('inspectionPopup').classList.remove('active');
+    }
+
+    // 사진 표시
+    function showPhotos() {
+      alert('점검 사진을 표시합니다.');
+      document.getElementById('inspectionPopup').classList.remove('active');
+    }
+
+    // 메타포트 열기
+    function openMetafort() {
+      alert('메타포트 링크로 이동합니다.');
+      document.getElementById('inspectionPopup').classList.remove('active');
+    }
+
+    // 클릭 시 팝업 닫기
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.inspection-popup') && !e.target.closest('.gm-style')) {
+        document.getElementById('inspectionPopup').classList.remove('active');
+      }
+    });
+
+    // 모달 외부 클릭 시 닫기
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
-      overlay.addEventListener('click', function(e) {
-        if (e.target === this) {
-          this.classList.remove('modal-overlay--active');
-          document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('menu-btn--active'));
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          overlay.classList.remove('active');
+          setActiveMenu(-1);
         }
       });
     });
+  </script>
 
-    // ESC 키로 모달 닫기
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        document.querySelectorAll('.modal-overlay').forEach(overlay => {
-          overlay.classList.remove('modal-overlay--active');
-        });
-        document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('menu-btn--active'));
-      }
-    });
+  <!-- Google Maps API -->
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA38pzCsLGAwnkQMIoKiWPqTw_a1XJE5W0&callback=initMap">
   </script>
 </body>
 </html>

@@ -1,0 +1,35 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "Code": "pt2",
+        "Treee": "ì†Œë‚˜ë¬´",
+        "ì¢…í•©íŒ": "ì£¼ì˜(ì •ë°€ì§„ë‹¨)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.99305014254571,
+          37.57897126815568
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Code": "pt3",
+        "Treee": "ì†Œë‚˜ë¬´",
+        "ì¢…í•©íŒ": "ì£¼ì˜(ì •ë°€ì§„ë‹¨)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.9930962248,
+          37.578955941599844
+        ]
+      }
+    }
+  ]
+}

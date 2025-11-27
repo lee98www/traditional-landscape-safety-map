@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>안전 점검 실시 - 확인하기 | 전통조경 안전지도 시범서비스</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <style>
+    /* 확인 페이지 - 디자인 시안 기준 */
+    .confirm-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: #EBF3FF;
+    }
+
+    /* Header - 디자인 시안 기준 */
+    .header {
+      position: relative;
+      background-color: #FFFFFF;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+
+    .header__logo {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 20px;
+      background-color: #E8F4FD;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333333;
+      text-decoration: none;
+    }
+
+    .header__title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 18px;
+      font-weight: 600;
+      color: #333333;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 120px;
+    }
+
+    /* Report Preview - 디자인 시안: 파란색 테두리(좌측/상단 강조) */
+    .report-preview {
+      width: 100%;
+      max-width: 800px;
+      background-color: #FFFFFF;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      border: 2px solid #4A90E2;
+      border-left-width: 4px;
+      border-top-width: 4px;
+    }
+
+    .report-header {
+      background-color: #0052CC;
+      color: #FFFFFF;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .report-header__title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .report-header__subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .report-body {
+      padding: 32px;
+    }
+
+    .report-section {
+      margin-bottom: 24px;
+    }
+
+    .report-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .report-section__title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #0052CC;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #E0E0E0;
+    }
+
+    .report-info {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 8px 16px;
+    }
+
+    .report-info__label {
+      font-size: 13px;
+      color: #666666;
+    }
+
+    .report-info__value {
+      font-size: 13px;
+      color: #333333;
+      font-weight: 500;
+    }
+
+    .report-summary {
+      background-color: #F5F5F5;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .report-summary__item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .report-summary__item:last-child {
+      margin-bottom: 0;
+    }
+
+    .report-summary__label {
+      font-size: 13px;
+      color: #666666;
+    }
+
+    .report-summary__value {
+      font-size: 13px;
+      color: #333333;
+      font-weight: 600;
+    }
+
+    .report-summary__value--warning {
+      color: #FFC107;
+    }
+
+    .report-summary__value--danger {
+      color: #DC3545;
+    }
+
+    /* Buttons - 디자인 시안 기준 */
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 160px;
+      height: 48px;
+      padding: 0 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit {
+      background-color: #0052CC;
+      color: #FFFFFF;
+      border: none;
+    }
+
+    .btn-submit:hover {
+      background-color: #003D99;
+    }
+
+    .btn-download {
+      background-color: #FFFFFF;
+      color: #0052CC;
+      border: 2px solid #0052CC;
+    }
+
+    .btn-download:hover {
+      background-color: #E8F4FD;
+    }
+
+    /* Navigation Buttons - 디자인 시안 기준 */
+    .nav-buttons {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background-color: #EBF3FF;
+      z-index: 100;
+    }
+
+    .btn-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-prev {
+      background-color: #FFFFFF;
+      color: #0052CC;
+      border: 2px solid #0052CC;
+    }
+
+    .btn-prev:hover {
+      background-color: #E8F4FD;
+    }
+
+    .btn-nav svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Modal - 디자인 시안 기준 */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background-color: #FFFFFF;
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal__icon {
+      width: 64px;
+      height: 64px;
+      background-color: #4CAF50;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+
+    .modal__icon svg {
+      width: 32px;
+      height: 32px;
+      color: #FFFFFF;
+    }
+
+    .modal__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #333333;
+      margin-bottom: 12px;
+    }
+
+    .modal__message {
+      font-size: 14px;
+      color: #666666;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .modal__buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .btn-modal {
+      min-width: 120px;
+      height: 44px;
+      padding: 0 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-modal--primary {
+      background-color: #0052CC;
+      color: #FFFFFF;
+      border: none;
+    }
+
+    .btn-modal--primary:hover {
+      background-color: #003D99;
+    }
+
+    .btn-modal--secondary {
+      background-color: #FFFFFF;
+      color: #333333;
+      border: 1px solid #D0D0D0;
+    }
+
+    .btn-modal--secondary:hover {
+      background-color: #F5F5F5;
+    }
+
+    /* Footer - 디자인 시안 기준 */
+    .footer {
+      background-color: #1A1A1A;
+      color: #FFFFFF;
+      padding: 24px 40px;
+    }
+
+    .footer__content {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .footer__links {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 12px;
+    }
+
+    .footer__link {
+      color: #CCCCCC;
+      text-decoration: none;
+    }
+
+    .footer__separator {
+      color: #666666;
+    }
+
+    .footer__info {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .footer__info-item {
+      color: #999999;
+      font-size: 11px;
+    }
+
+    .footer__copyright {
+      color: #666666;
+      font-size: 11px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .report-info {
+        grid-template-columns: 100px 1fr;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .btn-action {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body class="confirm-page">
+  <!-- Header -->
+  <header class="header">
+    <a href="index.html" class="header__logo">전통조경 안전지도 시범서비스</a>
+    <h1 class="header__title">안전 점검 실시</h1>
+    <div style="width: 180px;"></div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="report-preview">
+      <div class="report-header">
+        <h2 class="report-header__title">안전 점검 보고서</h2>
+        <p class="report-header__subtitle">전통조경 안전지도 시범서비스</p>
+      </div>
+
+      <div class="report-body">
+        <!-- 기본 정보 -->
+        <div class="report-section">
+          <h3 class="report-section__title">기본 정보</h3>
+          <div class="report-info">
+            <span class="report-info__label">점검 유형</span>
+            <span class="report-info__value" id="inspectionTypeDisplay">정기점검</span>
+
+            <span class="report-info__label">대상지</span>
+            <span class="report-info__value" id="siteDisplay">창덕궁 낙선재 권역</span>
+
+            <span class="report-info__label">점검 대상</span>
+            <span class="report-info__value" id="targetDisplay">석축 및 옹벽</span>
+
+            <span class="report-info__label">점검일</span>
+            <span class="report-info__value" id="dateDisplay">2025.11.27</span>
+
+            <span class="report-info__label">점검자</span>
+            <span class="report-info__value">홍길동 (국가유산청)</span>
+          </div>
+        </div>
+
+        <!-- 점검 결과 요약 -->
+        <div class="report-section">
+          <h3 class="report-section__title">점검 결과 요약</h3>
+          <div class="report-summary">
+            <div class="report-summary__item">
+              <span class="report-summary__label">균열</span>
+              <span class="report-summary__value report-summary__value--warning">관심 (경미)</span>
+            </div>
+            <div class="report-summary__item">
+              <span class="report-summary__label">파손·탈락</span>
+              <span class="report-summary__value report-summary__value--warning">관심 (경미)</span>
+            </div>
+            <div class="report-summary__item">
+              <span class="report-summary__label">열화</span>
+              <span class="report-summary__value report-summary__value--danger">주의 (심각-국부)</span>
+            </div>
+            <div class="report-summary__item">
+              <span class="report-summary__label">누수흔</span>
+              <span class="report-summary__value report-summary__value--danger">위험 (있음)</span>
+            </div>
+            <div class="report-summary__item">
+              <span class="report-summary__label">채움재 유실</span>
+              <span class="report-summary__value report-summary__value--danger">위험 (있음)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 예상피해유형 -->
+        <div class="report-section">
+          <h3 class="report-section__title">예상피해유형</h3>
+          <div class="report-info">
+            <span class="report-info__label">선택 항목</span>
+            <span class="report-info__value">붕괴, 세굴</span>
+          </div>
+        </div>
+
+        <!-- 조사자 의견 -->
+        <div class="report-section">
+          <h3 class="report-section__title">조사자 의견</h3>
+          <p style="font-size: var(--font-size-sm); color: var(--color-text-primary); line-height: 1.6;">
+            석축 전면부 일부 구간에서 균열 및 열화가 관찰되었으며, 누수흔과 채움재 유실이 확인되어 지속적인 모니터링이 필요합니다. 특히 우기 시 세굴 피해가 우려되므로 배수시설 점검 및 보수가 권장됩니다.
+          </p>
+        </div>
+
+        <!-- 액션 버튼 -->
+        <div class="action-buttons">
+          <button type="button" class="btn-action btn-submit" onclick="submitReport()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 2L11 13"/>
+              <path d="M22 2l-7 20-4-9-9-4 20-7z"/>
+            </svg>
+            제출하기
+          </button>
+          <button type="button" class="btn-action btn-download" onclick="downloadReport()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+              <polyline points="7,10 12,15 17,10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            보고서 다운로드
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Navigation Buttons -->
+  <div class="nav-buttons">
+    <button type="button" class="btn-nav btn-prev" onclick="goBack()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5"/>
+        <path d="M12 19l-7-7 7-7"/>
+      </svg>
+      이전
+    </button>
+    <div></div>
+  </div>
+
+  <!-- 제출 완료 모달 -->
+  <div class="modal-overlay" id="submitModal">
+    <div class="modal">
+      <div class="modal__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <polyline points="20,6 9,17 4,12"/>
+        </svg>
+      </div>
+      <h3 class="modal__title">제출 완료</h3>
+      <p class="modal__message">안전 점검 보고서가 성공적으로 제출되었습니다.</p>
+      <div class="modal__buttons">
+        <button type="button" class="btn-modal btn-modal--secondary" onclick="downloadReport()">
+          보고서 다운로드
+        </button>
+        <button type="button" class="btn-modal btn-modal--primary" onclick="goHome()">
+          종료
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 다운로드 완료 모달 -->
+  <div class="modal-overlay" id="downloadModal">
+    <div class="modal">
+      <div class="modal__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <polyline points="20,6 9,17 4,12"/>
+        </svg>
+      </div>
+      <h3 class="modal__title">다운로드 완료</h3>
+      <p class="modal__message">보고서 다운로드가 완료되었습니다.</p>
+      <div class="modal__buttons">
+        <button type="button" class="btn-modal btn-modal--primary" onclick="closeDownloadModal()">
+          확인
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // URL 파라미터
+    const urlParams = new URLSearchParams(window.location.search);
+    const siteId = urlParams.get('site') || '3';
+    const inspectionType = urlParams.get('type') || 'regular';
+    const target = urlParams.get('target') || '석축 및 옹벽';
+
+    // 사이트 정보
+    const sites = {
+      1: '창덕궁 주합루 권역',
+      2: '창덕궁 연경당 권역',
+      3: '창덕궁 낙선재 권역'
+    };
+
+    // 화면 초기화
+    document.getElementById('inspectionTypeDisplay').textContent = inspectionType === 'regular' ? '정기점검' : '상시점검';
+    document.getElementById('siteDisplay').textContent = sites[siteId] || '창덕궁 낙선재 권역';
+    document.getElementById('targetDisplay').textContent = decodeURIComponent(target);
+    document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('ko-KR').replace(/\./g, '.').slice(0, -1);
+
+    // 이전 버튼
+    function goBack() {
+      window.location.href = `inspection-final.html?site=${siteId}&type=${inspectionType}&target=${encodeURIComponent(target)}`;
+    }
+
+    // 제출하기
+    function submitReport() {
+      document.getElementById('submitModal').classList.add('active');
+    }
+
+    // 보고서 다운로드
+    function downloadReport() {
+      document.getElementById('submitModal').classList.remove('active');
+      document.getElementById('downloadModal').classList.add('active');
+    }
+
+    // 다운로드 모달 닫기
+    function closeDownloadModal() {
+      document.getElementById('downloadModal').classList.remove('active');
+    }
+
+    // 홈으로
+    function goHome() {
+      window.location.href = 'index.html';
+    }
+
+    // 모달 바깥 클릭 시 닫기
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.classList.remove('active');
+        }
+      });
+    });
+
+    // ESC 키로 모달 닫기
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+          overlay.classList.remove('active');
+        });
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "Code": "pt7",
+        "ì§‘ìˆ˜ì •": null,
+        "ì¢…í•©íŒ": "ìœ„í—˜(ì¦‰ì‹œì¡°ì¹˜)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.99363137002614,
+          37.57856740451333
+        ]
+      }
+    }
+  ]
+}

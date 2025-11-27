@@ -1,0 +1,31 @@
+{
+  "id": "pl5_fence",
+  "targetType": "담장",
+  "targetName": "담장 21번",
+  "code": "pl5",
+  "site": "낙선재 권역",
+  "inspectionDate": "2024-10-20",
+  "inspector": "점검자명",
+  "generalInfo": {
+    "location": "낙선재 권역",
+    "code": "pl5",
+    "extractedText": ""
+  },
+  "checklistItems": {
+    "note": "원본 HWPX 파일을 참고하여 수동으로 입력 필요"
+  },
+  "overallAssessment": {
+    "rating": "검토 필요",
+    "inspectorOpinion": "원본 점검표 참고"
+  },
+  "photos": [
+    "pl5_fence/0_사진기록.jpg",
+    "pl5_fence/1. 전경.jpg",
+    "pl5_fence/2.jpg",
+    "pl5_fence/3.jpg"
+  ],
+  "coordinates": {
+    "lat": 37.578503568492145,
+    "lng": 126.99400023894299
+  }
+}

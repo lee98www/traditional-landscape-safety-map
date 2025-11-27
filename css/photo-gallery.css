@@ -1,0 +1,324 @@
+/**
+ * 사진 갤러리 스타일
+ */
+
+/* 갤러리 그리드 */
+.photo-gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.photo-gallery__thumbnail {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.photo-gallery__thumbnail:hover {
+  transform: scale(1.05);
+}
+
+.photo-gallery__thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-gallery__thumbnail-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.photo-gallery__thumbnail:hover .photo-gallery__thumbnail-overlay {
+  opacity: 1;
+}
+
+.photo-gallery__thumbnail-overlay svg {
+  width: 40px;
+  height: 40px;
+}
+
+.photo-gallery__count {
+  text-align: right;
+  font-size: 14px;
+  color: #666;
+  margin-top: 8px;
+}
+
+.photo-gallery__empty {
+  padding: 60px 20px;
+  text-align: center;
+  color: #999;
+  background: #F5F5F5;
+  border-radius: 8px;
+}
+
+/* 사진 모달 */
+.photo-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 9999;
+  display: none;
+  flex-direction: column;
+}
+
+.photo-modal.active {
+  display: flex;
+}
+
+.photo-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  color: white;
+}
+
+.photo-modal__counter {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.photo-modal__close {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.photo-modal__close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.photo-modal__close svg {
+  width: 20px;
+  height: 20px;
+}
+
+.photo-modal__body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 0 80px;
+}
+
+.photo-modal__image-container {
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo-modal__image-container img {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.photo-modal__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.photo-modal__nav:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.photo-modal__nav svg {
+  width: 24px;
+  height: 24px;
+}
+
+.photo-modal__nav--prev {
+  left: 20px;
+}
+
+.photo-modal__nav--next {
+  right: 20px;
+}
+
+.photo-modal__footer {
+  padding: 20px 30px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.photo-modal__thumbnails {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.photo-modal__thumbnails::-webkit-scrollbar {
+  height: 6px;
+}
+
+.photo-modal__thumbnails::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.photo-modal__thumbnails::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.photo-modal__thumbnail {
+  flex-shrink: 0;
+  width: 80px;
+  height: 60px;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.photo-modal__thumbnail:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.photo-modal__thumbnail.active {
+  border-color: white;
+}
+
+.photo-modal__thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* GIS 정보창 스타일 */
+.gis-info-window {
+  padding: 12px;
+  min-width: 200px;
+}
+
+.gis-info-window h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.gis-info-window p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.gis-info-window button {
+  margin-top: 12px;
+  width: 100%;
+  padding: 8px 16px;
+  background: #4A90E2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.gis-info-window button:hover {
+  background: #357ABD;
+}
+
+.gis-info-window .rating {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.gis-info-window .rating--안전 {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+.gis-info-window .rating--관심 {
+  background: #FFF3E0;
+  color: #EF6C00;
+}
+
+.gis-info-window .rating--주의 {
+  background: #FFF3E0;
+  color: #F57C00;
+}
+
+.gis-info-window .rating--경계 {
+  background: #FFEBEE;
+  color: #C62828;
+}
+
+.gis-info-window .rating--위험 {
+  background: #FFEBEE;
+  color: #B71C1C;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .photo-gallery__grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+
+  .photo-modal__body {
+    padding: 0 60px;
+  }
+
+  .photo-modal__nav {
+    width: 40px;
+    height: 40px;
+  }
+
+  .photo-modal__nav svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .photo-modal__thumbnail {
+    width: 60px;
+    height: 45px;
+  }
+}

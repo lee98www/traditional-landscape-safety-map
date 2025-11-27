@@ -15,6 +15,11 @@
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/photo-gallery.css">
+
+  <!-- Data Loading Modules -->
+  <script src="js/data-loader.js"></script>
+  <script src="js/photo-gallery.js"></script>
 
   <style>
     /* 확인 페이지 - 디자인 시안 기준 */
@@ -959,12 +964,16 @@
   <script>
     // URL 파라미터
     const urlParams = new URLSearchParams(window.location.search);
+    const inspectionId = urlParams.get('id'); // 새로운 방식: inspection ID
     const siteId = urlParams.get('site') || '3';
     const inspectionType = urlParams.get('type') || 'regular';
     const target = urlParams.get('target') || '석축 및 옹벽';
 
     // sessionStorage에서 점검 데이터 불러오기
-    const inspectionData = JSON.parse(sessionStorage.getItem('inspectionData') || '{}');
+    let inspectionData = JSON.parse(sessionStorage.getItem('inspectionData') || '{}');
+
+    // 전역 변수로 현재 점검표 저장
+    window.currentInspection = null;
 
     // 사이트 정보 (설계서 기준: 낙선재, 주합루, 의두합)
     const sites = {
@@ -1119,6 +1128,188 @@
         document.querySelectorAll('.modal-overlay').forEach(overlay => {
           overlay.classList.remove('active');
         });
+      }
+    });
+
+    // ============================================================
+    // 실제 점검표 데이터 로딩 (Phase 5)
+    // ============================================================
+
+    // 점검표 데이터 로드 및 렌더링
+    async function loadInspectionData(inspectionId) {
+      try {
+        console.log('Loading inspection data for:', inspectionId);
+
+        // 데이터 로더를 통해 점검표 로드
+        const inspection = await DataLoader.loadInspection(inspectionId);
+
+        if (!inspection) {
+          console.error('Inspection not found:', inspectionId);
+          return;
+        }
+
+        console.log('Loaded inspection:', inspection);
+        window.currentInspection = inspection;
+
+        // 페이지 렌더링
+        renderInspectionData(inspection);
+        renderPhotos(inspection);
+
+      } catch (error) {
+        console.error('Failed to load inspection:', error);
+      }
+    }
+
+    // 점검표 데이터를 페이지에 렌더링
+    function renderInspectionData(inspection) {
+      // 헤더 정보
+      const inspectionTypeEl = document.getElementById('inspectionTypeDisplay');
+      const siteEl = document.getElementById('siteDisplay');
+      const targetEl = document.getElementById('targetDisplay');
+      const dateEl = document.getElementById('dateDisplay');
+
+      if (inspectionTypeEl) inspectionTypeEl.textContent = inspection.targetType || '정기점검';
+      if (siteEl) siteEl.textContent = inspection.site || '낙선재 권역';
+      if (targetEl) targetEl.textContent = inspection.targetName || '';
+      if (dateEl) dateEl.textContent = inspection.inspectionDate || new Date().toLocaleDateString('ko-KR');
+
+      // 점검자 정보 (있는 경우)
+      const inspectorEl = document.querySelector('[data-field="inspector"]');
+      if (inspectorEl && inspection.inspector) {
+        inspectorEl.textContent = inspection.inspector;
+      }
+
+      // 일반 현황 정보
+      if (inspection.generalInfo) {
+        renderGeneralInfo(inspection.generalInfo);
+      }
+
+      // 점검 항목
+      if (inspection.checklistItems) {
+        console.log('Rendering checklist items:', inspection.checklistItems);
+        // 점검 항목 구조는 타입마다 다르므로 일반적인 처리만
+        // 실제 세부 렌더링은 타입별로 처리 필요
+      }
+
+      // 종합 판정
+      if (inspection.overallAssessment) {
+        renderOverallAssessment(inspection.overallAssessment);
+      }
+    }
+
+    // 일반 현황 정보 렌더링
+    function renderGeneralInfo(generalInfo) {
+      // 위치
+      const locationEl = document.querySelector('[data-field="location"]');
+      if (locationEl && generalInfo.location) {
+        locationEl.textContent = generalInfo.location;
+      }
+
+      // 코드
+      const codeEl = document.querySelector('[data-field="code"]');
+      if (codeEl && generalInfo.code) {
+        codeEl.textContent = generalInfo.code;
+      }
+
+      // extractedText가 있으면 표시 (디버깅용)
+      if (generalInfo.extractedText) {
+        console.log('Extracted text available:', generalInfo.extractedText.substring(0, 200) + '...');
+      }
+    }
+
+    // 종합 판정 렌더링
+    function renderOverallAssessment(assessment) {
+      // 종합 판정 등급
+      const ratingEls = document.querySelectorAll('.report-judgment__item');
+      ratingEls.forEach(el => {
+        const itemRating = el.getAttribute('data-rating');
+        if (itemRating === assessment.rating) {
+          el.classList.add('report-judgment__item--selected');
+        } else {
+          el.classList.remove('report-judgment__item--selected');
+        }
+      });
+
+      // 점검자 의견
+      const opinionEl = document.querySelector('[data-field="inspectorOpinion"]');
+      if (opinionEl && assessment.inspectorOpinion) {
+        opinionEl.textContent = assessment.inspectorOpinion;
+      }
+    }
+
+    // 사진 렌더링
+    function renderPhotos(inspection) {
+      if (!inspection.photos || inspection.photos.length === 0) {
+        console.warn('No photos found for inspection:', inspection.id);
+        return;
+      }
+
+      console.log('Rendering photos:', inspection.photos.length);
+
+      // 사진 URL 생성
+      const photoUrls = DataLoader.getPhotoUrls(inspection);
+
+      // 사진 섹션 찾기 또는 생성
+      let photoContainer = document.getElementById('photoContainer');
+
+      if (!photoContainer) {
+        // 사진 컨테이너가 없으면 보고서 끝에 추가
+        const reportContent = document.querySelector('.report-content');
+        if (reportContent) {
+          const photoSection = document.createElement('div');
+          photoSection.className = 'report-section';
+          photoSection.innerHTML = `
+            <h3 class="report-section__title">사진 기록</h3>
+            <div id="photoContainer" class="photo-container"></div>
+          `;
+          reportContent.appendChild(photoSection);
+          photoContainer = document.getElementById('photoContainer');
+        }
+      }
+
+      if (photoContainer) {
+        // 썸네일 그리드 생성
+        photoContainer.innerHTML = photoUrls.map((url, index) => `
+          <img src="${url}"
+               alt="점검 사진 ${index + 1}"
+               class="photo-thumbnail"
+               onclick="openPhotoGallery(${index})"
+               style="width: 150px; height: 150px; object-fit: cover; margin: 5px; cursor: pointer; border-radius: 8px;"
+               onerror="this.style.display='none';">
+        `).join('');
+      }
+    }
+
+    // 사진 갤러리 열기
+    function openPhotoGallery(startIndex) {
+      if (!window.currentInspection || !window.currentInspection.photos) {
+        console.error('No inspection data available');
+        return;
+      }
+
+      const photoUrls = DataLoader.getPhotoUrls(window.currentInspection);
+
+      // PhotoGallery 모듈 사용
+      const galleryContainer = document.getElementById('photoGalleryContainer') ||
+                              document.body.appendChild(Object.assign(document.createElement('div'), {id: 'photoGalleryContainer'}));
+
+      PhotoGallery.init('photoGalleryContainer', photoUrls);
+      PhotoGallery.openModal(startIndex);
+    }
+
+    // 페이지 로드 시 실행
+    window.addEventListener('DOMContentLoaded', async function() {
+      console.log('Page loaded, inspectionId:', inspectionId);
+
+      if (inspectionId) {
+        // 새로운 방식: inspection ID로 데이터 로드
+        await loadInspectionData(inspectionId);
+      } else {
+        // 기존 방식: sessionStorage 또는 URL 파라미터 사용
+        console.log('Using legacy flow (no inspection ID)');
+        updateBasicInfo();
+        updateResultInfo();
+        updateFinalInfo();
       }
     });
   </script>

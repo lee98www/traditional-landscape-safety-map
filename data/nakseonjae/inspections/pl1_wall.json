@@ -1,0 +1,129 @@
+{
+  "id": "pl1_wall",
+  "targetType": "석축",
+  "targetName": "석축 pl1",
+  "code": "pl1",
+  "site": "낙선재 권역",
+  "inspectionDate": "2024-10-20",
+  "inspector": "점검자명",
+  "generalInfo": {
+    "location": "낙선재 권역",
+    "code": "pl1",
+    "materials": ["석재"],
+    "otherMaterials": ""
+  },
+  "checklistItems": {
+    "foundation": {
+      "scour": {
+        "status": "있음",
+        "severity": "위험",
+        "remark": ""
+      },
+      "subsidence": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      },
+      "waterInfiltration": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      }
+    },
+    "front": {
+      "crack": {
+        "status": "있음",
+        "severity": "주의",
+        "grade": "약간 심각",
+        "remark": ""
+      },
+      "damage": {
+        "status": "있음",
+        "severity": "경계",
+        "grade": "심각",
+        "remark": ""
+      },
+      "weathering": {
+        "status": "있음",
+        "severity": "위험",
+        "grade": "매우 심각",
+        "remark": ""
+      },
+      "leakage": {
+        "status": "있음",
+        "severity": "위험",
+        "remark": ""
+      },
+      "fillingLoss": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      },
+      "jointLoss": {
+        "status": "있음",
+        "severity": "위험",
+        "remark": ""
+      },
+      "deformation": {
+        "status": "있음",
+        "severity": "위험",
+        "grade": "매우 심각",
+        "remark": ""
+      }
+    },
+    "drainage": {
+      "status": "원활",
+      "remark": ""
+    },
+    "rockfall": {
+      "status": "없음",
+      "remark": ""
+    },
+    "top": {
+      "groundSubsidence": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      }
+    },
+    "additionalDamage": {
+      "exist": "있음",
+      "types": ["시설물", "수목", "보행로"],
+      "waterway": {
+        "status": "원활",
+        "remark": ""
+      },
+      "sump": {
+        "status": "원활",
+        "severity": "안전",
+        "remark": ""
+      }
+    }
+  },
+  "inspectionResult": {
+    "maintenanceNeeded": "경계",
+    "maintenanceType": "수리",
+    "remark": ""
+  },
+  "overallAssessment": {
+    "rating": "경계",
+    "expectedDamageTypes": ["손상", "배부름", "붕괴"],
+    "inspectorOpinion": "전반적으로 누수 흔적에 따른 이끼 발생 및 줄눈 유실이 확인됨. 석재의 열화가 광범위하게 진행되어 구조적 안정성 검토가 필요함.",
+    "recommendations": [
+      "줄눈 보수 권장",
+      "배수 시설 점검",
+      "석재 열화 부위 정밀 진단 필요"
+    ]
+  },
+  "photos": [
+    "pl1_wall/1. 전경.jpg",
+    "pl1_wall/2.jpg",
+    "pl1_wall/3.jpg",
+    "pl1_wall/4.jpg",
+    "pl1_wall/0_사진기록.jpg"
+  ],
+  "coordinates": {
+    "lat": 37.578887,
+    "lng": 126.993300
+  }
+}

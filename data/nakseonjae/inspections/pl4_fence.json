@@ -1,0 +1,34 @@
+{
+  "id": "pl4_fence",
+  "targetType": "담장",
+  "targetName": "담장 18번",
+  "code": "pl4",
+  "site": "낙선재 권역",
+  "inspectionDate": "2024-10-20",
+  "inspector": "점검자명",
+  "generalInfo": {
+    "location": "낙선재 권역",
+    "code": "pl4",
+    "extractedText": ""
+  },
+  "checklistItems": {
+    "note": "원본 HWPX 파일을 참고하여 수동으로 입력 필요"
+  },
+  "overallAssessment": {
+    "rating": "검토 필요",
+    "inspectorOpinion": "원본 점검표 참고"
+  },
+  "photos": [
+    "pl4_fence/0_사진기록1.jpg",
+    "pl4_fence/0_사진기록2.jpg",
+    "pl4_fence/0_사진기록3.jpg",
+    "pl4_fence/1. 전경.jpg",
+    "pl4_fence/2.jpg",
+    "pl4_fence/3.jpg",
+    "pl4_fence/4.jpg"
+  ],
+  "coordinates": {
+    "lat": 37.57881765918615,
+    "lng": 126.99389040822147
+  }
+}

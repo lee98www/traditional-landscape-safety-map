@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>안전 점검 실시 - 일반현황 | 전통조경 안전지도 시범서비스</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <style>
+    /* 점검 페이지 - 통일된 디자인 */
+    .inspection-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--color-bg-page);
+    }
+
+    /* Header - 통일된 스타일 */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: var(--color-bg-white);
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: var(--z-header);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header__logo {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 20px;
+      background-color: var(--color-logo-bg);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-logo-text);
+      text-decoration: none;
+      transition: all var(--transition-fast);
+    }
+
+    .header__logo:hover {
+      background-color: var(--color-primary-lighter);
+    }
+
+    .header__title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+
+    /* Layout */
+    .page-layout {
+      display: flex;
+      margin-top: 60px;
+      min-height: calc(100vh - 60px);
+    }
+
+    /* Sidebar - 통일된 스타일 */
+    .sidebar {
+      width: 240px;
+      background-color: var(--color-bg-white);
+      border-right: 1px solid var(--color-border-light);
+      padding: 16px 0;
+      flex-shrink: 0;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      bottom: 80px;
+      overflow-y: auto;
+    }
+
+    .sidebar__item {
+      padding: 14px 20px;
+      font-size: var(--font-size-base);
+      color: var(--color-text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all var(--transition-fast);
+    }
+
+    .sidebar__item:hover {
+      background-color: var(--color-bg-gray);
+    }
+
+    .sidebar__item--active {
+      background-color: var(--color-primary-light);
+      color: var(--color-primary);
+      font-weight: var(--font-weight-medium);
+      border-left: 4px solid var(--color-primary);
+      padding-left: 16px;
+    }
+
+    .sidebar__item--sub {
+      padding-left: 36px;
+      font-size: var(--font-size-sm);
+    }
+
+    .sidebar__item--sub.sidebar__item--active {
+      padding-left: 32px;
+    }
+
+    .sidebar__arrow {
+      width: 16px;
+      height: 16px;
+      transition: transform var(--transition-fast);
+    }
+
+    .sidebar__arrow--expanded {
+      transform: rotate(180deg);
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 240px;
+      padding: 32px;
+      padding-bottom: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    /* 일반현황 카드 - 심플한 디자인 */
+    .general-card {
+      background-color: var(--color-bg-white);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .general-card__header {
+      background-color: #4A7A8C;
+      color: #FFFFFF;
+      padding: 14px 20px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .general-card__body {
+      padding: 24px;
+    }
+
+    /* 폼 섹션 */
+    .form-section {
+      margin-bottom: 24px;
+    }
+
+    .form-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-section__title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #E0E0E0;
+    }
+
+    /* 폼 그리드 */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group--full {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+    }
+
+    .form-input {
+      height: 42px;
+      padding: 0 14px;
+      border: 1px solid #D0D0D0;
+      border-radius: 6px;
+      font-size: 14px;
+      color: #333;
+      background-color: #FFFFFF;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px rgba(0, 82, 204, 0.1);
+    }
+
+    .form-input::placeholder {
+      color: #999;
+    }
+
+    /* 체크박스 그룹 */
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background-color: #F5F5F5;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .checkbox-item:hover {
+      background-color: #E8F4FD;
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--color-primary);
+      cursor: pointer;
+    }
+
+    .checkbox-item label {
+      font-size: 13px;
+      color: #333;
+      cursor: pointer;
+    }
+
+    /* Navigation Buttons - 통일된 스타일 */
+    .nav-buttons {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background-color: var(--color-bg-page);
+      z-index: var(--z-dropdown);
+      border-top: 1px solid var(--color-border-light);
+    }
+
+    .btn-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .btn-prev {
+      background-color: var(--color-bg-white);
+      color: var(--color-primary);
+      border: 2px solid var(--color-primary);
+    }
+
+    .btn-prev:hover {
+      background-color: var(--color-primary-light);
+    }
+
+    .btn-next {
+      background-color: var(--color-primary);
+      color: var(--color-text-white);
+      border: none;
+      box-shadow: 0 4px 12px rgba(0, 82, 204, 0.3);
+    }
+
+    .btn-next:hover {
+      background-color: var(--color-primary-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 82, 204, 0.4);
+    }
+
+    .btn-nav svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: 220px;
+      }
+
+      .main-content {
+        margin-left: 220px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+
+      .main-content {
+        margin-left: 0;
+        padding: 16px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="inspection-page">
+  <!-- Header -->
+  <header class="header">
+    <a href="index.html" class="header__logo">전통조경 안전지도 시범서비스</a>
+    <h1 class="header__title">안전 점검 실시</h1>
+    <div style="width: 180px;"></div>
+  </header>
+
+  <!-- Page Layout -->
+  <div class="page-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar__item sidebar__item--active">
+        일반현황
+      </div>
+      <div class="sidebar__item" onclick="toggleSubmenu('checklist')">
+        점검항목
+        <svg class="sidebar__arrow" id="checklistArrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6,9 12,15 18,9"/>
+        </svg>
+      </div>
+      <div id="checklistSubmenu" style="display: none;">
+        <div class="sidebar__item sidebar__item--sub" onclick="location.href='inspection-checklist.html' + (window.location.search ? window.location.search + '&' : '?') + 'section=facility'">
+          당해시설
+        </div>
+        <div class="sidebar__item sidebar__item--sub" onclick="location.href='inspection-checklist.html' + (window.location.search ? window.location.search + '&' : '?') + 'section=additional'">
+          추가 피해요소
+        </div>
+      </div>
+      <div class="sidebar__item" onclick="location.href='inspection-result.html' + window.location.search">
+        점검결과
+      </div>
+      <div class="sidebar__item" onclick="location.href='inspection-final.html' + window.location.search">
+        종합판정
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="general-card">
+        <div class="general-card__header">
+          일반현황 입력
+        </div>
+        <div class="general-card__body">
+          <!-- 국가유산 개요 -->
+          <div class="form-section">
+            <h3 class="form-section__title">국가유산 개요</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">국가유산명</label>
+                <input type="text" class="form-input" placeholder="국가유산명을 입력하세요">
+              </div>
+              <div class="form-group">
+                <label class="form-label">국가유산유형</label>
+                <input type="text" class="form-input" placeholder="국가유산유형을 입력하세요">
+              </div>
+              <div class="form-group">
+                <label class="form-label">소재지</label>
+                <input type="text" class="form-input" placeholder="소재지를 입력하세요">
+              </div>
+              <div class="form-group">
+                <label class="form-label">소유자/관리자</label>
+                <input type="text" class="form-input" placeholder="소유자/관리자를 입력하세요">
+              </div>
+            </div>
+          </div>
+
+          <!-- 국가유산 관리 -->
+          <div class="form-section">
+            <h3 class="form-section__title">국가유산 관리</h3>
+            <div class="form-group form-group--full">
+              <label class="form-label">관리 항목 (해당 항목 선택)</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="plan" name="management">
+                  <label for="plan">종합정비계획</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="survey" name="management">
+                  <label for="survey">정기조사</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="care" name="management">
+                  <label for="care">돌봄사업</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="monitor" name="management">
+                  <label for="monitor">모니터링</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="keeper" name="management">
+                  <label for="keeper">국가유산지킴이</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Navigation Buttons -->
+  <div class="nav-buttons">
+    <button type="button" class="btn-nav btn-prev" onclick="goBack()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5"/>
+        <path d="M12 19l-7-7 7-7"/>
+      </svg>
+      이전
+    </button>
+    <button type="button" class="btn-nav btn-next" onclick="goNext()">
+      다음
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14"/>
+        <path d="M12 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
+
+  <script>
+    // URL 파라미터
+    const urlParams = new URLSearchParams(window.location.search);
+    const siteId = urlParams.get('site') || '1';
+    const inspectionType = urlParams.get('type') || 'regular';
+    const target = urlParams.get('target') || '석축 및 옹벽';
+
+    // 서브메뉴 토글
+    function toggleSubmenu(id) {
+      const submenu = document.getElementById(id + 'Submenu');
+      const arrow = document.getElementById(id + 'Arrow');
+
+      if (submenu.style.display === 'none') {
+        submenu.style.display = 'block';
+        arrow.classList.add('sidebar__arrow--expanded');
+      } else {
+        submenu.style.display = 'none';
+        arrow.classList.remove('sidebar__arrow--expanded');
+      }
+    }
+
+    // 이전 버튼
+    function goBack() {
+      window.location.href = `inspection-target.html?site=${siteId}&type=${inspectionType}`;
+    }
+
+    // 다음 버튼
+    function goNext() {
+      window.location.href = `inspection-checklist.html?site=${siteId}&type=${inspectionType}&target=${encodeURIComponent(target)}&section=facility`;
+    }
+  </script>
+</body>
+</html>

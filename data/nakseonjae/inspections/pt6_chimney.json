@@ -1,0 +1,31 @@
+{
+  "id": "pt6_chimney",
+  "targetType": "굴뚝",
+  "targetName": "굴뚝 3번",
+  "code": "pt6",
+  "site": "낙선재 권역",
+  "inspectionDate": "2024-10-20",
+  "inspector": "점검자명",
+  "generalInfo": {
+    "location": "낙선재 권역",
+    "code": "pt6",
+    "extractedText": ""
+  },
+  "checklistItems": {
+    "note": "원본 HWPX 파일을 참고하여 수동으로 입력 필요"
+  },
+  "overallAssessment": {
+    "rating": "검토 필요",
+    "inspectorOpinion": "원본 점검표 참고"
+  },
+  "photos": [
+    "pt6_chimney/0_사진기록.JPG",
+    "pt6_chimney/1. 전경.jpg",
+    "pt6_chimney/2.jpg",
+    "pt6_chimney/3.jpg"
+  ],
+  "coordinates": {
+    "lat": 37.57898653639754,
+    "lng": 126.99380888956591
+  }
+}

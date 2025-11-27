@@ -1,0 +1,20 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "Code": "pt4",
+        "Tree": "ì†Œë‚˜ë¬´",
+        "ì¢…í•©íŒ": "ì£¼ì˜(ì •ë°€ì§„ë‹¨)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.99259652779999,
+          37.57892205259983
+        ]
+      }
+    }
+  ]
+}
