@@ -1524,38 +1524,6 @@
       // 비탈면 점검표 - PDF 기준 전면 수정
       renderSlopeChecklist() {
         return `
-        <!-- 일반현황 -->
-        <table class="checklist-table" style="margin-bottom: 16px;">
-          <thead>
-            <tr>
-              <th colspan="2">일반현황</th>
-              <th colspan="5">내용</th>
-              <th>비고</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="section-header" rowspan="3">일반<br>현황</td>
-              <td class="item-cell">위치</td>
-              <td colspan="5"><input type="text" name="slope_location" style="width:100%; border:none; background:transparent;"></td>
-              <td class="remark-cell"><input type="text" name="slope_location_remark"></td>
-            </tr>
-            <tr>
-              <td class="item-cell">재료</td>
-              <td class="check-cell"><label class="check-label"><input type="checkbox" name="slope_material" value="흙"> 흙</label></td>
-              <td class="check-cell"><label class="check-label"><input type="checkbox" name="slope_material" value="암반"> 암반</label></td>
-              <td class="check-cell" colspan="3"><label class="check-label"><input type="checkbox" name="slope_material" value="혼합"> 혼합</label></td>
-              <td class="remark-cell"><input type="text" name="slope_material_remark"></td>
-            </tr>
-            <tr>
-              <td class="item-cell">경계</td>
-              <td class="check-cell" colspan="2"><label class="check-label"><input type="radio" name="slope_boundary" value="시설물"> 시설물(석축 및 담장 등)</label></td>
-              <td class="check-cell" colspan="3"><label class="check-label"><input type="radio" name="slope_boundary" value="없음"> 없음(토사 등)</label></td>
-              <td class="remark-cell"><input type="text" name="slope_boundary_remark"></td>
-            </tr>
-          </tbody>
-        </table>
-
         <!-- 점검항목 - 당해시설 -->
         <table class="checklist-table">
           <thead>

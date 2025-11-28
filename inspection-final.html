@@ -392,30 +392,11 @@
       <div class="final-card">
         <div class="final-card__header">종합판정 입력</div>
         <div class="final-card__body">
-          <!-- 예상 피해 유형 섹션 -->
+          <!-- 예상 피해 유형 섹션 - 점검 대상별 동적 렌더링 -->
           <div class="final-section">
             <h3 class="final-section__title">예상 피해 유형 (중복가능)</h3>
-            <div class="damage-type-group">
-              <div class="damage-type-item">
-                <input type="checkbox" id="damage" name="damageType" value="손상">
-                <label for="damage">손상</label>
-              </div>
-              <div class="damage-type-item">
-                <input type="checkbox" id="subsidence" name="damageType" value="침하">
-                <label for="subsidence">침하</label>
-              </div>
-              <div class="damage-type-item">
-                <input type="checkbox" id="overturning" name="damageType" value="전도">
-                <label for="overturning">전도</label>
-              </div>
-              <div class="damage-type-item">
-                <input type="checkbox" id="bulging" name="damageType" value="배부름">
-                <label for="bulging">배부름</label>
-              </div>
-              <div class="damage-type-item">
-                <input type="checkbox" id="collapse" name="damageType" value="붕괴">
-                <label for="collapse">붕괴</label>
-              </div>
+            <div class="damage-type-group" id="damageTypeGroup">
+              <!-- JS로 target에 따라 동적 렌더링 -->
             </div>
             <p class="damage-note">*서로 영향을 주고받는 피해지점을 함께 기입하여 내용 작성 필요 (예: 수목 ③에 의해 석축 전면부 변형)</p>
           </div>
@@ -457,6 +438,68 @@
 
     // 헤더에 점검 대상 항목명 표시
     document.getElementById('headerTitle').textContent = `안전 점검 실시 (${decodeURIComponent(target)})`;
+
+    // 점검 대상별 예상피해 유형 정의
+    const damageTypesByTarget = {
+      '비탈면': ['침식', '이완', '붕괴'],
+      '석축 및 옹벽': ['손상', '침하', '전도', '배부름', '붕괴'],
+      '지반': ['침하', '공동', '침수', '침식', '손상'],
+      '다리': ['침하', '손상', '전도', '배부름', '붕괴'],
+      '지당': ['손상', '배부름', '퇴적', '침하', '붕괴'],
+      '문': ['손상', '전도', '붕괴'],
+      '담장': ['손상', '전도', '붕괴', '고사'],
+      '굴뚝': ['손상', '전도', '붕괴'],
+      '배수시설': ['손상', '전도', '배부름', '퇴적', '침하', '붕괴'],
+      '단일목': ['부러짐', '도복'],
+      '군락': ['부러짐', '도복']
+    };
+
+    // 예상 피해 유형 동적 렌더링
+    function renderDamageTypes() {
+      const container = document.getElementById('damageTypeGroup');
+      if (!container) return;
+
+      const types = damageTypesByTarget[target] || ['손상', '침하', '전도', '배부름', '붕괴'];
+
+      let html = '';
+      types.forEach((type, index) => {
+        const id = `damageType_${index}`;
+        html += `
+          <div class="damage-type-item">
+            <input type="checkbox" id="${id}" name="damageType" value="${type}">
+            <label for="${id}">${type}</label>
+          </div>`;
+      });
+
+      container.innerHTML = html;
+
+      // 저장된 데이터 복원
+      loadSavedDamageTypes();
+    }
+
+    // 저장된 예상 피해 유형 복원
+    function loadSavedDamageTypes() {
+      const savedData = JSON.parse(sessionStorage.getItem('inspectionData') || '{}');
+      if (savedData.final?.damageTypes) {
+        savedData.final.damageTypes.forEach(type => {
+          const checkbox = document.querySelector(`input[name="damageType"][value="${type}"]`);
+          if (checkbox) checkbox.checked = true;
+        });
+      }
+    }
+
+    // 저장된 조사자 의견 복원
+    function loadSavedOpinion() {
+      const savedData = JSON.parse(sessionStorage.getItem('inspectionData') || '{}');
+      if (savedData.final?.opinion) {
+        const textarea = document.querySelector('.opinion-textarea');
+        if (textarea) textarea.value = savedData.final.opinion;
+      }
+    }
+
+    // 페이지 로드 시 실행
+    renderDamageTypes();
+    loadSavedOpinion();
 
     // 서브메뉴 토글
     function toggleSubmenu(id) {

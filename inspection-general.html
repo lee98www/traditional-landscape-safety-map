@@ -137,8 +137,9 @@
       padding: 32px;
       padding-bottom: 100px;
       display: flex;
-      justify-content: center;
-      align-items: flex-start;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
     }
 
     /* 일반현황 카드 - 심플한 디자인 */
@@ -250,6 +251,82 @@
       height: 16px;
       accent-color: var(--color-primary);
       cursor: pointer;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background-color: #F5F5F5;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .checkbox-label:hover {
+      background-color: #E8F4FD;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--color-primary);
+      cursor: pointer;
+    }
+
+    /* 시설물 개요 테이블 스타일 */
+    .facility-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .facility-table th,
+    .facility-table td {
+      border: 1px solid #D0D0D0;
+      padding: 10px 12px;
+      text-align: left;
+    }
+
+    .facility-table th {
+      background-color: #F5F5F5;
+      font-weight: 600;
+      width: 80px;
+      color: #333;
+    }
+
+    .facility-table td {
+      background-color: #FFFFFF;
+    }
+
+    .facility-table input[type="text"] {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .facility-table .checkbox-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .facility-table .checkbox-inline label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .facility-table .checkbox-inline input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+      accent-color: var(--color-primary);
     }
 
     .checkbox-item label {
@@ -380,12 +457,11 @@
     <main class="main-content">
       <div class="general-card">
         <div class="general-card__header">
-          일반현황 입력
+          국가유산 개요
         </div>
         <div class="general-card__body">
-          <!-- 국가유산 개요 -->
+          <!-- 국가유산 기본 정보 -->
           <div class="form-section">
-            <h3 class="form-section__title">국가유산 개요</h3>
             <div class="form-grid">
               <div class="form-group">
                 <label class="form-label">국가유산명</label>
@@ -436,13 +512,18 @@
             </div>
           </div>
 
-          <!-- 시설물 개요 - 점검 대상별 동적 렌더링 -->
-          <div class="form-section" id="facilityOverviewSection">
-            <h3 class="form-section__title">시설물 개요</h3>
-            <div class="form-grid" id="facilityFields">
-              <!-- JS로 target에 따라 동적 렌더링 -->
-            </div>
-          </div>
+        </div>
+      </div>
+
+      <!-- 시설물 개요 - 별도 카드 -->
+      <div class="general-card">
+        <div class="general-card__header">
+          시설물 개요
+        </div>
+        <div class="general-card__body">
+          <table class="facility-table" id="facilityFields">
+            <!-- JS로 target에 따라 동적 렌더링 -->
+          </table>
         </div>
       </div>
     </main>
@@ -482,164 +563,267 @@
     // 헤더에 점검 대상 항목명 표시
     document.getElementById('headerTitle').textContent = `안전 점검 실시 (${target})`;
 
-    // 시설물 개요 필드 렌더링 (점검 대상별)
+    // 시설물 개요 필드 렌더링 (점검 대상별 - 테이블 형식)
     function renderFacilityFields() {
       const container = document.getElementById('facilityFields');
-      let html = '';
+      let html = '<tbody>';
 
       // 공통: 위치 필드
       html += `
-        <div class="form-group">
-          <label class="form-label">위치</label>
-          <input type="text" class="form-input" id="facilityLocation" placeholder="시설물 위치">
-        </div>
+        <tr>
+          <th>위치</th>
+          <td colspan="3"><input type="text" id="facilityLocation" placeholder="시설물 위치 입력"></td>
+        </tr>
       `;
 
       switch(target) {
         case '비탈면':
           html += `
-            <div class="form-group">
-              <label class="form-label">높이 (m)</label>
-              <input type="text" class="form-input" id="facilityHeight" placeholder="높이">
-            </div>
-            <div class="form-group">
-              <label class="form-label">경사각 (°)</label>
-              <input type="text" class="form-input" id="facilitySlopeAngle" placeholder="경사각">
-            </div>
-            <div class="form-group">
-              <label class="form-label">재료</label>
-              <select class="form-input" id="facilityMaterial">
-                <option value="">선택</option>
-                <option value="흙">흙</option>
-                <option value="암반">암반</option>
-                <option value="혼합">혼합</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">경계</label>
-              <select class="form-input" id="facilityBoundary">
-                <option value="">선택</option>
-                <option value="시설물">시설물</option>
-                <option value="없음">없음</option>
-              </select>
-            </div>
+            <tr>
+              <th>재료</th>
+              <td colspan="3">
+                <div class="checkbox-inline">
+                  <label><input type="checkbox" name="facilityMaterial" value="흙"> 흙</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="암반"> 암반</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="혼합"> 혼합</label>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>경계</th>
+              <td colspan="3">
+                <div class="checkbox-inline">
+                  <label><input type="checkbox" name="facilityBoundary" value="시설물(석축 및 담장 등)"> 시설물(석축 및 담장 등)</label>
+                  <label><input type="checkbox" name="facilityBoundary" value="없음(토사 등)"> 없음(토사 등)</label>
+                </div>
+              </td>
+            </tr>
           `;
           break;
 
         case '지반':
           html += `
-            <div class="form-group">
-              <label class="form-label">재료</label>
-              <select class="form-input" id="facilityMaterial">
-                <option value="">선택</option>
-                <option value="흙">흙</option>
-                <option value="석재">석재</option>
-                <option value="소성재">소성재</option>
-                <option value="아스콘/콘크리트">아스콘/콘크리트</option>
-                <option value="혼합">혼합</option>
-              </select>
-            </div>
+            <tr>
+              <th>재료</th>
+              <td colspan="3">
+                <div class="checkbox-inline">
+                  <label><input type="checkbox" name="facilityMaterial" value="흙"> 흙</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="석재"> 석재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="소성재"> 소성재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="아스콘·콘크리트"> 아스콘·콘크리트</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="혼합"> 혼합</label>
+                </div>
+              </td>
+            </tr>
           `;
           break;
 
         case '석축 및 옹벽':
           html += `
-            <div class="form-group">
-              <label class="form-label">규모 (가로×세로×높이 m)</label>
-              <input type="text" class="form-input" id="facilityScale" placeholder="예: 10×5×3">
-            </div>
+            <tr>
+              <th>제원</th>
+              <td>길이: <input type="text" id="facilityLength" placeholder="m" style="width: 80px;"></td>
+              <td>높이: <input type="text" id="facilityHeight" placeholder="m" style="width: 80px;"></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>재료</th>
+              <td colspan="3">
+                <div class="checkbox-inline">
+                  <label><input type="checkbox" name="facilityMaterial" value="석재"> 석재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="콘크리트"> 콘크리트</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="기타"> 기타(<input type="text" id="facilityMaterialOther" style="width: 60px;">)</label>
+                </div>
+              </td>
+            </tr>
           `;
           break;
 
         case '다리':
           html += `
-            <div class="form-group">
-              <label class="form-label">길이 (m)</label>
-              <input type="text" class="form-input" id="facilityLength" placeholder="길이">
-            </div>
-            <div class="form-group">
-              <label class="form-label">폭 (m)</label>
-              <input type="text" class="form-input" id="facilityWidth" placeholder="폭">
-            </div>
+            <tr>
+              <th>유형</th>
+              <td colspan="3"><input type="text" id="facilityType" placeholder="유형 입력"></td>
+            </tr>
+            <tr>
+              <th>제원</th>
+              <td>길이: <input type="text" id="facilityLength" placeholder="m" style="width: 80px;"></td>
+              <td>높이: <input type="text" id="facilityHeight" placeholder="m" style="width: 80px;"></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>재료</th>
+              <td colspan="3">
+                <div class="checkbox-inline">
+                  <label><input type="checkbox" name="facilityMaterial" value="목재"> 목재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="석재"> 석재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="소성재(기와, 전돌)"> 소성재(기와, 전돌)</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="흙"> 흙</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="강재"> 강재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="콘크리트"> 콘크리트</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="복합재"> 복합재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="기타"> 기타(<input type="text" id="facilityMaterialOther" style="width: 60px;">)</label>
+                </div>
+              </td>
+            </tr>
           `;
           break;
 
         case '지당':
           html += `
-            <div class="form-group">
-              <label class="form-label">면적 (㎡)</label>
-              <input type="text" class="form-input" id="facilityArea" placeholder="면적">
-            </div>
+            <tr>
+              <th>제원</th>
+              <td colspan="3"><input type="text" id="facilityScale" placeholder="제원 입력"></td>
+            </tr>
+            <tr>
+              <th>재료</th>
+              <td colspan="3">
+                <div class="checkbox-inline">
+                  <label><input type="checkbox" name="facilityMaterial" value="흙"> 흙</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="수지재"> 수지재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="강재"> 강재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="석재"> 석재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="콘크리트"> 콘크리트</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="기타"> 기타(<input type="text" id="facilityMaterialOther" style="width: 60px;">)</label>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>수질 상태</th>
+              <td colspan="3">
+                <div class="checkbox-inline">
+                  <label><input type="checkbox" name="facilityWaterQuality" value="녹조"> 녹조</label>
+                  <label><input type="checkbox" name="facilityWaterQuality" value="부유물"> 부유물</label>
+                  <label><input type="checkbox" name="facilityWaterQuality" value="기타"> 기타(<input type="text" id="facilityWaterQualityOther" style="width: 60px;">)</label>
+                </div>
+              </td>
+            </tr>
           `;
           break;
 
         case '문':
+          html += `
+            <tr>
+              <th>유형</th>
+              <td colspan="3"><input type="text" id="facilityType" placeholder="유형 입력"></td>
+            </tr>
+            <tr>
+              <th>재료</th>
+              <td colspan="3">
+                <div class="checkbox-inline">
+                  <label><input type="checkbox" name="facilityMaterial" value="목재"> 목재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="석재"> 석재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="소성재"> 소성재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="흙"> 흙</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="강재"> 강재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="콘크리트"> 콘크리트</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="기타"> 기타(<input type="text" id="facilityMaterialOther" style="width: 60px;">)</label>
+                </div>
+              </td>
+            </tr>
+          `;
+          break;
+
         case '담장':
+          html += `
+            <tr>
+              <th>제원</th>
+              <td>길이: <input type="text" id="facilityLength" placeholder="m" style="width: 80px;"></td>
+              <td>높이: <input type="text" id="facilityHeight" placeholder="m" style="width: 80px;"></td>
+              <td>
+                <div class="checkbox-inline">
+                  <label><input type="checkbox" name="facilityPosition" value="내"> 내</label>
+                  <label><input type="checkbox" name="facilityPosition" value="외"> 외</label>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>재료</th>
+              <td colspan="3">
+                <div class="checkbox-inline">
+                  <label><input type="checkbox" name="facilityMaterial" value="목재"> 목재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="석재"> 석재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="소성재"> 소성재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="흙"> 흙</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="강재"> 강재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="콘크리트"> 콘크리트</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="기타"> 기타(<input type="text" id="facilityMaterialOther" style="width: 60px;">)</label>
+                </div>
+              </td>
+            </tr>
+          `;
+          break;
+
         case '굴뚝':
           html += `
-            <div class="form-group">
-              <label class="form-label">규모 (가로×세로×높이 m)</label>
-              <input type="text" class="form-input" id="facilityScale" placeholder="예: 3×0.5×2">
-            </div>
+            <tr>
+              <th>재료</th>
+              <td colspan="3">
+                <div class="checkbox-inline">
+                  <label><input type="checkbox" name="facilityMaterial" value="목재"> 목재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="석재"> 석재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="소성재"> 소성재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="흙"> 흙</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="강재"> 강재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="콘크리트"> 콘크리트</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="기타"> 기타(<input type="text" id="facilityMaterialOther" style="width: 60px;">)</label>
+                </div>
+              </td>
+            </tr>
           `;
           break;
 
         case '배수시설':
           html += `
-            <div class="form-group">
-              <label class="form-label">규모 (길이×폭×깊이 m)</label>
-              <input type="text" class="form-input" id="facilityScale" placeholder="예: 50×0.3×0.5">
-            </div>
+            <tr>
+              <th>규모</th>
+              <td colspan="3"><input type="text" id="facilityScale" placeholder="규모 입력"></td>
+            </tr>
           `;
           break;
 
         case '수목: 단일목':
           html += `
-            <div class="form-group">
-              <label class="form-label">수고 (m)</label>
-              <input type="text" class="form-input" id="facilityTreeHeight" placeholder="수고">
-            </div>
-            <div class="form-group">
-              <label class="form-label">흉고직경 (cm)</label>
-              <input type="text" class="form-input" id="facilityDbh" placeholder="흉고직경">
-            </div>
-            <div class="form-group">
-              <label class="form-label">수관폭 (m)</label>
-              <input type="text" class="form-input" id="facilityCrownWidth" placeholder="수관폭">
-            </div>
+            <tr>
+              <th>수고</th>
+              <td><input type="text" id="facilityTreeHeight" placeholder="m"></td>
+              <th>흉고직경</th>
+              <td><input type="text" id="facilityDbh" placeholder="cm"></td>
+            </tr>
+            <tr>
+              <th>수관폭</th>
+              <td colspan="3"><input type="text" id="facilityCrownWidth" placeholder="m"></td>
+            </tr>
           `;
           break;
 
         case '수목: 군락':
           html += `
-            <div class="form-group">
-              <label class="form-label">본수</label>
-              <input type="text" class="form-input" id="facilityTreeCount" placeholder="본수">
-            </div>
-            <div class="form-group">
-              <label class="form-label">주요 수종</label>
-              <input type="text" class="form-input" id="facilityMainSpecies" placeholder="주요 수종">
-            </div>
-            <div class="form-group">
-              <label class="form-label">평균 수고 (m)</label>
-              <input type="text" class="form-input" id="facilityAvgHeight" placeholder="평균 수고">
-            </div>
-            <div class="form-group">
-              <label class="form-label">평균 수관폭 (m)</label>
-              <input type="text" class="form-input" id="facilityAvgCrownWidth" placeholder="평균 수관폭">
-            </div>
+            <tr>
+              <th>본수</th>
+              <td><input type="text" id="facilityTreeCount" placeholder="본"></td>
+              <th>주요수종</th>
+              <td><input type="text" id="facilityMainSpecies" placeholder="수종명"></td>
+            </tr>
+            <tr>
+              <th>평균수고</th>
+              <td><input type="text" id="facilityAvgHeight" placeholder="m"></td>
+              <th>평균수관폭</th>
+              <td><input type="text" id="facilityAvgCrownWidth" placeholder="m"></td>
+            </tr>
           `;
           break;
 
         default:
           html += `
-            <div class="form-group">
-              <label class="form-label">규모</label>
-              <input type="text" class="form-input" id="facilityScale" placeholder="규모">
-            </div>
+            <tr>
+              <th>규모</th>
+              <td colspan="3"><input type="text" id="facilityScale" placeholder="규모 입력"></td>
+            </tr>
           `;
       }
 
+      html += '</tbody>';
       container.innerHTML = html;
     }
 
@@ -651,10 +835,8 @@
 
       switch(target) {
         case '비탈면':
-          facilityData.height = document.getElementById('facilityHeight')?.value || '';
-          facilityData.slopeAngle = document.getElementById('facilitySlopeAngle')?.value || '';
-          facilityData.material = document.getElementById('facilityMaterial')?.value || '';
-          facilityData.boundary = document.getElementById('facilityBoundary')?.value || '';
+          facilityData.material = Array.from(document.querySelectorAll('input[name="facilityMaterial"]:checked')).map(el => el.value);
+          facilityData.boundary = Array.from(document.querySelectorAll('input[name="facilityBoundary"]:checked')).map(el => el.value);
           break;
 
         case '지반':

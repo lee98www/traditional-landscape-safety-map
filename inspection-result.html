@@ -408,13 +408,7 @@
       <div class="result-card">
         <div class="result-card__header" id="resultCardHeader">점검결과 입력</div>
         <div class="result-card__body">
-          <!-- 점검 항목별 결과 요약 -->
-          <div id="checklistSummary" style="margin-bottom: 24px;">
-            <!-- JS로 동적 렌더링 -->
-          </div>
-
           <!-- 종합 점검결과 선택 -->
-          <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 12px; color: #333;">종합 점검결과</h4>
           <table class="result-table">
             <thead>
               <tr>
@@ -492,208 +486,9 @@
     // 결과 카드 헤더에도 항목명 표시
     document.getElementById('resultCardHeader').textContent = `점검결과 입력 (${target})`;
 
-    // 점검 대상별 점검항목 정의
-    const checklistItemsByTarget = {
-      '비탈면': {
-        '당해시설': ['토사암반층 결합력', '토층 심도', '피복율', '낙석흔적', '풍화도', '배수상태'],
-        '추가피해요소': ['배수로', '도로/시설물', '건축물']
-      },
-      '지반': {
-        '당해시설': ['세굴', '침하', '공동', '지반노출', '지면유출흔적', '지면구배', '배수상태'],
-        '추가피해요소': ['배수로', '도로/시설물', '건축물']
-      },
-      '석축 및 옹벽': {
-        '당해시설': {
-          '기초부': ['세굴', '침하', '균열', '파손'],
-          '전면부': ['균열', '파손/탈락', '열화', '변형', '줄눈유실', '배부름'],
-          '상부': ['균열', '파손/탈락', '열화', '침하', '활동']
-        },
-        '추가피해요소': ['배수로', '도로/시설물', '건축물']
-      },
-      '다리': {
-        '당해시설': {
-          '기초부': ['세굴', '침하', '균열', '파손'],
-          '교각부': ['균열', '파손/탈락', '열화', '변형', '부식', '유간'],
-          '교면부': ['균열', '파손/탈락', '열화', '부식'],
-          '난간': ['균열', '파손/탈락', '부식']
-        },
-        '추가피해요소': ['배수로', '도로/시설물', '건축물']
-      },
-      '지당': {
-        '당해시설': {
-          '바닥부': ['균열', '파손', '열화', '퇴적', '침하', '누수'],
-          '측벽부': ['균열', '파손/탈락', '열화', '누수', '줄눈유실', '변형'],
-          '중도': ['균열', '파손/탈락', '열화', '침하'],
-          '입수구': ['막힘', '파손'],
-          '출수구': ['막힘', '파손']
-        },
-        '추가피해요소': ['배수로', '도로/시설물', '건축물']
-      },
-      '문': {
-        '당해시설': {
-          '기초부': ['세굴', '침하', '우수침투흔'],
-          '벽체부': ['균열', '파손/탈락', '열화', '누수흔', '변형', '부식'],
-          '지붕부': ['균열', '파손/탈락', '열화', '변형']
-        },
-        '추가피해요소': ['배수로', '도로/시설물', '건축물']
-      },
-      '담장': {
-        '당해시설': {
-          '기초부': ['세굴', '침하', '우수침투흔'],
-          '벽체부': ['균열', '파손/탈락', '열화', '누수흔', '줄눈유실', '변형', '부식'],
-          '지붕부': ['균열', '파손/탈락', '열화', '변형']
-        },
-        '추가피해요소': ['배수로', '도로/시설물', '건축물']
-      },
-      '굴뚝': {
-        '당해시설': {
-          '기초부': ['세굴', '침하', '우수침투흔'],
-          '벽체부': ['균열', '파손/탈락', '열화', '변형', '부식'],
-          '지붕부': ['균열', '파손/탈락', '열화']
-        },
-        '추가피해요소': ['배수로', '도로/시설물', '건축물']
-      },
-      '배수시설': {
-        '당해시설': {
-          '바닥부': ['균열', '파손/탈락', '열화', '퇴적'],
-          '벽체부': ['균열', '파손/탈락', '열화'],
-          '덮개부': ['균열', '파손', '탈락'],
-          '피복재료': ['균열', '파손', '열화'],
-          '배수상태': ['배수상태']
-        },
-        '추가피해요소': ['배수로', '도로/시설물', '건축물']
-      },
-      '수목: 단일목': {
-        '당해시설': {
-          '뿌리': ['복토·심토', '뿌리들림', '뿌리감기', '결함'],
-          '근원': ['결함', '병충해'],
-          '줄기': ['밀도', '엽색', '결함', '병충해'],
-          '가지': ['고사지', '결함', '병충해'],
-          '기타': ['기울기', '토사결합력', '토양상태']
-        },
-        '추가피해요소': ['배수로', '도로/시설물', '건축물']
-      },
-      '수목: 군락': {
-        '당해시설': {
-          '구조적요소': ['결함', '기울기', '뿌리들림', '토사결합력', '토양상태', '외과수술', '보강시설'],
-          '생리적요소': ['병해', '충해']
-        },
-        '추가피해요소': ['배수로', '도로/시설물', '건축물']
-      }
-    };
-
-    // 점검항목 요약 렌더링
-    function renderChecklistSummary() {
-      const container = document.getElementById('checklistSummary');
-      const items = checklistItemsByTarget[target];
-
-      if (!items) {
-        container.innerHTML = '<p style="color: #666;">점검항목 정보가 없습니다.</p>';
-        return;
-      }
-
-      let html = '';
-
-      // 당해시설 섹션
-      html += '<div style="margin-bottom: 16px;">';
-      html += '<h4 style="font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #4A7A8C;">당해시설 점검항목</h4>';
-      html += '<table class="result-table" style="margin-bottom: 0;">';
-      html += '<thead><tr><th style="width: 100px;">구분</th><th style="width: 150px;">점검항목</th><th style="width: 80px;">판정</th><th>비고</th></tr></thead>';
-      html += '<tbody>';
-
-      const facilityItems = items['당해시설'];
-      if (Array.isArray(facilityItems)) {
-        // 단일 배열인 경우 (비탈면, 지반)
-        facilityItems.forEach(item => {
-          html += `<tr>
-            <td class="label-cell">-</td>
-            <td>${item}</td>
-            <td class="input-cell"><select class="summary-select" data-item="${item}">
-              <option value="">-</option>
-              <option value="안전">안전</option>
-              <option value="관심">관심</option>
-              <option value="주의">주의</option>
-              <option value="경계">경계</option>
-              <option value="위험">위험</option>
-            </select></td>
-            <td class="remark-cell"><input type="text" placeholder="비고" data-remark="${item}"></td>
-          </tr>`;
-        });
-      } else {
-        // 중첩 객체인 경우 (석축 및 옹벽, 다리 등)
-        for (const section in facilityItems) {
-          const sectionItems = facilityItems[section];
-          sectionItems.forEach((item, idx) => {
-            html += `<tr>
-              ${idx === 0 ? `<td class="label-cell" rowspan="${sectionItems.length}">${section}</td>` : ''}
-              <td>${item}</td>
-              <td class="input-cell"><select class="summary-select" data-item="${section}-${item}">
-                <option value="">-</option>
-                <option value="안전">안전</option>
-                <option value="관심">관심</option>
-                <option value="주의">주의</option>
-                <option value="경계">경계</option>
-                <option value="위험">위험</option>
-              </select></td>
-              <td class="remark-cell"><input type="text" placeholder="비고" data-remark="${section}-${item}"></td>
-            </tr>`;
-          });
-        }
-      }
-
-      html += '</tbody></table></div>';
-
-      // 추가피해요소 섹션
-      html += '<div>';
-      html += '<h4 style="font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #4A7A8C;">추가피해요소 점검항목</h4>';
-      html += '<table class="result-table" style="margin-bottom: 0;">';
-      html += '<thead><tr><th style="width: 150px;">점검항목</th><th style="width: 80px;">판정</th><th>비고</th></tr></thead>';
-      html += '<tbody>';
-
-      const additionalItems = items['추가피해요소'];
-      additionalItems.forEach(item => {
-        html += `<tr>
-          <td class="label-cell">${item}</td>
-          <td class="input-cell"><select class="summary-select" data-item="추가-${item}">
-            <option value="">-</option>
-            <option value="안전">안전</option>
-            <option value="관심">관심</option>
-            <option value="주의">주의</option>
-            <option value="경계">경계</option>
-            <option value="위험">위험</option>
-          </select></td>
-          <td class="remark-cell"><input type="text" placeholder="비고" data-remark="추가-${item}"></td>
-        </tr>`;
-      });
-
-      html += '</tbody></table></div>';
-
-      container.innerHTML = html;
-
-      // 이전에 저장된 데이터 복원
-      loadSavedSummaryData();
-    }
-
-    // 저장된 요약 데이터 로드
-    function loadSavedSummaryData() {
+    // 저장된 종합 점검결과 복원
+    function loadSavedResultData() {
       const savedData = JSON.parse(sessionStorage.getItem('inspectionData') || '{}');
-      const summaryData = savedData.resultSummary || {};
-
-      document.querySelectorAll('.summary-select').forEach(select => {
-        const itemKey = select.dataset.item;
-        if (summaryData[itemKey]) {
-          select.value = summaryData[itemKey].judgment || '';
-        }
-      });
-
-      document.querySelectorAll('[data-remark]').forEach(input => {
-        const itemKey = input.dataset.remark;
-        if (summaryData[itemKey]) {
-          input.value = summaryData[itemKey].remark || '';
-        }
-      });
-
-      // 종합 점검결과 복원
       if (savedData.result) {
         const radio = document.querySelector(`input[name="result"][value="${savedData.result.rating}"]`);
         if (radio) radio.checked = true;
@@ -704,8 +499,8 @@
       }
     }
 
-    // 페이지 로드 시 점검항목 요약 렌더링
-    renderChecklistSummary();
+    // 페이지 로드 시 저장된 데이터 복원
+    loadSavedResultData();
 
     // 서브메뉴 토글
     function toggleSubmenu(id) {

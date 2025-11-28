@@ -34,7 +34,9 @@
 
     /* Header - 디자인 시안 기준 */
     .header {
-      position: relative;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
       background-color: #FFFFFF;
       height: 60px;
       display: flex;
@@ -654,7 +656,7 @@
   <main class="main-content">
     <div class="report-preview">
       <div class="report-header">
-        <h2 class="report-header__title">안전 점검 보고서</h2>
+        <h2 class="report-header__title" id="reportTitle">안전 점검 보고서</h2>
         <p class="report-header__subtitle">전통조경 안전지도 시범서비스</p>
       </div>
 
@@ -680,249 +682,27 @@
           </div>
         </div>
 
-        <!-- 일반 현황 - 디자인 시안 기준 테이블 형식 -->
-        <div class="report-section">
+        <!-- 일반 현황 - 점검 대상별 동적 렌더링 -->
+        <div class="report-section" id="generalInfoSection">
           <h3 class="report-section__title">일반 현황</h3>
-          <table class="status-table">
-            <tr>
-              <th>항목</th>
-              <td colspan="3">내용</td>
-              <th>비고</th>
-            </tr>
-            <tr>
-              <th>재료</th>
-              <td colspan="3">
-                <div class="option-group">
-                  <span class="option-item"><span class="check-box checked"></span> <span class="check-label">석재</span></span>
-                  <span class="option-item"><span class="check-box"></span> <span class="check-label">콘크리트</span></span>
-                  <span class="option-item"><span class="check-box"></span> <span class="check-label">기타(　　)</span></span>
-                </div>
-              </td>
-              <td></td>
-            </tr>
-            <tr>
-              <th>상단 식물 여부</th>
-              <td colspan="3">
-                <div class="option-group">
-                  <span class="option-item"><span class="check-box checked"></span> <span class="check-label">교목</span></span>
-                  <span class="option-item"><span class="check-box"></span> <span class="check-label">관목</span></span>
-                  <span class="option-item"><span class="check-box checked"></span> <span class="check-label">초화류</span></span>
-                  <span class="option-item"><span class="check-box"></span> <span class="check-label">없음</span></span>
-                </div>
-              </td>
-              <td></td>
-            </tr>
-            <tr>
-              <th>상단 시설물 여부</th>
-              <td colspan="3">
-                <div class="option-group">
-                  <span class="option-item"><span class="check-box"></span> <span class="check-label">있음(　　)</span></span>
-                  <span class="option-item"><span class="check-box checked"></span> <span class="check-label">없음</span></span>
-                </div>
-              </td>
-              <td></td>
-            </tr>
-            <tr>
-              <th>상단 경사 여부</th>
-              <td colspan="3">
-                <div class="option-group">
-                  <span class="option-item"><span class="check-box"></span> <span class="check-label">있음</span></span>
-                  <span class="option-item"><span class="check-box checked"></span> <span class="check-label">없음</span></span>
-                </div>
-              </td>
-              <td></td>
-            </tr>
-          </table>
+          <div id="generalInfoContainer">
+            <!-- JS로 target에 따라 동적 렌더링 -->
+          </div>
         </div>
 
-        <!-- 점검 항목 - 디자인 시안 기준 테이블 형식 -->
-        <div class="report-section">
+        <!-- 점검 항목 - 점검 대상별 동적 렌더링 -->
+        <div class="report-section" id="checklistSection">
           <h3 class="report-section__title">점검 항목</h3>
-          <table class="checklist-table">
-            <colgroup>
-              <col style="width: 50px;"><!-- 대분류 -->
-              <col style="width: 50px;"><!-- 중분류 -->
-              <col style="width: 70px;"><!-- 항목명 -->
-              <col style="width: 100px;"><!-- 안전 -->
-              <col style="width: 100px;"><!-- 관심 -->
-              <col style="width: 100px;"><!-- 주의 -->
-              <col style="width: 100px;"><!-- 경계 -->
-              <col style="width: 100px;"><!-- 위험 -->
-              <col style="width: 90px;"><!-- 비고 -->
-            </colgroup>
-            <thead>
-              <tr>
-                <th colspan="2" rowspan="2">구분</th>
-                <th rowspan="2"></th>
-                <th colspan="5">평가 척도</th>
-                <th rowspan="2">비고</th>
-              </tr>
-              <tr>
-                <th>안전</th>
-                <th>관심</th>
-                <th>주의</th>
-                <th>경계</th>
-                <th>위험</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- 당해시설 - 기초부 -->
-              <tr>
-                <td rowspan="12" class="sub-header">당해시설<br>(12)</td>
-                <td rowspan="3" class="row-header">기초부</td>
-                <td>세굴</td>
-                <td><span class="check-cell"><span class="check-box checked"></span> 없음</span></td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td><span class="check-cell"><span class="check-box"></span> 있음</span></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>침하</td>
-                <td><span class="check-cell"><span class="check-box checked"></span> 없음</span></td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td><span class="check-cell"><span class="check-box"></span> 있음</span></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>우수침투흔</td>
-                <td><span class="check-cell"><span class="check-box checked"></span> 없음</span></td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td><span class="check-cell"><span class="check-box"></span> 있음</span></td>
-                <td></td>
-              </tr>
-              <!-- 당해시설 - 전면부 -->
-              <tr>
-                <td rowspan="9" class="row-header">전면부</td>
-                <td>균열</td>
-                <td><span class="check-cell"><span class="check-box"></span> 없음</span></td>
-                <td><span class="check-cell"><span class="check-box"></span> 경미</span></td>
-                <td><span class="check-cell"><span class="check-box checked"></span> 심각(국부)</span></td>
-                <td><span class="check-cell"><span class="check-box"></span> 심각(광대)</span></td>
-                <td><span class="check-cell"><span class="check-box"></span> 파괴예상</span></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>파손·탈락</td>
-                <td><span class="check-cell"><span class="check-box"></span> 없음</span></td>
-                <td><span class="check-cell"><span class="check-box checked"></span> 경미</span></td>
-                <td><span class="check-cell"><span class="check-box"></span> 심각(국부)</span></td>
-                <td><span class="check-cell"><span class="check-box"></span> 심각(광대)</span></td>
-                <td><span class="check-cell"><span class="check-box"></span> 파괴예상</span></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>열화</td>
-                <td><span class="check-cell"><span class="check-box"></span> 없음</span></td>
-                <td><span class="check-cell"><span class="check-box"></span> 경미</span></td>
-                <td><span class="check-cell"><span class="check-box checked"></span> 심각(국부)</span></td>
-                <td><span class="check-cell"><span class="check-box"></span> 심각(광대)</span></td>
-                <td><span class="check-cell"><span class="check-box"></span> 파괴예상</span></td>
-                <td style="font-size:10px;">풍화, 배흘림, 벌리박락, 탄화, 철근 노출</td>
-              </tr>
-              <tr>
-                <td>누수흔</td>
-                <td><span class="check-cell"><span class="check-box"></span> 없음</span></td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td><span class="check-cell"><span class="check-box checked"></span> 있음</span></td>
-                <td>지의류</td>
-              </tr>
-              <tr>
-                <td>유실-채움재</td>
-                <td><span class="check-cell"><span class="check-box"></span> 없음</span></td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td><span class="check-cell"><span class="check-box checked"></span> 있음</span></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>유실-줄눈</td>
-                <td><span class="check-cell"><span class="check-box"></span> 없음</span></td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td><span class="check-cell"><span class="check-box checked"></span> 있음</span></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>변형</td>
-                <td><span class="check-cell"><span class="check-box checked"></span> 없음</span></td>
-                <td><span class="check-cell"><span class="check-box"></span> 경미</span></td>
-                <td><span class="check-cell"><span class="check-box"></span> 심각(국부)</span></td>
-                <td><span class="check-cell"><span class="check-box"></span> 심각(광대)</span></td>
-                <td><span class="check-cell"><span class="check-box"></span> 파괴예상</span></td>
-                <td style="font-size:10px;">기울기, 배부름 등 석렬이탈</td>
-              </tr>
-              <tr>
-                <td>배수공</td>
-                <td><span class="check-cell"><span class="check-box"></span> 양호</span></td>
-                <td><span class="check-cell"><span class="check-box checked"></span> 없음</span></td>
-                <td><span class="check-cell"><span class="check-box"></span> 불량</span></td>
-                <td>-</td>
-                <td>-</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>낙석 흔적</td>
-                <td><span class="check-cell"><span class="check-box checked"></span> 없음</span></td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td><span class="check-cell"><span class="check-box"></span> 있음</span></td>
-                <td></td>
-              </tr>
-              <!-- 추가 피해 요소 -->
-              <tr>
-                <td rowspan="3" class="sub-header">추가 피해요소<br>(3)</td>
-                <td class="row-header">상부</td>
-                <td>지반 침하 여부</td>
-                <td><span class="check-cell"><span class="check-box checked"></span> 없음</span></td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td><span class="check-cell"><span class="check-box"></span> 있음</span></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td rowspan="2" class="row-header">인접<br>요소</td>
-                <td>위치</td>
-                <td><span class="check-cell"><span class="check-box"></span> 없음</span></td>
-                <td>-</td>
-                <td><span class="check-cell"><span class="check-box checked"></span> 석축·옹벽<br>높이 2배 이내</span></td>
-                <td>-</td>
-                <td><span class="check-cell"><span class="check-box"></span> 석축·옹벽<br>높이 1/2배 이내</span></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>유형</td>
-                <td><span class="check-cell"><span class="check-box"></span> 건조물</span></td>
-                <td><span class="check-cell"><span class="check-box"></span> 시설물</span></td>
-                <td><span class="check-cell"><span class="check-box"></span> 보행로</span></td>
-                <td><span class="check-cell"><span class="check-box checked"></span> 수목</span></td>
-                <td><span class="check-cell"><span class="check-box"></span> 기타</span></td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
+          <div id="checklistContainer">
+            <!-- JS로 target에 따라 동적 렌더링 -->
+          </div>
         </div>
 
-        <!-- 예상 피해 유형 -->
+        <!-- 예상 피해 유형 - 점검 대상별 동적 렌더링 -->
         <div class="report-section" id="damageTypeSection">
           <h3 class="report-section__title">예상 피해 유형 (중복가능)</h3>
-          <div class="option-group damage-type-options" style="padding: 12px 0;">
-            <span class="option-item" data-type="손상"><span class="check-box"></span> <span class="check-label">손상</span></span>
-            <span class="option-item" data-type="침하"><span class="check-box"></span> <span class="check-label">침하</span></span>
-            <span class="option-item" data-type="전도"><span class="check-box"></span> <span class="check-label">전도</span></span>
-            <span class="option-item" data-type="배부름"><span class="check-box"></span> <span class="check-label">배부름</span></span>
-            <span class="option-item" data-type="붕괴"><span class="check-box"></span> <span class="check-label">붕괴</span></span>
+          <div class="option-group damage-type-options" id="damageTypeContainer" style="padding: 12px 0;">
+            <!-- JS로 target에 따라 동적 렌더링 -->
           </div>
         </div>
 
@@ -1054,6 +834,9 @@
 
     // 헤더에 점검 대상 항목명 표시
     document.getElementById('headerTitle').textContent = `안전 점검 실시 (${target})`;
+
+    // 보고서 타이틀에도 항목명 표시
+    document.getElementById('reportTitle').textContent = `안전 점검 보고서 (${target})`;
 
     // sessionStorage에서 점검 데이터 불러오기
     let inspectionData = JSON.parse(sessionStorage.getItem('inspectionData') || '{}');
@@ -1267,6 +1050,585 @@
     updateResultInfo();
     updateFinalInfo();
     updateChecklistDisplay();
+
+    // ============================================================
+    // 점검 대상별 동적 렌더링 함수들
+    // ============================================================
+
+    // 점검 대상별 일반현황 정의
+    const generalInfoByTarget = {
+      '비탈면': {
+        fields: [
+          { name: '위치', type: 'text', key: 'location' },
+          { name: '재료', type: 'checkbox', options: ['흙', '암반', '혼합'], key: 'material' },
+          { name: '경계', type: 'checkbox', options: ['시설물(석축 및 담장 등)', '없음(토사 등)'], key: 'boundary' }
+        ]
+      },
+      '석축 및 옹벽': {
+        fields: [
+          { name: '위치', type: 'text', key: 'location' },
+          { name: '제원', type: 'dimension', keys: ['length', 'height'] },
+          { name: '재료', type: 'checkbox', options: ['석재', '콘크리트', '기타'], key: 'material' }
+        ]
+      },
+      '지반': {
+        fields: [
+          { name: '위치', type: 'text', key: 'location' },
+          { name: '재료', type: 'checkbox', options: ['흙', '석재', '소성재', '아스콘·콘크리트', '혼합'], key: 'material' }
+        ]
+      },
+      '다리': {
+        fields: [
+          { name: '위치', type: 'text', key: 'location' },
+          { name: '유형', type: 'text', key: 'type' },
+          { name: '제원', type: 'dimension', keys: ['length', 'height'] },
+          { name: '재료', type: 'checkbox', options: ['목재', '석재', '소성재', '흙', '강재', '콘크리트', '복합재', '기타'], key: 'material' }
+        ]
+      },
+      '지당': {
+        fields: [
+          { name: '위치', type: 'text', key: 'location' },
+          { name: '제원', type: 'text', key: 'dimension' },
+          { name: '재료', type: 'checkbox', options: ['흙', '수지재', '강재', '석재', '콘크리트', '기타'], key: 'material' },
+          { name: '수질 상태', type: 'checkbox', options: ['녹조', '부유물', '기타'], key: 'waterQuality' }
+        ]
+      },
+      '문': {
+        fields: [
+          { name: '위치', type: 'text', key: 'location' },
+          { name: '유형', type: 'text', key: 'type' },
+          { name: '재료', type: 'checkbox', options: ['목재', '석재', '소성재', '흙', '강재', '콘크리트', '기타'], key: 'material' }
+        ]
+      },
+      '담장': {
+        fields: [
+          { name: '위치', type: 'text', key: 'location' },
+          { name: '제원', type: 'dimension', keys: ['length', 'height'] },
+          { name: '재료', type: 'checkbox', options: ['목재', '석재', '소성재', '흙', '강재', '콘크리트', '기타'], key: 'material' }
+        ]
+      },
+      '굴뚝': {
+        fields: [
+          { name: '위치', type: 'text', key: 'location' },
+          { name: '재료', type: 'checkbox', options: ['목재', '석재', '소성재', '흙', '강재', '콘크리트', '기타'], key: 'material' }
+        ]
+      },
+      '배수시설': {
+        fields: [
+          { name: '종류', type: 'checkbox', options: ['수로', '집수정', '명거', '암거'], key: 'facilityType' },
+          { name: '재료', type: 'checkbox', options: ['흙', '수지재', '강재', '석재', '콘크리트', '기타'], key: 'material' },
+          { name: '지형', type: 'checkbox', options: ['평지', '경사지', '석축, 옹벽'], key: 'terrain' }
+        ]
+      },
+      '단일목': {
+        fields: [
+          { name: '위치', type: 'text', key: 'location' },
+          { name: '형상', type: 'tree', keys: ['species', 'height', 'dbh', 'crownWidth'] }
+        ]
+      },
+      '군락': {
+        fields: [
+          { name: '위치', type: 'text', key: 'location' },
+          { name: '제원', type: 'tree2', keys: ['species', 'height'] },
+          { name: '종류', type: 'checkbox', options: ['관목', '교목', '상록수', '낙엽수', '활엽수', '침엽수'], key: 'treeType' },
+          { name: '활력도', type: 'checkbox', options: ['높음', '보통', '낮음'], key: 'vitality' }
+        ]
+      }
+    };
+
+    // 점검 대상별 점검항목 정의
+    const checklistItemsByTarget = {
+      '비탈면': {
+        facility: [
+          { name: '높이', ratings: ['<5m', '5~11m', '11~18m', '18~25m', '>25m'] },
+          { name: '경사', ratings: ['<15°', '15-20°', '20~25°', '25-30°', '30° 이상'] },
+          { name: '토사·암반층 결합력', ratings: ['매우 견고', '조밀/견고', '양호/중간', '느슨/연약', '매우 느슨'] },
+          { name: '토층심도', ratings: ['0~20㎝', '20~40㎝', '40~60㎝', '60~80㎝', '80㎝ 이상'] },
+          { name: '피복율', ratings: ['50% 이상', '-', '50% 이하', '-', '없음'] },
+          { name: '낙석흔적', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '풍화도', ratings: ['신선(해당없음)', '약간풍화', '보통풍화', '심한풍화', '완전풍화'] },
+          { name: '지면유출흔적', ratings: ['없음', '-', '습윤', '-', '젖음, 용수'] },
+          { name: '배수상태', ratings: ['원활', '-', '습윤', '-', '물고임'] }
+        ],
+        additional: [
+          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
+          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+        ],
+        facilityCount: 9,
+        additionalCount: 4
+      },
+      '석축 및 옹벽': {
+        facility: [
+          { name: '세굴', section: '기초부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '침하', section: '기초부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '우수침투흔', section: '기초부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '균열', section: '전면부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '파손·탈락', section: '전면부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '열화', section: '전면부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '누수흔', section: '전면부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '채움재 유실', section: '전면부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '줄눈 유실', section: '전면부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '변형', section: '전면부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '배수공', section: '상단부', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] },
+          { name: '낙석 흔적', section: '상단부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '지반 침하', section: '상단부', ratings: ['없음', '-', '-', '-', '있음'] }
+        ],
+        additional: [
+          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
+          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+        ],
+        facilityCount: 13,
+        additionalCount: 4
+      },
+      '지반': {
+        facility: [
+          { name: '세굴', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '침하', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '공동', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '지반노출', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '지면유출흔적', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '지면구배', ratings: ['있음', '-', '-', '-', '없음'] },
+          { name: '배수상태', ratings: ['원활', '-', '습윤', '-', '물고임'] }
+        ],
+        additional: [
+          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
+          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+        ],
+        facilityCount: 7,
+        additionalCount: 4
+      },
+      '다리': {
+        facility: [
+          { name: '세굴', section: '기초부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '침하', section: '기초부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '균열', section: '기초부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '파손·탈락', section: '기초부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '균열', section: '교각부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '파손·탈락', section: '교각부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '열화', section: '교각부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '변형', section: '교각부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '부식', section: '교각부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '유간', section: '교각부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '균열', section: '교면부(상판)', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '파손·탈락', section: '교면부(상판)', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '열화', section: '교면부(상판)', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '부식', section: '교면부(상판)', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '균열', section: '난간', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '파손·탈락', section: '난간', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '열화', section: '난간', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '변형', section: '난간', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '부식', section: '난간', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '유간', section: '난간', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] }
+        ],
+        additional: [
+          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', ratings: ['건조물', '시설물', '지당', '수목', '기타'] },
+          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+        ],
+        facilityCount: 20,
+        additionalCount: 4
+      },
+      '지당': {
+        facility: [
+          { name: '균열', section: '바닥부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '파손·탈락', section: '바닥부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '열화', section: '바닥부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '퇴적', section: '바닥부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '침하', section: '바닥부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '누수', section: '바닥부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '균열', section: '측벽부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '파손·탈락', section: '측벽부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '열화', section: '측벽부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '변형', section: '측벽부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '누수흔', section: '측벽부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '균열', section: '중도', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '파손·탈락', section: '중도', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '수목 유무', section: '중도', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '수목 기울기', section: '중도', ratings: ['5° 미만', '5~10° 미만', '10~15°미만', '15~20°미만', '20° 초과'] },
+          { name: '입수구', section: '배수시설', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] },
+          { name: '출수구', section: '배수시설', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+        ],
+        additional: [
+          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
+          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+        ],
+        facilityCount: 17,
+        additionalCount: 4
+      },
+      '문': {
+        facility: [
+          { name: '세굴', section: '기초부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '침하', section: '기초부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '우수침투흔', section: '기초부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '균열', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '파손·탈락', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '열화', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '누수흔', section: '벽체부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '변형', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '부식', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '균열', section: '지붕부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '파손·탈락', section: '지붕부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '누수흔', section: '지붕부', ratings: ['없음', '-', '-', '-', '있음'] }
+        ],
+        additional: [
+          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
+          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+        ],
+        facilityCount: 12,
+        additionalCount: 4
+      },
+      '담장': {
+        facility: [
+          { name: '세굴', section: '기초부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '침하', section: '기초부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '우수침투흔', section: '기초부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '균열', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '파손·탈락', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '열화', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '누수흔', section: '벽체부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '줄눈 유실', section: '벽체부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '변형', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '부식', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '균열', section: '지붕부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '파손·탈락', section: '지붕부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '누수흔', section: '지붕부', ratings: ['없음', '-', '-', '-', '있음'] }
+        ],
+        additional: [
+          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
+          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+        ],
+        facilityCount: 13,
+        additionalCount: 4
+      },
+      '굴뚝': {
+        facility: [
+          { name: '세굴', section: '기초부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '침하', section: '기초부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '우수침투흔', section: '기초부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '균열', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '파손·탈락', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '열화', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '누수흔', section: '벽체부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '변형', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '부식', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '균열', section: '지붕부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '파손·탈락', section: '지붕부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '누수흔', section: '지붕부', ratings: ['없음', '-', '-', '-', '있음'] }
+        ],
+        additional: [
+          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
+          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+        ],
+        facilityCount: 12,
+        additionalCount: 4
+      },
+      '배수시설': {
+        facility: [
+          { name: '균열', section: '바닥부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '파손·탈락', section: '바닥부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '열화', section: '바닥부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '퇴적', section: '바닥부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '침하', section: '바닥부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '누수', section: '바닥부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '균열', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '파손·탈락', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '열화', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '변형', section: '벽체부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '누수', section: '벽체부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '균열', section: '덮개부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '파손·탈락', section: '덮개부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '열화', section: '덮개부', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] },
+          { name: '퇴적', section: '덮개부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '침하', section: '덮개부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '누수', section: '덮개부', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '피복 재료', ratings: ['매끄러운 포장', '마사토', '잔디', '낙엽있는 삼림지', '밀집잔디 삼림지'] },
+          { name: '배수 상태', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+        ],
+        additional: [
+          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] }
+        ],
+        facilityCount: 19,
+        additionalCount: 2
+      },
+      '단일목': {
+        facility: [
+          { name: '복토·심토', section: '뿌리', ratings: ['없음', '경미', '국부', '광대', '심각'] },
+          { name: '뿌리들림', section: '뿌리', ratings: ['없음', '-', '경미', '-', '심각'] },
+          { name: '뿌리감기', section: '뿌리', ratings: ['없음', '-', '경미', '-', '심각'] },
+          { name: '결함', section: '뿌리', ratings: ['없음', '-', '경미', '-', '있음'] },
+          { name: '결함', section: '근원', ratings: ['없음', '-', '경미', '-', '심각'] },
+          { name: '병충해', section: '근원', ratings: ['없음', '-', '경미', '-', '심각'] },
+          { name: '밀도', section: '줄기', ratings: ['정상', '-', '-', '-', '쇠퇴(50%이하)'] },
+          { name: '엽색', section: '줄기', ratings: ['진한녹색', '-', '녹색', '-', '변색'] },
+          { name: '결함', section: '줄기', ratings: ['없음', '-', '경미', '-', '심각'] },
+          { name: '병충해', section: '줄기', ratings: ['없음', '-', '경미', '-', '심각'] },
+          { name: '고사지', section: '가지', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '결함', section: '가지', ratings: ['없음', '-', '경미', '-', '심각'] },
+          { name: '병충해', section: '가지', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '기울기', ratings: ['5° 미만', '5~10° 미만', '10~15°미만', '15~20°미만', '20° 초과'] },
+          { name: '토사결합력', ratings: ['매우 견고', '견고', '중간', '느슨', '매우 느슨'] },
+          { name: '토양상태', ratings: ['양토', '식양토', '마사토', '사질토', '진흙'] },
+          { name: '외과수술', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '보강시설', ratings: ['있음', '-', '-', '-', '필요'] }
+        ],
+        additional: [
+          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', ratings: ['건조물', '시설물', '보행로', '수목', '기타'] },
+          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+        ],
+        facilityCount: 18,
+        additionalCount: 4
+      },
+      '군락': {
+        facility: [
+          { name: '복토·심토', section: '뿌리', ratings: ['없음', '경미', '국부', '광대', '심각'] },
+          { name: '뿌리들림', section: '뿌리', ratings: ['없음', '-', '경미', '-', '심각'] },
+          { name: '뿌리감기', section: '뿌리', ratings: ['없음', '-', '경미', '-', '심각'] },
+          { name: '결함', section: '뿌리', ratings: ['없음', '-', '경미', '-', '있음'] },
+          { name: '결함', section: '근원', ratings: ['없음', '-', '경미', '-', '심각'] },
+          { name: '병충해', section: '근원', ratings: ['없음', '-', '경미', '-', '심각'] },
+          { name: '밀도', section: '줄기', ratings: ['정상', '-', '-', '-', '쇠퇴(50%이하)'] },
+          { name: '엽색', section: '줄기', ratings: ['진한녹색', '-', '녹색', '-', '변색'] },
+          { name: '결함', section: '줄기', ratings: ['없음', '-', '경미', '-', '심각'] },
+          { name: '병충해', section: '줄기', ratings: ['없음', '-', '경미', '-', '심각'] },
+          { name: '고사지', section: '가지', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '결함', section: '가지', ratings: ['없음', '-', '경미', '-', '심각'] },
+          { name: '병충해', section: '가지', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '기울기', ratings: ['5° 미만', '5~10° 미만', '10~15°미만', '15~20°미만', '20° 초과'] },
+          { name: '토사결합력', ratings: ['매우 견고', '견고', '중간', '느슨', '매우 느슨'] },
+          { name: '토양상태', ratings: ['양토', '식양토', '마사토', '사질토', '진흙'] },
+          { name: '외과수술', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '보강시설', ratings: ['있음', '-', '-', '-', '필요'] }
+        ],
+        additional: [
+          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', ratings: ['건조물', '시설물', '보행로', '수목', '기타'] },
+          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+        ],
+        facilityCount: 18,
+        additionalCount: 4
+      }
+    };
+
+    // 점검 대상별 예상피해 유형 정의
+    const damageTypesByTarget = {
+      '비탈면': ['침식', '이완', '붕괴'],
+      '석축 및 옹벽': ['손상', '침하', '전도', '배부름', '붕괴'],
+      '지반': ['침하', '공동', '침수', '침식', '손상'],
+      '다리': ['침하', '손상', '전도', '배부름', '붕괴'],
+      '지당': ['손상', '배부름', '퇴적', '침하', '붕괴'],
+      '문': ['손상', '전도', '붕괴'],
+      '담장': ['손상', '전도', '붕괴', '고사'],
+      '굴뚝': ['손상', '전도', '붕괴'],
+      '배수시설': ['손상', '전도', '배부름', '퇴적', '침하', '붕괴'],
+      '단일목': ['부러짐', '도복'],
+      '군락': ['부러짐', '도복']
+    };
+
+    // 일반현황 테이블 렌더링
+    function renderGeneralInfo(targetType) {
+      const container = document.getElementById('generalInfoContainer');
+      if (!container) return;
+
+      const config = generalInfoByTarget[targetType];
+      if (!config) {
+        container.innerHTML = '<p>일반현황 정보가 없습니다.</p>';
+        return;
+      }
+
+      // facilityInfo 키에서 데이터 가져오기 (inspection-general.html에서 저장한 키)
+      const facilityData = inspectionData.facilityInfo || {};
+      console.log('Facility data:', facilityData);
+
+      let html = `<table class="status-table">
+        <tr>
+          <th>항목</th>
+          <td colspan="3">내용</td>
+          <th>비고</th>
+        </tr>`;
+
+      config.fields.forEach(field => {
+        html += '<tr>';
+        html += `<th>${field.name}</th>`;
+
+        if (field.type === 'text') {
+          const value = facilityData[field.key] || '';
+          html += `<td colspan="3">${value || '-'}</td>`;
+        } else if (field.type === 'checkbox') {
+          html += '<td colspan="3"><div class="option-group">';
+          const savedValues = facilityData[field.key] || [];
+          field.options.forEach(opt => {
+            const isChecked = Array.isArray(savedValues) ? savedValues.includes(opt) : savedValues === opt;
+            html += `<span class="option-item"><span class="check-box${isChecked ? ' checked' : ''}"></span> <span class="check-label">${opt}</span></span>`;
+          });
+          html += '</div></td>';
+        } else if (field.type === 'dimension') {
+          const length = facilityData.length || '';
+          const height = facilityData.height || '';
+          html += `<td colspan="3">길이: ${length || '-'} / 높이: ${height || '-'}</td>`;
+        } else if (field.type === 'tree') {
+          const species = facilityData.species || '';
+          const treeHeight = facilityData.treeHeight || facilityData.height || '';
+          const dbh = facilityData.dbh || '';
+          const crownWidth = facilityData.crownWidth || '';
+          html += `<td colspan="3">수종: ${species || '-'} / 수고: ${treeHeight || '-'}m / 흉고: ${dbh || '-'}cm / 수관폭: ${crownWidth || '-'}m</td>`;
+        } else if (field.type === 'tree2') {
+          const species = facilityData.species || '';
+          const treeHeight = facilityData.treeHeight || facilityData.height || '';
+          html += `<td colspan="3">수종: ${species || '-'} / 수고: ${treeHeight || '-'}m</td>`;
+        }
+
+        html += '<td></td></tr>';
+      });
+
+      html += '</table>';
+      container.innerHTML = html;
+    }
+
+    // 점검항목 테이블 렌더링
+    function renderChecklist(targetType) {
+      const container = document.getElementById('checklistContainer');
+      if (!container) return;
+
+      const config = checklistItemsByTarget[targetType];
+      if (!config) {
+        // 기본 양식 (설정이 없는 경우)
+        container.innerHTML = '<p>점검항목 정보가 준비 중입니다.</p>';
+        return;
+      }
+
+      let html = `<table class="checklist-table">
+        <colgroup>
+          <col style="width: 50px;">
+          <col style="width: 70px;">
+          <col style="width: 90px;">
+          <col style="width: 90px;">
+          <col style="width: 90px;">
+          <col style="width: 90px;">
+          <col style="width: 90px;">
+          <col style="width: 70px;">
+        </colgroup>
+        <thead>
+          <tr>
+            <th colspan="2" rowspan="2">구분</th>
+            <th colspan="5">평가 척도</th>
+            <th rowspan="2">비고</th>
+          </tr>
+          <tr>
+            <th>안전</th>
+            <th>관심</th>
+            <th>주의</th>
+            <th>경계</th>
+            <th>위험</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+      // 당해시설 항목
+      const facilityItems = config.facility || [];
+      const facilityCount = config.facilityCount || facilityItems.length;
+
+      facilityItems.forEach((item, index) => {
+        html += '<tr>';
+        if (index === 0) {
+          html += `<td rowspan="${facilityCount}" class="sub-header">당해<br>시설</td>`;
+        }
+        html += `<td class="row-header">${item.name}</td>`;
+
+        // 저장된 값 찾기
+        const savedItem = inspectionData.checklist?.facility?.find(i => i.item === item.name);
+        const savedValue = savedItem?.rating || '';
+
+        item.ratings.forEach(rating => {
+          if (rating === '-') {
+            html += '<td>-</td>';
+          } else {
+            const isChecked = savedValue === rating;
+            html += `<td><span class="check-cell"><span class="check-box${isChecked ? ' checked' : ''}"></span> ${rating}</span></td>`;
+          }
+        });
+
+        html += `<td>${savedItem?.remark || ''}</td>`;
+        html += '</tr>';
+      });
+
+      // 추가 피해요소 항목
+      const additionalItems = config.additional || [];
+      const additionalCount = config.additionalCount || additionalItems.length;
+
+      additionalItems.forEach((item, index) => {
+        html += '<tr>';
+        if (index === 0) {
+          html += `<td rowspan="${additionalCount}" class="sub-header">추가<br>피해<br>요소</td>`;
+        }
+        html += `<td class="row-header">${item.name}</td>`;
+
+        // 저장된 값 찾기
+        const savedItem = inspectionData.checklist?.additional?.find(i => i.item === item.name);
+        const savedValue = savedItem?.rating || '';
+
+        item.ratings.forEach(rating => {
+          if (rating === '-') {
+            html += '<td>-</td>';
+          } else {
+            const isChecked = savedValue === rating;
+            html += `<td><span class="check-cell"><span class="check-box${isChecked ? ' checked' : ''}"></span> ${rating}</span></td>`;
+          }
+        });
+
+        html += `<td>${savedItem?.remark || ''}</td>`;
+        html += '</tr>';
+      });
+
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    // 예상피해 유형 렌더링
+    function renderDamageTypes(targetType) {
+      const container = document.getElementById('damageTypeContainer');
+      if (!container) return;
+
+      const types = damageTypesByTarget[targetType] || ['손상', '침하', '전도', '배부름', '붕괴'];
+      const savedTypes = inspectionData.final?.damageTypes || [];
+
+      let html = '';
+      types.forEach(type => {
+        const isChecked = savedTypes.includes(type);
+        html += `<span class="option-item" data-type="${type}"><span class="check-box${isChecked ? ' checked' : ''}"></span> <span class="check-label">${type}</span></span>`;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // 점검 대상에 따라 보고서 양식 렌더링
+    function renderReportByTarget(targetType) {
+      console.log('Rendering report for target:', targetType);
+      renderGeneralInfo(targetType);
+      renderChecklist(targetType);
+      renderDamageTypes(targetType);
+    }
+
+    // 페이지 로드 시 점검 대상별 렌더링 실행
+    renderReportByTarget(target);
 
     // 이전 버튼
     function goBack() {
