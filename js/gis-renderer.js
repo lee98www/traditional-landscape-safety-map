@@ -170,29 +170,22 @@ const GISRenderer = {
   },
 
   /**
-   * 점검 결과에 따른 마커 아이콘
-   * @param {string} rating - 점검 등급
+   * 점검 결과에 따른 마커 아이콘 (통일된 파란색 핀)
+   * @param {string} rating - 점검 등급 (사용 안함)
    * @param {string} targetType - 대상 유형
    */
   getMarkerIcon(rating, targetType) {
-    const colors = {
-      '안전': '#4CAF50',
-      '관심': '#FFC107',
-      '주의': '#FF9800',
-      '경계': '#FF5722',
-      '위험': '#F44336',
-      '검토 필요': '#9E9E9E'
-    };
-
-    const color = colors[rating] || colors['검토 필요'];
+    // 점검 이력은 통일된 파란색 위치 핀 아이콘 사용
+    const pinPath = 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z';
 
     return {
-      path: google.maps.SymbolPath.CIRCLE,
-      scale: 10,
-      fillColor: color,
-      fillOpacity: 0.9,
+      path: pinPath,
+      fillColor: '#1976D2',
+      fillOpacity: 1,
       strokeColor: '#FFFFFF',
-      strokeWeight: 2
+      strokeWeight: 2,
+      scale: 1.5,
+      anchor: new google.maps.Point(12, 22)
     };
   },
 
