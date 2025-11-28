@@ -15,7 +15,9 @@ const DataLoader = {
   cache: {
     inspections: null,
     gis: null,
-    siteInfo: null
+    siteInfo: null,
+    disasterHistory: null,
+    repairHistory: null
   },
 
   /**
@@ -213,13 +215,94 @@ const DataLoader = {
   },
 
   /**
+   * 재해 이력 데이터 로드
+   * @param {string} siteId - 대상지 ID (기본값: 'nakseonjae')
+   * @returns {Promise<Array>} 재해 이력 배열
+   */
+  async loadDisasterHistory(siteId = 'nakseonjae') {
+    if (this.cache.disasterHistory) {
+      return this.cache.disasterHistory;
+    }
+
+    try {
+      const response = await fetch(`data/${siteId}/disaster-history.json`);
+      if (!response.ok) {
+        throw new Error(`재해 이력 로드 실패: ${siteId}`);
+      }
+      this.cache.disasterHistory = await response.json();
+      return this.cache.disasterHistory;
+    } catch (error) {
+      console.error('재해 이력 로드 오류:', error);
+      return [];
+    }
+  },
+
+  /**
+   * 수리 이력 데이터 로드
+   * @param {string} siteId - 대상지 ID (기본값: 'nakseonjae')
+   * @returns {Promise<Array>} 수리 이력 배열
+   */
+  async loadRepairHistory(siteId = 'nakseonjae') {
+    if (this.cache.repairHistory) {
+      return this.cache.repairHistory;
+    }
+
+    try {
+      const response = await fetch(`data/${siteId}/repair-history.json`);
+      if (!response.ok) {
+        throw new Error(`수리 이력 로드 실패: ${siteId}`);
+      }
+      this.cache.repairHistory = await response.json();
+      return this.cache.repairHistory;
+    } catch (error) {
+      console.error('수리 이력 로드 오류:', error);
+      return [];
+    }
+  },
+
+  /**
+   * 이력 데이터 필터링
+   * @param {Array} items - 이력 항목 배열
+   * @param {string} filterType - 필터 타입 ('all', '전통조경요소', '석축', '담장', '수목' 등)
+   * @returns {Array} 필터링된 배열
+   */
+  filterHistory(items, filterType) {
+    if (!items || items.length === 0) return [];
+    if (filterType === 'all' || filterType === '전통조경요소') return items;
+
+    return items.filter(item => {
+      // elementType이 필터와 일치하는지 확인
+      return item.elementType === filterType;
+    });
+  },
+
+  /**
+   * 타입별 이력 통계
+   * @param {Array} items - 이력 항목 배열
+   * @returns {Object} 타입별 개수
+   */
+  getHistoryStats(items) {
+    if (!items || items.length === 0) return {};
+
+    const stats = {};
+    items.forEach(item => {
+      const type = item.elementType || '기타';
+      stats[type] = (stats[type] || 0) + 1;
+    });
+
+    return stats;
+  },
+
+  /**
    * 캐시 초기화
    */
   clearCache() {
     this.cache = {
       inspections: null,
       gis: null,
-      siteInfo: null
+      siteInfo: null,
+      disasterHistory: null,
+      repairHistory: null
     };
   }
 };

@@ -268,6 +268,19 @@
       pointer-events: auto;
     }
 
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .filter-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #666;
+      white-space: nowrap;
+    }
+
     .filter-select {
       padding: 8px 12px;
       border: 1px solid #DDD;
@@ -390,18 +403,29 @@
       display: block;
     }
 
+    /* 수리 이역 서브메뉴 컨테이너 */
+    .repair-submenu-container {
+      margin-top: 8px;
+      display: none;
+    }
+
+    .repair-submenu-container.active {
+      display: block;
+    }
+
+    .submenu-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #666;
+      padding: 0 16px 6px 16px;
+    }
+
     /* 수리 이력 서브메뉴 */
     .repair-submenu {
       background: var(--color-bg-white);
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin-top: 8px;
       overflow: hidden;
-      display: none;
-    }
-
-    .repair-submenu.active {
-      display: block;
     }
 
     .submenu-item {
@@ -502,31 +526,37 @@
     </div>
 
     <!-- 수리 이력 서브메뉴 -->
-    <div class="repair-submenu" id="repairSubmenu">
-      <button class="submenu-item" onclick="selectRepairFilter('flood')">
-        <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
-        범람 위험 요소
-      </button>
-      <button class="submenu-item" onclick="selectRepairFilter('terrain')">
-        <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
-        인접 지형
-      </button>
-      <button class="submenu-item" onclick="selectRepairFilter('surrounding')">
-        <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
-        주변 영향
-      </button>
-      <button class="submenu-item" onclick="selectRepairFilter('elevation')">
-        <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
-        고저차
-      </button>
-      <button class="submenu-item" onclick="selectRepairFilter('hydraulic')">
-        <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
-        수리 조건
-      </button>
-      <button class="submenu-item" onclick="selectRepairFilter('rainfall')">
-        <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
-        강우 이력
-      </button>
+    <div class="repair-submenu-container">
+      <div class="repair-submenu" id="repairSubmenu">
+        <button class="submenu-item active" onclick="selectRepairFilter('all')">
+          <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
+          모두보기
+        </button>
+        <button class="submenu-item" onclick="selectRepairFilter('flood')">
+          <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
+          범람 위험 요소
+        </button>
+        <button class="submenu-item" onclick="selectRepairFilter('terrain')">
+          <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
+          인접 지형
+        </button>
+        <button class="submenu-item" onclick="selectRepairFilter('surrounding')">
+          <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
+          주변 영향
+        </button>
+        <button class="submenu-item" onclick="selectRepairFilter('elevation')">
+          <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
+          고저차
+        </button>
+        <button class="submenu-item" onclick="selectRepairFilter('hydraulic')">
+          <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
+          수리 조건
+        </button>
+        <button class="submenu-item" onclick="selectRepairFilter('rainfall')">
+          <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
+          강우 이력
+        </button>
+      </div>
     </div>
   </div>
 
@@ -641,26 +671,38 @@
   <!-- 재해 이력 오버레이 -->
   <div class="history-overlay" id="disasterOverlay">
     <div class="filter-bar">
-      <select class="filter-select">
-        <option>전통조경요소</option>
-        <option>석축</option>
-        <option>옹벽</option>
-        <option>담장</option>
-        <option>수목</option>
-      </select>
-      <select class="filter-select">
-        <option>재해</option>
-        <option>호우</option>
-        <option>강풍</option>
-        <option>태풍</option>
-      </select>
-      <select class="filter-select">
-        <option>연도</option>
-        <option>2023</option>
-        <option>2022</option>
-        <option>2021</option>
-        <option>2020</option>
-      </select>
+      <div class="filter-group">
+        <label class="filter-label">전통조경요소</label>
+        <select class="filter-select" id="disasterElementFilter" onchange="applyDisasterFilters()">
+          <option value="all" selected>모두보기</option>
+          <option value="석축">석축</option>
+          <option value="옹벽">옹벽</option>
+          <option value="담장">담장</option>
+          <option value="수목">수목</option>
+          <option value="문">문</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">재해</label>
+        <select class="filter-select" id="disasterTypeFilter" onchange="applyDisasterFilters()">
+          <option value="all" selected>모두보기</option>
+          <option value="호우">호우</option>
+          <option value="강풍">강풍</option>
+          <option value="태풍">태풍</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">연도</label>
+        <select class="filter-select" id="disasterYearFilter" onchange="applyDisasterFilters()">
+          <option value="all" selected>모두보기</option>
+          <option value="2023">2023</option>
+          <option value="2022">2022</option>
+          <option value="2021">2021</option>
+          <option value="2020">2020</option>
+          <option value="2019">2019</option>
+          <option value="2017">2017</option>
+        </select>
+      </div>
     </div>
     <div class="warning-banner">
       ※ 본 지도의 조사 영역과 결과는 실제 조사 결과가 아닌 이해를 돕기 위한 예시 이미지 입니다
@@ -735,13 +777,19 @@
     let polygons = [];
     let currentMode = null;
     let inspectionsData = [];
+    let gisData = {};
+    let allDisasterHistory = [];
+    let allRepairHistory = [];
 
     // 대상지 좌표 (창덕궁 낙선재)
     const siteInfo = DataLoader.getSiteInfo();
     const siteLocation = siteInfo.center;
 
+    // 더미 폴리곤 데이터는 삭제하고 실제 데이터를 JSON에서 로드합니다
+    // (아래 주석 처리된 코드는 참고용으로 남겨둠)
+    /*
     // 재해 이력 폴리곤 데이터 - 매우 작은 크기, 좁은 범위 (중심: 37.5795, 126.9910)
-    const disasterPolygons = [
+    const disasterPolygons_OLD = [
       // 고위험 (빨강) - 4개
       { paths: [
         { lat: 37.57962, lng: 126.99065 }, { lat: 37.57968, lng: 126.99072 },
@@ -794,9 +842,11 @@
         { lat: 37.57970, lng: 126.99108 }, { lat: 37.57965, lng: 126.99104 }
       ], color: '#FFD54F', level: 'low' }
     ];
+    */
 
-    // 수리 이력 폴리곤 데이터 - 매우 작은 크기, 좁은 범위 (중심: 37.5795, 126.9910)
-    const repairPolygons = [
+    // 수리 이력 폴리곤 데이터도 JSON에서 로드합니다
+    /*
+    const repairPolygons_OLD = [
       // 수리 필요 높음 (보라) - 4개
       { paths: [
         { lat: 37.57942, lng: 126.99075 }, { lat: 37.57948, lng: 126.99080 },
@@ -849,6 +899,7 @@
         { lat: 37.58000, lng: 126.99122 }
       ], color: '#CE93D8', level: 'low' }
     ];
+    */
 
     // Google Maps 초기화
     async function initMap() {
@@ -864,14 +915,18 @@
       // GIS 렌더러 초기화
       GISRenderer.init(map);
 
-      // 점검표 데이터 로드
+      // 점검표 데이터 로드 (표시는 하지 않음 - 버튼 클릭 시에만 표시)
       inspectionsData = await DataLoader.loadAllInspections();
       console.log(`점검표 ${inspectionsData.length}개 로드 완료`);
 
-      // GIS 레이어 로드 (배경)
-      const gisData = await DataLoader.loadAllGIS();
-      await GISRenderer.renderAllLayers(gisData);
-      console.log('GIS 레이어 로드 완료');
+      // GIS 데이터 로드만 수행 (렌더링은 하지 않음 - 버튼 클릭 시에만)
+      gisData = await DataLoader.loadAllGIS();
+      console.log('GIS 데이터 로드 완료 (렌더링 대기 중)');
+
+      // 재해/수리 이력 데이터 로드
+      allDisasterHistory = await DataLoader.loadDisasterHistory();
+      allRepairHistory = await DataLoader.loadRepairHistory();
+      console.log(`재해 이력 ${allDisasterHistory.length}개, 수리 이력 ${allRepairHistory.length}개 로드 완료`);
     }
 
     // 메뉴 활성화 상태 업데이트
@@ -886,7 +941,7 @@
     function hideAllOverlays() {
       document.getElementById('disasterOverlay').classList.remove('active');
       document.getElementById('repairOverlay').classList.remove('active');
-      document.getElementById('repairSubmenu').classList.remove('active');
+      document.querySelector('.repair-submenu-container').classList.remove('active');
       clearPolygons();
       clearInspectionMarkers();
       currentMode = null;
@@ -908,12 +963,89 @@
       // 실제 점검표 데이터로 마커 생성
       if (inspectionsData && inspectionsData.length > 0) {
         GISRenderer.addAllInspectionMarkers(inspectionsData, (inspection) => {
-          // 클릭 시 inspection-confirm.html로 이동
-          window.location.href = `inspection-confirm.html?id=${inspection.id}`;
+          // 클릭 시 모달 팝업 표시 (페이지 이동 대신)
+          showInspectionModal(inspection);
         });
       } else {
         console.warn('점검표 데이터가 없습니다.');
       }
+    }
+
+    // 점검 상세 모달 표시 함수
+    function showInspectionModal(inspection) {
+      // 기존 모달이 있으면 제거
+      const existingModal = document.querySelector('.inspection-modal');
+      if (existingModal) {
+        existingModal.remove();
+      }
+
+      // 등급별 색상 결정
+      const getRatingColor = (rating) => {
+        const colors = {
+          '안전': '#4CAF50',
+          '관심': '#2196F3',
+          '주의': '#FF9800',
+          '경계': '#FF5722',
+          '위험': '#F44336'
+        };
+        return colors[rating] || '#666';
+      };
+
+      const overallRating = inspection.overallAssessment ? inspection.overallAssessment.rating : '미확인';
+      const ratingColor = getRatingColor(overallRating);
+
+      // 사진 목록 생성
+      const photoUrls = DataLoader.getPhotoUrls(inspection);
+      const photoGridHTML = photoUrls.length > 0 ? `
+        <div class="photo-grid">
+          ${photoUrls.slice(0, 6).map((url, index) => `
+            <img src="${url}"
+                 alt="점검 사진 ${index + 1}"
+                 style="width: 100px; height: 100px; object-fit: cover; cursor: pointer; border-radius: 4px;"
+                 onerror="this.style.display='none';">
+          `).join('')}
+        </div>
+      ` : '<p style="color: #999;">사진이 없습니다.</p>';
+
+      // 모달 HTML 생성
+      const modal = document.createElement('div');
+      modal.className = 'inspection-modal';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <button class="close-btn" onclick="this.closest('.inspection-modal').remove()">&times;</button>
+          <h3 style="margin-top: 0; color: #333;">${inspection.targetName} 점검 상세</h3>
+          <div class="modal-body">
+            <p style="margin: 8px 0;"><strong>점검 유형:</strong> ${inspection.targetType}</p>
+            <p style="margin: 8px 0;"><strong>점검 일자:</strong> ${inspection.inspectionDate}</p>
+            <p style="margin: 8px 0;">
+              <strong>종합 판정:</strong>
+              <span style="color: ${ratingColor}; font-weight: 700; font-size: 16px;">${overallRating}</span>
+            </p>
+            <div style="margin-top: 16px;">
+              <strong>사진 기록:</strong>
+              <div style="margin-top: 8px;">
+                ${photoGridHTML}
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button onclick="window.location.href='inspection-confirm.html?id=${inspection.id}'"
+                    style="width: 100%; padding: 12px; background: #0052CC; color: white; border: none;
+                           border-radius: 8px; cursor: pointer; font-size: 16px;">
+              전체 보고서 보기 →
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+
+      // 모달 클릭 시 닫기 (배경 클릭)
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.remove();
+        }
+      });
     }
 
     // 점검 이력 팝업 표시
@@ -938,19 +1070,86 @@
       currentMode = 'disaster';
       document.getElementById('disasterOverlay').classList.add('active');
 
-      // 폴리곤 생성
-      disasterPolygons.forEach(data => {
-        const polygon = new google.maps.Polygon({
-          paths: data.paths,
-          strokeColor: data.color,
+      // 전체 재해 이력 표시
+      renderDisasterHistory(allDisasterHistory);
+    }
+
+    // 재해 이력 필터 적용
+    function applyDisasterFilters() {
+      const elementFilter = document.getElementById('disasterElementFilter').value;
+      const typeFilter = document.getElementById('disasterTypeFilter').value;
+      const yearFilter = document.getElementById('disasterYearFilter').value;
+
+      console.log('재해 이력 필터:', { elementFilter, typeFilter, yearFilter });
+
+      let filtered = allDisasterHistory;
+
+      // elementType 필터
+      if (elementFilter !== 'all') {
+        filtered = filtered.filter(item => item.elementType === elementFilter);
+      }
+
+      // type 필터 (호우, 강풍, 태풍)
+      if (typeFilter !== 'all') {
+        filtered = filtered.filter(item => item.type && item.type.includes(typeFilter));
+      }
+
+      // year 필터
+      if (yearFilter !== 'all') {
+        const year = parseInt(yearFilter);
+        filtered = filtered.filter(item => item.year === year);
+      }
+
+      console.log(`재해 이력 필터링 결과: ${filtered.length}개 항목`);
+      renderDisasterHistory(filtered);
+    }
+
+    // 재해 이력 렌더링 함수
+    function renderDisasterHistory(disasters) {
+      clearPolygons();
+
+      disasters.forEach(disaster => {
+        // 재해 위치에 작은 원형 마커 생성
+        const circle = new google.maps.Circle({
+          strokeColor: disaster.color || '#FF5252',
           strokeOpacity: 0.8,
           strokeWeight: 2,
-          fillColor: data.color,
-          fillOpacity: 0.5,
-          map: map
+          fillColor: disaster.color || '#FF5252',
+          fillOpacity: 0.35,
+          map: map,
+          center: disaster.coordinates,
+          radius: 15, // 15미터 반경
+          clickable: true
         });
-        polygons.push(polygon);
+
+        // 클릭 이벤트: 재해 정보 표시
+        circle.addListener('click', () => {
+          showDisasterInfo(disaster);
+        });
+
+        polygons.push(circle);
       });
+    }
+
+    // 재해 정보 표시 함수
+    function showDisasterInfo(disaster) {
+      const infoContent = `
+        <div style="padding: 10px; max-width: 250px;">
+          <h4 style="margin: 0 0 8px 0; color: #E53935;">재해 이력</h4>
+          <p style="margin: 4px 0;"><strong>연도:</strong> ${disaster.year}년</p>
+          <p style="margin: 4px 0;"><strong>위치:</strong> ${disaster.location}</p>
+          <p style="margin: 4px 0;"><strong>종류:</strong> ${disaster.type}</p>
+          <p style="margin: 4px 0;"><strong>대상:</strong> ${disaster.target}</p>
+          <p style="margin: 4px 0;"><strong>피해:</strong> ${disaster.damage}</p>
+        </div>
+      `;
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: infoContent,
+        position: disaster.coordinates
+      });
+
+      infoWindow.open(map);
     }
 
     // 수리 이력 표시
@@ -959,34 +1158,77 @@
       setActiveMenu(3);
       currentMode = 'repair';
       document.getElementById('repairOverlay').classList.add('active');
-      document.getElementById('repairSubmenu').classList.add('active');
+      document.querySelector('.repair-submenu-container').classList.add('active');
 
-      // 폴리곤 생성
-      repairPolygons.forEach(data => {
-        const polygon = new google.maps.Polygon({
-          paths: data.paths,
-          strokeColor: data.color,
+      // 전체 수리 이력 표시 (필터: '전통조경요소')
+      renderRepairHistory(allRepairHistory);
+    }
+
+    // 수리 이력 렌더링 함수
+    function renderRepairHistory(repairs) {
+      clearPolygons();
+
+      repairs.forEach(repair => {
+        // 수리 위치에 작은 원형 마커 생성
+        const circle = new google.maps.Circle({
+          strokeColor: repair.color || '#4CAF50',
           strokeOpacity: 0.8,
           strokeWeight: 2,
-          fillColor: data.color,
-          fillOpacity: 0.5,
-          map: map
+          fillColor: repair.color || '#4CAF50',
+          fillOpacity: 0.35,
+          map: map,
+          center: repair.coordinates,
+          radius: 15, // 15미터 반경
+          clickable: true
         });
-        polygons.push(polygon);
+
+        // 클릭 이벤트: 수리 정보 표시
+        circle.addListener('click', () => {
+          showRepairInfo(repair);
+        });
+
+        polygons.push(circle);
       });
     }
 
-    // 수리 이력 서브메뉴 필터 선택
+    // 수리 정보 표시 함수
+    function showRepairInfo(repair) {
+      const infoContent = `
+        <div style="padding: 10px; max-width: 250px;">
+          <h4 style="margin: 0 0 8px 0; color: #4CAF50;">수리 이력</h4>
+          <p style="margin: 4px 0;"><strong>연도:</strong> ${repair.year}년</p>
+          <p style="margin: 4px 0;"><strong>위치:</strong> ${repair.location}</p>
+          <p style="margin: 4px 0;"><strong>대상:</strong> ${repair.target}</p>
+          <p style="margin: 4px 0;"><strong>내용:</strong> ${repair.workDescription}</p>
+          ${repair.cost ? `<p style="margin: 4px 0;"><strong>비용:</strong> ${repair.cost}</p>` : ''}
+        </div>
+      `;
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: infoContent,
+        position: repair.coordinates
+      });
+
+      infoWindow.open(map);
+    }
+
+    // 수리 이력 필터 선택
     function selectRepairFilter(filterType) {
       // 모든 서브메뉴 아이템 비활성화
-      document.querySelectorAll('.submenu-item').forEach(item => {
+      document.querySelectorAll('#repairSubmenu .submenu-item').forEach(item => {
         item.classList.remove('active');
       });
       // 클릭한 아이템 활성화
       event.currentTarget.classList.add('active');
 
-      // 필터 타입에 따른 동작 (추후 데이터 연동 시 구현)
-      console.log('선택된 필터:', filterType);
+      console.log('수리 이력 선택된 필터:', filterType);
+
+      // DataLoader의 필터링 함수 사용 (elementType 기반)
+      const filtered = DataLoader.filterHistory(allRepairHistory, filterType);
+      console.log(`수리 이력 필터링 결과: ${filtered.length}개 항목`);
+
+      // 필터링된 데이터로 지도 업데이트
+      renderRepairHistory(filtered);
     }
 
     // 폴리곤 제거

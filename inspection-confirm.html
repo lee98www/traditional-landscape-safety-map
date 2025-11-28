@@ -612,6 +612,27 @@
       </div>
 
       <div class="report-body">
+        <!-- 점검 기본 정보 (Phase 5 추가) -->
+        <div class="report-section">
+          <h3 class="report-section__title">점검 기본 정보</h3>
+          <div class="report-info">
+            <div class="report-info__label">점검 유형</div>
+            <div class="report-info__value" id="inspectionTypeDisplay">-</div>
+
+            <div class="report-info__label">대상지</div>
+            <div class="report-info__value" id="siteDisplay">-</div>
+
+            <div class="report-info__label">점검 대상</div>
+            <div class="report-info__value" id="targetDisplay">-</div>
+
+            <div class="report-info__label">점검 일자</div>
+            <div class="report-info__value" id="dateDisplay">-</div>
+
+            <div class="report-info__label">점검자</div>
+            <div class="report-info__value" data-field="inspector">-</div>
+          </div>
+        </div>
+
         <!-- 일반 현황 - 디자인 시안 기준 테이블 형식 -->
         <div class="report-section">
           <h3 class="report-section__title">일반 현황</h3>
@@ -862,8 +883,11 @@
         <div class="report-section">
           <h3 class="report-section__title">종합 판정</h3>
           <div class="report-info" style="margin-bottom: 16px;">
-            <span class="report-info__label">조사자 의견</span>
-            <span class="report-info__value" id="inspectorOpinion">(의견 없음)</span>
+            <div class="report-info__label">판정 등급</div>
+            <div class="report-info__value" data-field="rating" style="font-weight: 700; font-size: 16px;">-</div>
+
+            <div class="report-info__label">점검자 의견</div>
+            <div class="report-info__value" data-field="inspectorOpinion" style="grid-column: 2; white-space: pre-wrap;">(의견 없음)</div>
           </div>
           <div style="font-size: 13px; font-weight: 500; color: #333; margin-bottom: 12px;">점검 결과에 따른 보수 필요성</div>
           <div class="report-judgment">
@@ -888,6 +912,12 @@
               <span class="report-judgment__desc">(즉시 조치)</span>
             </div>
           </div>
+        </div>
+
+        <!-- 사진 기록 (Phase 5 추가) -->
+        <div class="report-section" id="photoSection" style="display: none;">
+          <h3 class="report-section__title">사진 기록</h3>
+          <div id="photoContainer" class="photo-container" style="display: flex; flex-wrap: wrap; gap: 12px;"></div>
         </div>
 
         <!-- 제출 버튼 (디자인 시안 기준: 제출하기만 표시) -->
@@ -1219,7 +1249,22 @@
 
     // 종합 판정 렌더링
     function renderOverallAssessment(assessment) {
-      // 종합 판정 등급
+      // 판정 등급 표시
+      const ratingEl = document.querySelector('[data-field="rating"]');
+      if (ratingEl && assessment.rating) {
+        ratingEl.textContent = assessment.rating;
+        // 등급별 색상
+        const colors = {
+          '안전': '#4CAF50',
+          '관심': '#2196F3',
+          '주의': '#FF9800',
+          '경계': '#FF5722',
+          '위험': '#F44336'
+        };
+        ratingEl.style.color = colors[assessment.rating] || '#333';
+      }
+
+      // 종합 판정 등급 (기존 선택 UI)
       const ratingEls = document.querySelectorAll('.report-judgment__item');
       ratingEls.forEach(el => {
         const itemRating = el.getAttribute('data-rating');
@@ -1249,34 +1294,29 @@
       // 사진 URL 생성
       const photoUrls = DataLoader.getPhotoUrls(inspection);
 
-      // 사진 섹션 찾기 또는 생성
-      let photoContainer = document.getElementById('photoContainer');
+      // 사진 섹션 및 컨테이너 찾기
+      const photoSection = document.getElementById('photoSection');
+      const photoContainer = document.getElementById('photoContainer');
 
-      if (!photoContainer) {
-        // 사진 컨테이너가 없으면 보고서 끝에 추가
-        const reportContent = document.querySelector('.report-content');
-        if (reportContent) {
-          const photoSection = document.createElement('div');
-          photoSection.className = 'report-section';
-          photoSection.innerHTML = `
-            <h3 class="report-section__title">사진 기록</h3>
-            <div id="photoContainer" class="photo-container"></div>
-          `;
-          reportContent.appendChild(photoSection);
-          photoContainer = document.getElementById('photoContainer');
+      if (photoContainer && photoUrls.length > 0) {
+        // 사진 섹션 표시
+        if (photoSection) {
+          photoSection.style.display = 'block';
         }
-      }
 
-      if (photoContainer) {
         // 썸네일 그리드 생성
         photoContainer.innerHTML = photoUrls.map((url, index) => `
           <img src="${url}"
                alt="점검 사진 ${index + 1}"
                class="photo-thumbnail"
                onclick="openPhotoGallery(${index})"
-               style="width: 150px; height: 150px; object-fit: cover; margin: 5px; cursor: pointer; border-radius: 8px;"
-               onerror="this.style.display='none';">
+               style="width: 150px; height: 150px; object-fit: cover; cursor: pointer; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"
+               onerror="console.error('Failed to load:', this.src); this.style.display='none';">
         `).join('');
+
+        console.log('Photos rendered successfully:', photoUrls.length);
+      } else {
+        console.warn('Photo container not found or no photo URLs');
       }
     }
 

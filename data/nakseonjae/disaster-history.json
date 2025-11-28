@@ -1,0 +1,72 @@
+[
+  {
+    "id": "disaster_001",
+    "year": 2023,
+    "date": "2023년",
+    "location": "창덕궁낙선재권역",
+    "type": "호우, 강풍",
+    "elementType": "수목",
+    "target": "미송 1구",
+    "damage": "매화나무 1주 도목",
+    "description": "매화나무 1주 도목",
+    "coordinates": { "lat": 37.579100, "lng": 126.993450 },
+    "severity": "high",
+    "color": "#FF5252"
+  },
+  {
+    "id": "disaster_002",
+    "year": 2020,
+    "date": "2020년",
+    "location": "낙선재 정원",
+    "type": "호우, 강풍",
+    "elementType": "수목",
+    "target": "수목",
+    "damage": "낙선재 1주 도목",
+    "description": "낙선재 1주 도목",
+    "coordinates": { "lat": 37.579000, "lng": 126.993550 },
+    "severity": "high",
+    "color": "#FF5252"
+  },
+  {
+    "id": "disaster_003",
+    "year": 2020,
+    "date": "2020년",
+    "location": "낙선재 정원",
+    "type": "호우, 강풍",
+    "elementType": "석축",
+    "target": "석축",
+    "damage": "석축 도복석으로 인한 석축 1.6m 부분 파손",
+    "description": "석축 도복석으로 인한 석축 1.6m 부분 파손",
+    "coordinates": { "lat": 37.578900, "lng": 126.993300 },
+    "severity": "medium",
+    "color": "#FFA726"
+  },
+  {
+    "id": "disaster_004",
+    "year": 2020,
+    "date": "2020년",
+    "location": "낙재화청정경원",
+    "type": "호우, 강풍",
+    "elementType": "수목",
+    "target": "수목",
+    "damage": "화원낙부(B70×H14) 1주 도목",
+    "description": "화원낙부(B60×H18) 1주 도목, 화원낙부(B70×H14) 1주 도목",
+    "coordinates": { "lat": 37.579150, "lng": 126.993600 },
+    "severity": "high",
+    "color": "#FF5252"
+  },
+  {
+    "id": "disaster_005",
+    "year": 2020,
+    "date": "2020년",
+    "location": "낙선재",
+    "type": "호우, 강풍",
+    "elementType": "문",
+    "target": "문",
+    "damage": "음압문5척각대옥갑석장계불량/음압문전릉석진설왜항방연",
+    "description": "음압문5척각대옥갑석장계불량/음압문전릉석진설왜항방연",
+    "coordinates": { "lat": 37.579036, "lng": 126.993281 },
+    "severity": "medium",
+    "color": "#FFA726"
+  }
+]
