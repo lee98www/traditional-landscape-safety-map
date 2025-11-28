@@ -553,15 +553,39 @@
     const siteId = urlParams.get('site') || '1';
     const inspectionType = urlParams.get('type') || 'regular';
     const targetRaw = urlParams.get('target');
-    const target = targetRaw || '석축 및 옹벽';
+    const targetDisplay = targetRaw || '석축 및 옹벽';
+
+    // target 정규화 함수 - URL의 target을 내부 키로 변환
+    function normalizeTarget(targetType) {
+      if (!targetType) return '석축 및 옹벽';
+
+      // "수목: 단일목" -> "단일목", "수목: 군락" -> "군락" 변환
+      if (targetType.includes('단일목')) return '단일목';
+      if (targetType.includes('군락')) return '군락';
+      if (targetType.includes('석축') || targetType.includes('옹벽')) return '석축 및 옹벽';
+      if (targetType.includes('비탈면')) return '비탈면';
+      if (targetType.includes('지반')) return '지반';
+      if (targetType.includes('다리')) return '다리';
+      if (targetType.includes('지당')) return '지당';
+      if (targetType.includes('문')) return '문';
+      if (targetType.includes('담장')) return '담장';
+      if (targetType.includes('굴뚝')) return '굴뚝';
+      if (targetType.includes('배수')) return '배수시설';
+
+      return targetType;
+    }
+
+    // 정규화된 target (내부 switch문 등에서 사용)
+    const target = normalizeTarget(targetDisplay);
 
     // 디버그: target 파라미터 확인
     console.log('[inspection-general] URL search:', window.location.search);
     console.log('[inspection-general] target raw:', targetRaw);
-    console.log('[inspection-general] target:', target);
+    console.log('[inspection-general] targetDisplay:', targetDisplay);
+    console.log('[inspection-general] target (normalized):', target);
 
-    // 헤더에 점검 대상 항목명 표시
-    document.getElementById('headerTitle').textContent = `안전 점검 실시 (${target})`;
+    // 헤더에 점검 대상 항목명 표시 (원본 이름 사용)
+    document.getElementById('headerTitle').textContent = `안전 점검 실시 (${targetDisplay})`;
 
     // 시설물 개요 필드 렌더링 (점검 대상별 - 테이블 형식)
     function renderFacilityFields() {
@@ -774,42 +798,106 @@
           break;
 
         case '배수시설':
+          // 배수시설은 위치 필드가 없음 - 위치 행 제거 후 종류부터 시작
+          html = '<tbody>';
           html += `
             <tr>
-              <th>규모</th>
-              <td colspan="3"><input type="text" id="facilityScale" placeholder="규모 입력"></td>
+              <th>종류</th>
+              <td colspan="3">
+                <div class="checkbox-inline">
+                  <label><input type="checkbox" name="facilityType" value="수로"> 수로</label>
+                  <label><input type="checkbox" name="facilityType" value="집수정"> 집수정</label>
+                  <label><input type="checkbox" name="facilityType" value="명거"> 명거</label>
+                  <label><input type="checkbox" name="facilityType" value="암거"> 암거</label>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>재료</th>
+              <td colspan="3">
+                <div class="checkbox-inline">
+                  <label><input type="checkbox" name="facilityMaterial" value="흙"> 흙</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="수지재"> 수지재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="강재"> 강재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="석재"> 석재</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="콘크리트"> 콘크리트</label>
+                  <label><input type="checkbox" name="facilityMaterial" value="기타"> 기타(<input type="text" id="facilityMaterialOther" style="width: 60px;">)</label>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>지형</th>
+              <td colspan="3">
+                <div class="checkbox-inline">
+                  <label><input type="checkbox" name="facilityTerrain" value="평지"> 평지</label>
+                  <label><input type="checkbox" name="facilityTerrain" value="경사지"> 경사지</label>
+                  <label><input type="checkbox" name="facilityTerrain" value="석축, 옹벽"> 석축, 옹벽</label>
+                </div>
+              </td>
             </tr>
           `;
           break;
 
-        case '수목: 단일목':
+        case '단일목':
           html += `
             <tr>
-              <th>수고</th>
-              <td><input type="text" id="facilityTreeHeight" placeholder="m"></td>
-              <th>흉고직경</th>
-              <td><input type="text" id="facilityDbh" placeholder="cm"></td>
+              <th>위치</th>
+              <td colspan="3">
+                <div class="checkbox-inline">
+                  <label><input type="checkbox" id="facilityOldTree" value="노거수"> 노거수</label>
+                </div>
+              </td>
             </tr>
             <tr>
-              <th>수관폭</th>
-              <td colspan="3"><input type="text" id="facilityCrownWidth" placeholder="m"></td>
+              <th>형상</th>
+              <td>수종: <input type="text" id="facilitySpecies" placeholder="수종" style="width: 80px;"></td>
+              <td>수고: <input type="text" id="facilityTreeHeight" placeholder="m" style="width: 60px;"> m</td>
+              <td>흉고: <input type="text" id="facilityDbh" placeholder="cm" style="width: 60px;"> cm</td>
+            </tr>
+            <tr>
+              <th></th>
+              <td colspan="3">수관폭: <input type="text" id="facilityCrownWidth" placeholder="m" style="width: 60px;"> m</td>
             </tr>
           `;
           break;
 
-        case '수목: 군락':
+        case '군락':
           html += `
             <tr>
-              <th>본수</th>
-              <td><input type="text" id="facilityTreeCount" placeholder="본"></td>
-              <th>주요수종</th>
-              <td><input type="text" id="facilityMainSpecies" placeholder="수종명"></td>
+              <th>위치</th>
+              <td colspan="3">
+                <div class="checkbox-inline">
+                  <label><input type="checkbox" id="facilityOldTree" value="노거수"> 노거수</label>
+                </div>
+              </td>
             </tr>
             <tr>
-              <th>평균수고</th>
-              <td><input type="text" id="facilityAvgHeight" placeholder="m"></td>
-              <th>평균수관폭</th>
-              <td><input type="text" id="facilityAvgCrownWidth" placeholder="m"></td>
+              <th>제원</th>
+              <td>수종: <input type="text" id="facilitySpecies" placeholder="수종" style="width: 80px;"></td>
+              <td colspan="2">수고: <input type="text" id="facilityTreeHeight" placeholder="m" style="width: 60px;"> m</td>
+            </tr>
+            <tr>
+              <th>종류</th>
+              <td colspan="3">
+                <div class="checkbox-inline">
+                  <label><input type="checkbox" name="facilityTreeType" value="관목"> 관목</label>
+                  <label><input type="checkbox" name="facilityTreeType" value="교목"> 교목</label>
+                  <label><input type="checkbox" name="facilityTreeType" value="상록수"> 상록수</label>
+                  <label><input type="checkbox" name="facilityTreeType" value="낙엽수"> 낙엽수</label>
+                  <label><input type="checkbox" name="facilityTreeType" value="활엽수"> 활엽수</label>
+                  <label><input type="checkbox" name="facilityTreeType" value="침엽수"> 침엽수</label>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>활력도</th>
+              <td colspan="3">
+                <div class="checkbox-inline">
+                  <label><input type="radio" name="facilityVitality" value="높음"> 높음</label>
+                  <label><input type="radio" name="facilityVitality" value="보통"> 보통</label>
+                  <label><input type="radio" name="facilityVitality" value="낮음"> 낮음(<input type="text" id="facilityVitalityNote" placeholder="원인" style="width: 60px;">)</label>
+                </div>
+              </td>
             </tr>
           `;
           break;
@@ -827,11 +915,14 @@
       container.innerHTML = html;
     }
 
-    // 시설물 개요 데이터 수집
+    // 시설물 개요 데이터 수집 (PDF 기준 업데이트)
     function collectFacilityData() {
-      const facilityData = {
-        location: document.getElementById('facilityLocation')?.value || ''
-      };
+      const facilityData = {};
+
+      // 배수시설은 위치 필드가 없음
+      if (target !== '배수시설') {
+        facilityData.location = document.getElementById('facilityLocation')?.value || '';
+      }
 
       switch(target) {
         case '비탈면':
@@ -840,37 +931,73 @@
           break;
 
         case '지반':
-          facilityData.material = document.getElementById('facilityMaterial')?.value || '';
+          facilityData.material = Array.from(document.querySelectorAll('input[name="facilityMaterial"]:checked')).map(el => el.value);
           break;
 
         case '석축 및 옹벽':
-        case '문':
-        case '담장':
-        case '굴뚝':
-        case '배수시설':
-          facilityData.scale = document.getElementById('facilityScale')?.value || '';
+          facilityData.length = document.getElementById('facilityLength')?.value || '';
+          facilityData.height = document.getElementById('facilityHeight')?.value || '';
+          facilityData.material = Array.from(document.querySelectorAll('input[name="facilityMaterial"]:checked')).map(el => el.value);
+          facilityData.materialOther = document.getElementById('facilityMaterialOther')?.value || '';
           break;
 
         case '다리':
+          facilityData.type = document.getElementById('facilityType')?.value || '';
           facilityData.length = document.getElementById('facilityLength')?.value || '';
-          facilityData.width = document.getElementById('facilityWidth')?.value || '';
+          facilityData.height = document.getElementById('facilityHeight')?.value || '';
+          facilityData.material = Array.from(document.querySelectorAll('input[name="facilityMaterial"]:checked')).map(el => el.value);
+          facilityData.materialOther = document.getElementById('facilityMaterialOther')?.value || '';
           break;
 
         case '지당':
-          facilityData.area = document.getElementById('facilityArea')?.value || '';
+          facilityData.dimension = document.getElementById('facilityScale')?.value || '';
+          facilityData.material = Array.from(document.querySelectorAll('input[name="facilityMaterial"]:checked')).map(el => el.value);
+          facilityData.materialOther = document.getElementById('facilityMaterialOther')?.value || '';
+          facilityData.waterQuality = Array.from(document.querySelectorAll('input[name="facilityWaterQuality"]:checked')).map(el => el.value);
+          facilityData.waterQualityOther = document.getElementById('facilityWaterQualityOther')?.value || '';
           break;
 
-        case '수목: 단일목':
+        case '문':
+          facilityData.type = document.getElementById('facilityType')?.value || '';
+          facilityData.material = Array.from(document.querySelectorAll('input[name="facilityMaterial"]:checked')).map(el => el.value);
+          facilityData.materialOther = document.getElementById('facilityMaterialOther')?.value || '';
+          break;
+
+        case '담장':
+          facilityData.length = document.getElementById('facilityLength')?.value || '';
+          facilityData.height = document.getElementById('facilityHeight')?.value || '';
+          facilityData.position = Array.from(document.querySelectorAll('input[name="facilityPosition"]:checked')).map(el => el.value);
+          facilityData.material = Array.from(document.querySelectorAll('input[name="facilityMaterial"]:checked')).map(el => el.value);
+          facilityData.materialOther = document.getElementById('facilityMaterialOther')?.value || '';
+          break;
+
+        case '굴뚝':
+          facilityData.material = Array.from(document.querySelectorAll('input[name="facilityMaterial"]:checked')).map(el => el.value);
+          facilityData.materialOther = document.getElementById('facilityMaterialOther')?.value || '';
+          break;
+
+        case '배수시설':
+          facilityData.facilityType = Array.from(document.querySelectorAll('input[name="facilityType"]:checked')).map(el => el.value);
+          facilityData.material = Array.from(document.querySelectorAll('input[name="facilityMaterial"]:checked')).map(el => el.value);
+          facilityData.materialOther = document.getElementById('facilityMaterialOther')?.value || '';
+          facilityData.terrain = Array.from(document.querySelectorAll('input[name="facilityTerrain"]:checked')).map(el => el.value);
+          break;
+
+        case '단일목':
+          facilityData.isOldTree = document.getElementById('facilityOldTree')?.checked || false;
+          facilityData.species = document.getElementById('facilitySpecies')?.value || '';
           facilityData.treeHeight = document.getElementById('facilityTreeHeight')?.value || '';
           facilityData.dbh = document.getElementById('facilityDbh')?.value || '';
           facilityData.crownWidth = document.getElementById('facilityCrownWidth')?.value || '';
           break;
 
-        case '수목: 군락':
-          facilityData.treeCount = document.getElementById('facilityTreeCount')?.value || '';
-          facilityData.mainSpecies = document.getElementById('facilityMainSpecies')?.value || '';
-          facilityData.avgHeight = document.getElementById('facilityAvgHeight')?.value || '';
-          facilityData.avgCrownWidth = document.getElementById('facilityAvgCrownWidth')?.value || '';
+        case '군락':
+          facilityData.isOldTree = document.getElementById('facilityOldTree')?.checked || false;
+          facilityData.species = document.getElementById('facilitySpecies')?.value || '';
+          facilityData.treeHeight = document.getElementById('facilityTreeHeight')?.value || '';
+          facilityData.treeType = Array.from(document.querySelectorAll('input[name="facilityTreeType"]:checked')).map(el => el.value);
+          facilityData.vitality = document.querySelector('input[name="facilityVitality"]:checked')?.value || '';
+          facilityData.vitalityNote = document.getElementById('facilityVitalityNote')?.value || '';
           break;
 
         default:
@@ -914,7 +1041,8 @@
             siteName: site.name,
             inspectionType: inspectionType,
             inspectionTypeName: inspectionType === 'regular' ? '정기점검' : '상시점검',
-            target: target,
+            target: target, // 정규화된 target (내부 데이터 키)
+            targetDisplay: targetDisplay, // 원본 표시명 (예: "수목: 군락")
             inspectionDate: new Date().toISOString().split('T')[0],
             inspector: '홍길동', // 로그인 정보에서 가져올 수 있음
             basicInfo: site.basicInfo

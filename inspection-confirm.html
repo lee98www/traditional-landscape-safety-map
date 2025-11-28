@@ -100,11 +100,13 @@
       font-size: 20px;
       font-weight: 700;
       margin-bottom: 8px;
+      color: #FFFFFF;
     }
 
     .report-header__subtitle {
       font-size: 14px;
       opacity: 0.9;
+      color: #FFFFFF;
     }
 
     .report-body {
@@ -571,44 +573,87 @@
       gap: 4px;
     }
 
-    /* Report Judgment */
-    .report-judgment {
-      display: flex;
-      gap: 8px;
-      margin-top: 16px;
-      flex-wrap: wrap;
+    /* 종합판정 테이블 - PDF 디자인 기준 */
+    .final-judgment-table {
+      table-layout: fixed;
     }
 
-    .report-judgment__item {
-      flex: 1;
-      min-width: 100px;
-      padding: 12px 8px;
+    .final-judgment-table th {
+      width: 100px;
+      vertical-align: middle;
+      line-height: 1.4;
+    }
+
+    .final-judgment-table td {
       text-align: center;
-      border: 2px solid #E0E0E0;
-      border-radius: 8px;
-      background-color: #FFFFFF;
     }
 
-    .report-judgment__item--selected {
-      border-color: #0052CC;
-      background-color: #E8F4FD;
+    .damage-type-row {
+      padding: 12px !important;
     }
 
-    .report-judgment__item--selected .report-judgment__label {
-      color: #0052CC;
+    .damage-type-row .option-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
     }
 
-    .report-judgment__label {
-      display: block;
-      font-size: 14px;
+    .damage-type-row .option-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rating-header {
+      font-size: 13px;
       font-weight: 600;
-      color: #333333;
-      margin-bottom: 2px;
+      color: #333;
+      padding: 10px 8px !important;
+      background-color: #F5F5F5;
     }
 
-    .report-judgment__desc {
+    .rating-desc {
       font-size: 11px;
-      color: #999999;
+      font-weight: 400;
+      color: #666;
+    }
+
+    .rating-cell {
+      height: 40px;
+      vertical-align: middle;
+    }
+
+    .rating-indicator {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: transparent;
+    }
+
+    .rating-cell.selected .rating-indicator {
+      background-color: #0052CC;
+    }
+
+    .rating-cell[data-rating="안전"].selected {
+      background-color: #E8F5E9;
+    }
+
+    .rating-cell[data-rating="관심"].selected {
+      background-color: #F1F8E9;
+    }
+
+    .rating-cell[data-rating="주의"].selected {
+      background-color: #FFF8E1;
+    }
+
+    .rating-cell[data-rating="경계"].selected {
+      background-color: #FFF3E0;
+    }
+
+    .rating-cell[data-rating="위험"].selected {
+      background-color: #FFEBEE;
     }
 
     /* Responsive */
@@ -698,47 +743,44 @@
           </div>
         </div>
 
-        <!-- 예상 피해 유형 - 점검 대상별 동적 렌더링 -->
-        <div class="report-section" id="damageTypeSection">
-          <h3 class="report-section__title">예상 피해 유형 (중복가능)</h3>
-          <div class="option-group damage-type-options" id="damageTypeContainer" style="padding: 12px 0;">
-            <!-- JS로 target에 따라 동적 렌더링 -->
-          </div>
-        </div>
-
-        <!-- 종합 판정 -->
-        <div class="report-section">
+        <!-- 종합 판정 - PDF/PNG 디자인 기준 테이블 형태 -->
+        <div class="report-section" id="finalJudgmentSection">
           <h3 class="report-section__title">종합 판정</h3>
-          <div class="report-info" style="margin-bottom: 16px;">
-            <div class="report-info__label">판정 등급</div>
-            <div class="report-info__value" data-field="rating" style="font-weight: 700; font-size: 16px;">-</div>
-
-            <div class="report-info__label">점검자 의견</div>
-            <div class="report-info__value" data-field="inspectorOpinion" style="grid-column: 2; white-space: pre-wrap;">(의견 없음)</div>
-          </div>
-          <h4 class="report-section__subtitle">점검 결과에 따른 보수 필요성</h4>
-          <div class="report-judgment">
-            <div class="report-judgment__item" data-rating="안전">
-              <span class="report-judgment__label">안전</span>
-              <span class="report-judgment__desc">(현상유지)</span>
-            </div>
-            <div class="report-judgment__item" data-rating="관심">
-              <span class="report-judgment__label">관심</span>
-              <span class="report-judgment__desc">(모니터링)</span>
-            </div>
-            <div class="report-judgment__item" data-rating="주의">
-              <span class="report-judgment__label">주의</span>
-              <span class="report-judgment__desc">(경미보수)</span>
-            </div>
-            <div class="report-judgment__item" data-rating="경계">
-              <span class="report-judgment__label">경계</span>
-              <span class="report-judgment__desc">(수리)</span>
-            </div>
-            <div class="report-judgment__item" data-rating="위험">
-              <span class="report-judgment__label">위험</span>
-              <span class="report-judgment__desc">(즉시 조치)</span>
-            </div>
-          </div>
+          <table class="status-table final-judgment-table">
+            <!-- 예상 피해 유형 -->
+            <tr>
+              <th rowspan="2" style="width: 100px;">예상 피해<br>유형<br>(중복가능)</th>
+              <td colspan="5" id="damageTypeContainer" class="damage-type-row">
+                <!-- JS로 target에 따라 동적 렌더링 -->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="5" class="note-cell" style="font-size: 11px; color: #666; text-align: left; padding: 8px 12px;">
+                *서로 영향을 주고받는 피해지점을 함께 기입하여 내용 작성 필요 (예: 수목 ③에 의해 석축 전면부 변형)
+              </td>
+            </tr>
+            <!-- 조사자 의견 -->
+            <tr>
+              <th>조사자 의견</th>
+              <td colspan="5" data-field="inspectorOpinion" style="min-height: 60px; text-align: left; white-space: pre-wrap;">(의견 없음)</td>
+            </tr>
+            <!-- 점검 결과에 따른 보수 필요성 -->
+            <tr>
+              <th rowspan="2">점검 결과에<br>따른 보수<br>필요성</th>
+              <td class="rating-header">안전<br><span class="rating-desc">(현상유지)</span></td>
+              <td class="rating-header">관심<br><span class="rating-desc">(경미보수)</span></td>
+              <td class="rating-header">주의<br><span class="rating-desc">(정밀진단)</span></td>
+              <td class="rating-header">경계<br><span class="rating-desc">(수리)</span></td>
+              <td class="rating-header">위험<br><span class="rating-desc">(즉시 조치)</span></td>
+            </tr>
+            <tr>
+              <td class="rating-cell" data-rating="안전"><span class="rating-indicator"></span></td>
+              <td class="rating-cell" data-rating="관심"><span class="rating-indicator"></span></td>
+              <td class="rating-cell" data-rating="주의"><span class="rating-indicator"></span></td>
+              <td class="rating-cell" data-rating="경계"><span class="rating-indicator"></span></td>
+              <td class="rating-cell" data-rating="위험"><span class="rating-indicator"></span></td>
+            </tr>
+          </table>
         </div>
 
         <!-- 사진 기록 (Phase 5 추가) -->
@@ -827,10 +869,34 @@
     const targetRaw = urlParams.get('target');
     const target = targetRaw || '석축 및 옹벽';
 
+    // target 정규화 함수 - URL의 target을 내부 키로 변환
+    function normalizeTarget(targetType) {
+      if (!targetType) return '석축 및 옹벽';
+
+      // "수목: 단일목" -> "단일목", "수목: 군락" -> "군락" 변환
+      if (targetType.includes('단일목')) return '단일목';
+      if (targetType.includes('군락')) return '군락';
+      if (targetType.includes('석축') || targetType.includes('옹벽')) return '석축 및 옹벽';
+      if (targetType.includes('비탈면')) return '비탈면';
+      if (targetType.includes('지반')) return '지반';
+      if (targetType.includes('다리')) return '다리';
+      if (targetType.includes('지당')) return '지당';
+      if (targetType.includes('문')) return '문';
+      if (targetType.includes('담장')) return '담장';
+      if (targetType.includes('굴뚝')) return '굴뚝';
+      if (targetType.includes('배수')) return '배수시설';
+
+      return targetType;
+    }
+
+    // 정규화된 target (내부 데이터 키용)
+    const normalizedTarget = normalizeTarget(target);
+
     // 디버그: target 파라미터 확인
     console.log('[inspection-confirm] URL search:', window.location.search);
     console.log('[inspection-confirm] target raw:', targetRaw);
     console.log('[inspection-confirm] target:', target);
+    console.log('[inspection-confirm] normalizedTarget:', normalizedTarget);
 
     // 헤더에 점검 대상 항목명 표시
     document.getElementById('headerTitle').textContent = `안전 점검 실시 (${target})`;
@@ -903,29 +969,29 @@
       }
     }
 
-    // 점검결과 업데이트
+    // 점검결과 업데이트 (테이블 구조의 rating-cell 사용)
     function updateResultInfo() {
       if (inspectionData.result && inspectionData.result.rating) {
         const rating = inspectionData.result.rating;
-        const judgmentItems = document.querySelectorAll('.report-judgment__item');
+        const ratingCells = document.querySelectorAll('.rating-cell');
 
-        judgmentItems.forEach(item => {
-          const itemRating = item.getAttribute('data-rating');
-          if (itemRating === rating) {
-            item.classList.add('report-judgment__item--selected');
+        ratingCells.forEach(cell => {
+          const cellRating = cell.getAttribute('data-rating');
+          if (cellRating === rating) {
+            cell.classList.add('selected');
           } else {
-            item.classList.remove('report-judgment__item--selected');
+            cell.classList.remove('selected');
           }
         });
       }
     }
 
-    // 종합판정 업데이트
+    // 종합판정 업데이트 (새 테이블 구조에 맞게 수정)
     function updateFinalInfo() {
       if (inspectionData.final) {
-        // 예상 피해 유형
+        // 예상 피해 유형 - 테이블 셀 내 option-group 내에서 처리
         if (inspectionData.final.damageTypes && inspectionData.final.damageTypes.length > 0) {
-          const damageItems = document.querySelectorAll('.damage-type-options .option-item');
+          const damageItems = document.querySelectorAll('#damageTypeContainer .option-item');
           damageItems.forEach(item => {
             const damageType = item.getAttribute('data-type');
             const checkbox = item.querySelector('.check-box');
@@ -950,21 +1016,19 @@
         }
       }
 
-      // 점검결과의 rating도 종합판정 영역에 표시
+      // 점검결과의 rating - 테이블의 rating-cell에 selected 클래스 추가
       if (inspectionData.result && inspectionData.result.rating) {
-        const ratingEl = document.querySelector('[data-field="rating"]');
-        if (ratingEl) {
-          ratingEl.textContent = inspectionData.result.rating;
-          // 등급별 색상
-          const colors = {
-            '안전': '#4CAF50',
-            '관심': '#8BC34A',
-            '주의': '#FFC107',
-            '경계': '#FF9800',
-            '위험': '#F44336'
-          };
-          ratingEl.style.color = colors[inspectionData.result.rating] || '#333';
-        }
+        const rating = inspectionData.result.rating;
+        const ratingCells = document.querySelectorAll('.rating-cell');
+
+        ratingCells.forEach(cell => {
+          const cellRating = cell.getAttribute('data-rating');
+          if (cellRating === rating) {
+            cell.classList.add('selected');
+          } else {
+            cell.classList.remove('selected');
+          }
+        });
       }
     }
 
@@ -1122,16 +1186,16 @@
       },
       '단일목': {
         fields: [
-          { name: '위치', type: 'text', key: 'location' },
-          { name: '형상', type: 'tree', keys: ['species', 'height', 'dbh', 'crownWidth'] }
+          { name: '위치', type: 'oldtree', key: 'isOldTree' },
+          { name: '형상', type: 'tree', keys: ['species', 'treeHeight', 'dbh', 'crownWidth'] }
         ]
       },
       '군락': {
         fields: [
-          { name: '위치', type: 'text', key: 'location' },
-          { name: '제원', type: 'tree2', keys: ['species', 'height'] },
+          { name: '위치', type: 'oldtree', key: 'isOldTree' },
+          { name: '제원', type: 'tree2', keys: ['species', 'treeHeight'] },
           { name: '종류', type: 'checkbox', options: ['관목', '교목', '상록수', '낙엽수', '활엽수', '침엽수'], key: 'treeType' },
-          { name: '활력도', type: 'checkbox', options: ['높음', '보통', '낮음'], key: 'vitality' }
+          { name: '활력도', type: 'radio', options: ['높음', '보통', '낮음'], key: 'vitality' }
         ]
       }
     };
@@ -1151,10 +1215,10 @@
           { name: '배수상태', ratings: ['원활', '-', '습윤', '-', '물고임'] }
         ],
         additional: [
-          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
-          { name: '유형', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
-          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
-          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+          { name: '유무', section: '인접 피해요소', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', section: '인접 피해요소', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
+          { name: '수로', section: '배수시설', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', section: '배수시설', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
         ],
         facilityCount: 9,
         additionalCount: 4
@@ -1176,10 +1240,10 @@
           { name: '지반 침하', section: '상단부', ratings: ['없음', '-', '-', '-', '있음'] }
         ],
         additional: [
-          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
-          { name: '유형', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
-          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
-          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+          { name: '유무', section: '인접 피해요소', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', section: '인접 피해요소', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
+          { name: '수로', section: '배수시설', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', section: '배수시설', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
         ],
         facilityCount: 13,
         additionalCount: 4
@@ -1195,10 +1259,10 @@
           { name: '배수상태', ratings: ['원활', '-', '습윤', '-', '물고임'] }
         ],
         additional: [
-          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
-          { name: '유형', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
-          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
-          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+          { name: '유무', section: '인접 피해요소', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', section: '인접 피해요소', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
+          { name: '수로', section: '배수시설', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', section: '배수시설', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
         ],
         facilityCount: 7,
         additionalCount: 4
@@ -1227,10 +1291,10 @@
           { name: '유간', section: '난간', ratings: ['없음', '경미', '약간 심각', '심각', '매우 심각'] }
         ],
         additional: [
-          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
-          { name: '유형', ratings: ['건조물', '시설물', '지당', '수목', '기타'] },
-          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
-          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+          { name: '유무', section: '인접 피해요소', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', section: '인접 피해요소', ratings: ['건조물', '시설물', '지당', '수목', '기타'] },
+          { name: '수로', section: '배수시설', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', section: '배수시설', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
         ],
         facilityCount: 20,
         additionalCount: 4
@@ -1256,10 +1320,10 @@
           { name: '출수구', section: '배수시설', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
         ],
         additional: [
-          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
-          { name: '유형', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
-          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
-          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+          { name: '유무', section: '인접 피해요소', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', section: '인접 피해요소', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
+          { name: '수로', section: '배수시설', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', section: '배수시설', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
         ],
         facilityCount: 17,
         additionalCount: 4
@@ -1280,10 +1344,10 @@
           { name: '누수흔', section: '지붕부', ratings: ['없음', '-', '-', '-', '있음'] }
         ],
         additional: [
-          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
-          { name: '유형', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
-          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
-          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+          { name: '유무', section: '인접 피해요소', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', section: '인접 피해요소', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
+          { name: '수로', section: '배수시설', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', section: '배수시설', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
         ],
         facilityCount: 12,
         additionalCount: 4
@@ -1305,10 +1369,10 @@
           { name: '누수흔', section: '지붕부', ratings: ['없음', '-', '-', '-', '있음'] }
         ],
         additional: [
-          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
-          { name: '유형', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
-          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
-          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+          { name: '유무', section: '인접 피해요소', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', section: '인접 피해요소', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
+          { name: '수로', section: '배수시설', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', section: '배수시설', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
         ],
         facilityCount: 13,
         additionalCount: 4
@@ -1329,10 +1393,10 @@
           { name: '누수흔', section: '지붕부', ratings: ['없음', '-', '-', '-', '있음'] }
         ],
         additional: [
-          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
-          { name: '유형', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
-          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
-          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+          { name: '유무', section: '인접 피해요소', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', section: '인접 피해요소', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
+          { name: '수로', section: '배수시설', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', section: '배수시설', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
         ],
         facilityCount: 12,
         additionalCount: 4
@@ -1360,8 +1424,8 @@
           { name: '배수 상태', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
         ],
         additional: [
-          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
-          { name: '유형', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] }
+          { name: '유무', section: '인접 피해요소', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', section: '인접 피해요소', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] }
         ],
         facilityCount: 19,
         additionalCount: 2
@@ -1388,42 +1452,35 @@
           { name: '보강시설', ratings: ['있음', '-', '-', '-', '필요'] }
         ],
         additional: [
-          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
-          { name: '유형', ratings: ['건조물', '시설물', '보행로', '수목', '기타'] },
-          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
-          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+          { name: '유무', section: '인접 피해요소', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', section: '인접 피해요소', ratings: ['건조물', '시설물', '보행로', '수목', '기타'] },
+          { name: '수로', section: '배수시설', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', section: '배수시설', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
         ],
         facilityCount: 18,
         additionalCount: 4
       },
       '군락': {
         facility: [
-          { name: '복토·심토', section: '뿌리', ratings: ['없음', '경미', '국부', '광대', '심각'] },
-          { name: '뿌리들림', section: '뿌리', ratings: ['없음', '-', '경미', '-', '심각'] },
-          { name: '뿌리감기', section: '뿌리', ratings: ['없음', '-', '경미', '-', '심각'] },
-          { name: '결함', section: '뿌리', ratings: ['없음', '-', '경미', '-', '있음'] },
-          { name: '결함', section: '근원', ratings: ['없음', '-', '경미', '-', '심각'] },
-          { name: '병충해', section: '근원', ratings: ['없음', '-', '경미', '-', '심각'] },
-          { name: '밀도', section: '줄기', ratings: ['정상', '-', '-', '-', '쇠퇴(50%이하)'] },
-          { name: '엽색', section: '줄기', ratings: ['진한녹색', '-', '녹색', '-', '변색'] },
-          { name: '결함', section: '줄기', ratings: ['없음', '-', '경미', '-', '심각'] },
-          { name: '병충해', section: '줄기', ratings: ['없음', '-', '경미', '-', '심각'] },
-          { name: '고사지', section: '가지', ratings: ['없음', '-', '-', '-', '있음'] },
-          { name: '결함', section: '가지', ratings: ['없음', '-', '경미', '-', '심각'] },
-          { name: '병충해', section: '가지', ratings: ['없음', '-', '-', '-', '있음'] },
-          { name: '기울기', ratings: ['5° 미만', '5~10° 미만', '10~15°미만', '15~20°미만', '20° 초과'] },
-          { name: '토사결합력', ratings: ['매우 견고', '견고', '중간', '느슨', '매우 느슨'] },
-          { name: '토양상태', ratings: ['양토', '식양토', '마사토', '사질토', '진흙'] },
-          { name: '외과수술', ratings: ['없음', '-', '-', '-', '있음'] },
-          { name: '보강시설', ratings: ['있음', '-', '-', '-', '필요'] }
+          // 구조적 요소
+          { name: '결함', section: '구조적 요소', ratings: ['없음', '-', '경미', '-', '심각'] },
+          { name: '기울기', section: '구조적 요소', ratings: ['5° 미만', '5~10° 미만', '10~15°', '15~20', '20° 초과'] },
+          { name: '뿌리들림', section: '구조적 요소', ratings: ['없음', '-', '경미', '-', '매우 심각'] },
+          { name: '토사결합력', section: '구조적 요소', ratings: ['매우 견고', '견고', '중간', '느슨', '매우 느슨'] },
+          { name: '토양상태', section: '구조적 요소', ratings: ['양토', '식양토', '마사토', '사질토', '진흙'] },
+          { name: '외과수술', section: '구조적 요소', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '보강시설', section: '구조적 요소', ratings: ['있음', '-', '-', '-', '필요'] },
+          // 생리적 요소
+          { name: '병해', section: '생리적 요소', ratings: ['없음', '-', '경미', '-', '심각'] },
+          { name: '충해', section: '생리적 요소', ratings: ['없음', '-', '경미', '-', '심각'] }
         ],
         additional: [
-          { name: '유무', ratings: ['없음', '-', '-', '-', '있음'] },
-          { name: '유형', ratings: ['건조물', '시설물', '보행로', '수목', '기타'] },
-          { name: '수로', ratings: ['원활', '-', '-', '-', '막힘'] },
-          { name: '집수정', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
+          { name: '유무', section: '인접 피해요소', ratings: ['없음', '-', '-', '-', '있음'] },
+          { name: '유형', section: '인접 피해요소', ratings: ['건조물', '시설물', '수목', '보행로', '기타'] },
+          { name: '수로', section: '배수시설', ratings: ['원활', '-', '-', '-', '막힘'] },
+          { name: '집수정', section: '배수시설', ratings: ['원활', '-', '부분 막힘', '-', '막힘'] }
         ],
-        facilityCount: 18,
+        facilityCount: 9,
         additionalCount: 4
       }
     };
@@ -1480,6 +1537,17 @@
             html += `<span class="option-item"><span class="check-box${isChecked ? ' checked' : ''}"></span> <span class="check-label">${opt}</span></span>`;
           });
           html += '</div></td>';
+        } else if (field.type === 'radio') {
+          html += '<td colspan="3"><div class="option-group">';
+          const savedValue = facilityData[field.key] || '';
+          field.options.forEach(opt => {
+            const isChecked = savedValue === opt;
+            html += `<span class="option-item"><span class="check-box${isChecked ? ' checked' : ''}"></span> <span class="check-label">${opt}</span></span>`;
+          });
+          html += '</div></td>';
+        } else if (field.type === 'oldtree') {
+          const isOldTree = facilityData[field.key] || false;
+          html += `<td colspan="3"><div class="option-group"><span class="option-item"><span class="check-box${isOldTree ? ' checked' : ''}"></span> <span class="check-label">노거수</span></span></div></td>`;
         } else if (field.type === 'dimension') {
           const length = facilityData.length || '';
           const height = facilityData.height || '';
@@ -1503,32 +1571,36 @@
       container.innerHTML = html;
     }
 
-    // 점검항목 테이블 렌더링
+    // 점검항목 테이블 렌더링 (PDF 디자인 기준 - section별 rowspan 처리)
     function renderChecklist(targetType) {
       const container = document.getElementById('checklistContainer');
       if (!container) return;
 
       const config = checklistItemsByTarget[targetType];
       if (!config) {
-        // 기본 양식 (설정이 없는 경우)
         container.innerHTML = '<p>점검항목 정보가 준비 중입니다.</p>';
         return;
       }
 
+      // section이 있는 경우 섹션별로 그룹화
+      const facilityItems = config.facility || [];
+      const hasSection = facilityItems.some(item => item.section);
+
       let html = `<table class="checklist-table">
         <colgroup>
           <col style="width: 50px;">
+          ${hasSection ? '<col style="width: 55px;">' : ''}
           <col style="width: 70px;">
-          <col style="width: 90px;">
-          <col style="width: 90px;">
-          <col style="width: 90px;">
-          <col style="width: 90px;">
-          <col style="width: 90px;">
-          <col style="width: 70px;">
+          <col style="width: 85px;">
+          <col style="width: 85px;">
+          <col style="width: 85px;">
+          <col style="width: 85px;">
+          <col style="width: 85px;">
+          <col style="width: 60px;">
         </colgroup>
         <thead>
           <tr>
-            <th colspan="2" rowspan="2">구분</th>
+            <th colspan="${hasSection ? '3' : '2'}" rowspan="2">구분</th>
             <th colspan="5">평가 척도</th>
             <th rowspan="2">비고</th>
           </tr>
@@ -1542,67 +1614,133 @@
         </thead>
         <tbody>`;
 
-      // 당해시설 항목
-      const facilityItems = config.facility || [];
-      const facilityCount = config.facilityCount || facilityItems.length;
-
-      facilityItems.forEach((item, index) => {
-        html += '<tr>';
-        if (index === 0) {
-          html += `<td rowspan="${facilityCount}" class="sub-header">당해<br>시설</td>`;
-        }
-        html += `<td class="row-header">${item.name}</td>`;
-
-        // 저장된 값 찾기
-        const savedItem = inspectionData.checklist?.facility?.find(i => i.item === item.name);
-        const savedValue = savedItem?.rating || '';
-
-        item.ratings.forEach(rating => {
-          if (rating === '-') {
-            html += '<td>-</td>';
-          } else {
-            const isChecked = savedValue === rating;
-            html += `<td><span class="check-cell"><span class="check-box${isChecked ? ' checked' : ''}"></span> ${rating}</span></td>`;
-          }
+      // section별로 그룹화된 아이템 처리
+      if (hasSection) {
+        // 당해시설 - section별 그룹화
+        const sectionGroups = {};
+        facilityItems.forEach(item => {
+          const section = item.section || '기타';
+          if (!sectionGroups[section]) sectionGroups[section] = [];
+          sectionGroups[section].push(item);
         });
 
-        html += `<td>${savedItem?.remark || ''}</td>`;
-        html += '</tr>';
-      });
+        const totalFacilityCount = facilityItems.length;
+        let firstFacilityRow = true;
 
-      // 추가 피해요소 항목
+        Object.entries(sectionGroups).forEach(([section, items]) => {
+          items.forEach((item, idx) => {
+            html += '<tr>';
+
+            // 당해시설 rowspan (전체 항목 개수)
+            if (firstFacilityRow) {
+              html += `<td rowspan="${totalFacilityCount}" class="sub-header">당해<br>시설<br>(${totalFacilityCount})</td>`;
+              firstFacilityRow = false;
+            }
+
+            // section rowspan
+            if (idx === 0) {
+              html += `<td rowspan="${items.length}" class="row-header">${section}</td>`;
+            }
+
+            html += `<td class="row-header">${item.name}</td>`;
+
+            // 저장된 값 찾기 (section + name으로 고유 식별)
+            const itemKey = item.section ? `${item.section}_${item.name}` : item.name;
+            const savedItem = inspectionData.checklist?.facility?.find(i =>
+              (i.section && i.item) ? `${i.section}_${i.item}` === itemKey : i.item === item.name
+            );
+            const savedValue = savedItem?.rating || '';
+
+            item.ratings.forEach(rating => {
+              if (rating === '-') {
+                html += '<td>-</td>';
+              } else {
+                const isChecked = savedValue === rating;
+                html += `<td><span class="check-cell"><span class="check-box${isChecked ? ' checked' : ''}"></span> <span class="check-label">${rating}</span></span></td>`;
+              }
+            });
+
+            html += `<td>${savedItem?.remark || ''}</td>`;
+            html += '</tr>';
+          });
+        });
+      } else {
+        // section이 없는 경우 기존 방식
+        const facilityCount = config.facilityCount || facilityItems.length;
+
+        facilityItems.forEach((item, index) => {
+          html += '<tr>';
+          if (index === 0) {
+            html += `<td rowspan="${facilityCount}" class="sub-header">당해<br>시설<br>(${facilityCount})</td>`;
+          }
+          html += `<td class="row-header">${item.name}</td>`;
+
+          const savedItem = inspectionData.checklist?.facility?.find(i => i.item === item.name);
+          const savedValue = savedItem?.rating || '';
+
+          item.ratings.forEach(rating => {
+            if (rating === '-') {
+              html += '<td>-</td>';
+            } else {
+              const isChecked = savedValue === rating;
+              html += `<td><span class="check-cell"><span class="check-box${isChecked ? ' checked' : ''}"></span> <span class="check-label">${rating}</span></span></td>`;
+            }
+          });
+
+          html += `<td>${savedItem?.remark || ''}</td>`;
+          html += '</tr>';
+        });
+      }
+
+      // 추가 피해요소 항목 (section별 그룹핑)
       const additionalItems = config.additional || [];
       const additionalCount = config.additionalCount || additionalItems.length;
 
-      additionalItems.forEach((item, index) => {
-        html += '<tr>';
-        if (index === 0) {
-          html += `<td rowspan="${additionalCount}" class="sub-header">추가<br>피해<br>요소</td>`;
+      // section별 그룹핑
+      const additionalSections = {};
+      additionalItems.forEach(item => {
+        const section = item.section || '기타';
+        if (!additionalSections[section]) {
+          additionalSections[section] = [];
         }
-        html += `<td class="row-header">${item.name}</td>`;
+        additionalSections[section].push(item);
+      });
 
-        // 저장된 값 찾기
-        const savedItem = inspectionData.checklist?.additional?.find(i => i.item === item.name);
-        const savedValue = savedItem?.rating || '';
-
-        item.ratings.forEach(rating => {
-          if (rating === '-') {
-            html += '<td>-</td>';
-          } else {
-            const isChecked = savedValue === rating;
-            html += `<td><span class="check-cell"><span class="check-box${isChecked ? ' checked' : ''}"></span> ${rating}</span></td>`;
+      let additionalRowIndex = 0;
+      Object.entries(additionalSections).forEach(([sectionName, items]) => {
+        items.forEach((item, itemIndex) => {
+          html += '<tr>';
+          if (additionalRowIndex === 0) {
+            html += `<td rowspan="${additionalCount}" class="sub-header">추가<br>피해<br>요소<br>(${additionalCount})</td>`;
           }
-        });
+          if (itemIndex === 0) {
+            html += `<td rowspan="${items.length}" class="section-header">${sectionName}</td>`;
+          }
+          html += `<td class="row-header">${item.name}</td>`;
 
-        html += `<td>${savedItem?.remark || ''}</td>`;
-        html += '</tr>';
+          const savedItem = inspectionData.checklist?.additional?.find(i => i.item === item.name);
+          const savedValue = savedItem?.rating || '';
+
+          item.ratings.forEach(rating => {
+            if (rating === '-') {
+              html += '<td>-</td>';
+            } else {
+              const isChecked = savedValue === rating;
+              html += `<td><span class="check-cell"><span class="check-box${isChecked ? ' checked' : ''}"></span> <span class="check-label">${rating}</span></span></td>`;
+            }
+          });
+
+          html += `<td>${savedItem?.remark || ''}</td>`;
+          html += '</tr>';
+          additionalRowIndex++;
+        });
       });
 
       html += '</tbody></table>';
       container.innerHTML = html;
     }
 
-    // 예상피해 유형 렌더링
+    // 예상피해 유형 렌더링 (테이블 셀 내부)
     function renderDamageTypes(targetType) {
       const container = document.getElementById('damageTypeContainer');
       if (!container) return;
@@ -1610,13 +1748,29 @@
       const types = damageTypesByTarget[targetType] || ['손상', '침하', '전도', '배부름', '붕괴'];
       const savedTypes = inspectionData.final?.damageTypes || [];
 
-      let html = '';
+      let html = '<div class="option-group">';
       types.forEach(type => {
         const isChecked = savedTypes.includes(type);
         html += `<span class="option-item" data-type="${type}"><span class="check-box${isChecked ? ' checked' : ''}"></span> <span class="check-label">${type}</span></span>`;
       });
+      html += '</div>';
 
       container.innerHTML = html;
+    }
+
+    // 종합판정 보수필요성 렌더링
+    function renderRatingIndicator() {
+      const rating = inspectionData.result?.rating || '';
+      const ratingCells = document.querySelectorAll('.rating-cell');
+
+      ratingCells.forEach(cell => {
+        const cellRating = cell.getAttribute('data-rating');
+        if (cellRating === rating) {
+          cell.classList.add('selected');
+        } else {
+          cell.classList.remove('selected');
+        }
+      });
     }
 
     // 점검 대상에 따라 보고서 양식 렌더링
@@ -1625,10 +1779,11 @@
       renderGeneralInfo(targetType);
       renderChecklist(targetType);
       renderDamageTypes(targetType);
+      renderRatingIndicator();
     }
 
-    // 페이지 로드 시 점검 대상별 렌더링 실행
-    renderReportByTarget(target);
+    // 페이지 로드 시 점검 대상별 렌더링 실행 (정규화된 target 사용)
+    renderReportByTarget(normalizedTarget);
 
     // 이전 버튼
     function goBack() {

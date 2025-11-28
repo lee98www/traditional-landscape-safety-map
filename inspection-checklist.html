@@ -825,7 +825,26 @@
     const siteId = urlParams.get('site') || '1';
     const inspectionType = urlParams.get('type') || 'regular';
     const targetRaw = urlParams.get('target');
-    const target = targetRaw || '석축 및 옹벽';
+
+    // target 정규화 함수 (URL 파라미터 → 내부 데이터 키 변환)
+    function normalizeTarget(targetType) {
+      if (!targetType) return '석축 및 옹벽';
+      if (targetType.includes('단일목')) return '단일목';
+      if (targetType.includes('군락')) return '군락';
+      if (targetType.includes('석축') || targetType.includes('옹벽')) return '석축 및 옹벽';
+      if (targetType.includes('비탈면')) return '비탈면';
+      if (targetType.includes('지반')) return '지반';
+      if (targetType.includes('다리')) return '다리';
+      if (targetType.includes('지당')) return '지당';
+      if (targetType.includes('문')) return '문';
+      if (targetType.includes('담장')) return '담장';
+      if (targetType.includes('굴뚝')) return '굴뚝';
+      if (targetType.includes('배수')) return '배수시설';
+      return targetType;
+    }
+
+    const targetDisplay = targetRaw || '석축 및 옹벽'; // 표시용 원본
+    const target = normalizeTarget(targetDisplay); // 내부 데이터 키
     const section = urlParams.get('section') || 'facility';
     const inspectionId = urlParams.get('id'); // 점검표 ID (예: pl1_wall)
 
@@ -834,8 +853,8 @@
     console.log('[inspection-checklist] target raw:', targetRaw);
     console.log('[inspection-checklist] target:', target);
 
-    // 헤더에 점검 대상 항목명 표시
-    document.getElementById('headerTitle').textContent = `안전 점검 실시 (${target})`;
+    // 헤더에 점검 대상 항목명 표시 (표시용 원본 사용)
+    document.getElementById('headerTitle').textContent = `안전 점검 실시 (${targetDisplay})`;
 
     // 전역 변수
     let currentInspection = null;
@@ -1494,30 +1513,30 @@
         console.log('[getChecklistByTarget] normalizedType:', normalizedType);
 
         if (normalizedType.includes('석축') || normalizedType.includes('옹벽')) {
-          return { title: '석축 및 옹벽 점검표', html: this.renderWallChecklist() };
+          return { title: '당해시설 점검표 (석축 및 옹벽)', html: this.renderWallChecklist() };
         } else if (normalizedType.includes('비탈면')) {
-          return { title: '비탈면 점검표', html: this.renderSlopeChecklist() };
+          return { title: '당해시설 점검표 (비탈면)', html: this.renderSlopeChecklist() };
         } else if (normalizedType.includes('지반')) {
-          return { title: '지반 점검표', html: this.renderGroundChecklist() };
+          return { title: '당해시설 점검표 (지반)', html: this.renderGroundChecklist() };
         } else if (normalizedType.includes('다리')) {
-          return { title: '다리 점검표', html: this.renderBridgeChecklist() };
+          return { title: '당해시설 점검표 (다리)', html: this.renderBridgeChecklist() };
         } else if (normalizedType.includes('지당')) {
-          return { title: '지당 점검표', html: this.renderPondChecklist() };
+          return { title: '당해시설 점검표 (지당)', html: this.renderPondChecklist() };
         } else if (normalizedType.includes('문')) {
-          return { title: '문 점검표', html: this.renderGateChecklist() };
+          return { title: '당해시설 점검표 (문)', html: this.renderGateChecklist() };
         } else if (normalizedType.includes('담장')) {
-          return { title: '담장 점검표', html: this.renderFenceChecklist() };
+          return { title: '당해시설 점검표 (담장)', html: this.renderFenceChecklist() };
         } else if (normalizedType.includes('단일목') || (normalizedType.includes('수목') && !normalizedType.includes('군락'))) {
-          return { title: '수목(단일목) 점검표', html: this.renderTreeChecklist() };
+          return { title: '당해시설 점검표 (수목: 단일목)', html: this.renderTreeChecklist() };
         } else if (normalizedType.includes('군락')) {
-          return { title: '수목(군락) 점검표', html: this.renderGroveChecklist() };
+          return { title: '당해시설 점검표 (수목: 군락)', html: this.renderGroveChecklist() };
         } else if (normalizedType.includes('굴뚝')) {
-          return { title: '굴뚝 점검표', html: this.renderChimneyChecklist() };
+          return { title: '당해시설 점검표 (굴뚝)', html: this.renderChimneyChecklist() };
         } else if (normalizedType.includes('집수정') || normalizedType.includes('배수')) {
-          return { title: '배수시설(집수정) 점검표', html: this.renderDrainChecklist() };
+          return { title: '당해시설 점검표 (배수시설)', html: this.renderDrainChecklist() };
         } else {
           // 기본값: 석축 및 옹벽
-          return { title: '석축 및 옹벽 점검표', html: this.renderWallChecklist() };
+          return { title: '당해시설 점검표 (석축 및 옹벽)', html: this.renderWallChecklist() };
         }
       },
 
@@ -2307,7 +2326,7 @@
       const additionalContainer = document.getElementById('additionalChecklist');
       if (additionalContainer) {
         additionalContainer.innerHTML = `
-          <div class="checklist-card__header">추가 피해요소 점검표</div>
+          <div class="checklist-card__header">추가 피해요소 점검표 (${target})</div>
           <div class="checklist-card__body">
             ${AdditionalChecklistTemplate.render()}
           </div>

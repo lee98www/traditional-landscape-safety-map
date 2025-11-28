@@ -473,15 +473,34 @@
     const siteId = urlParams.get('site') || '1';
     const inspectionType = urlParams.get('type') || 'regular';
     const targetRaw = urlParams.get('target');
-    const target = targetRaw || '석축 및 옹벽';
+
+    // target 정규화 함수 (URL 파라미터 → 내부 데이터 키 변환)
+    function normalizeTarget(targetType) {
+      if (!targetType) return '석축 및 옹벽';
+      if (targetType.includes('단일목')) return '단일목';
+      if (targetType.includes('군락')) return '군락';
+      if (targetType.includes('석축') || targetType.includes('옹벽')) return '석축 및 옹벽';
+      if (targetType.includes('비탈면')) return '비탈면';
+      if (targetType.includes('지반')) return '지반';
+      if (targetType.includes('다리')) return '다리';
+      if (targetType.includes('지당')) return '지당';
+      if (targetType.includes('문')) return '문';
+      if (targetType.includes('담장')) return '담장';
+      if (targetType.includes('굴뚝')) return '굴뚝';
+      if (targetType.includes('배수')) return '배수시설';
+      return targetType;
+    }
+
+    const targetDisplay = targetRaw || '석축 및 옹벽'; // 표시용 원본
+    const target = normalizeTarget(targetDisplay); // 내부 데이터 키
 
     // 디버그: target 파라미터 확인
     console.log('[inspection-result] URL search:', window.location.search);
     console.log('[inspection-result] target raw:', targetRaw);
     console.log('[inspection-result] target:', target);
 
-    // 헤더에 점검 대상 항목명 표시
-    document.getElementById('headerTitle').textContent = `안전 점검 실시 (${target})`;
+    // 헤더에 점검 대상 항목명 표시 (표시용 원본 사용)
+    document.getElementById('headerTitle').textContent = `안전 점검 실시 (${targetDisplay})`;
 
     // 결과 카드 헤더에도 항목명 표시
     document.getElementById('resultCardHeader').textContent = `점검결과 입력 (${target})`;
