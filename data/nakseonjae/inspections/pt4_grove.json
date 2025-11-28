@@ -12,11 +12,67 @@
     "extractedText": "❑ 수목 안전점검표\r\n<일반 현황><항목><내용><비고><위치><낙선재 권역><□ 노거수><pt4><제원><수종 : 소나무><수고(m) : 6.5><><종류><□ 관목><■ 교목><■ 상록수><□ 낙엽수><□ 활엽수><■ 침엽수 ><><활력도><■ 높음><□ 보통><□ 낮음(     복토       )><>\r\n<점검 항목><구분><안전><관심><주의><경계><위험><비고><당해 요소><구조적 요소><결함><■ 없음><-><□ 경미><-><□ 심각><><기울기><□ 5° 미만><□ 5~10° 미만><□ 10~15°><■ 15~20><□  20° 초과><s><뿌리들림><■ 없음><-><□ 경미><-><□ 매우 심각><><토사결합력><□ 매우 견고><■ 견고><□ 중간><□ 느슨><□ 매우 느슨><><토양상태><■ 양토><□ 식양토><□ 마사토><□ 사질토><□ 진흙><><외과수술><■ 없음><-><-><-><□ 있음><><보강시설><□ 있음><-><-><-><■ 필요><><생리적 요소>..."
   },
   "checklistItems": {
-    "note": "원본 HWPX 파일을 참고하여 수동으로 입력 필요"
+    "structural": {
+      "defect": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "leaning": {
+        "status": "15~20°",
+        "severity": "경계",
+        "remark": ""
+      },
+      "uprooting": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "soilBinding": {
+        "status": "견고",
+        "severity": "관심",
+        "remark": ""
+      },
+      "soilCondition": {
+        "status": "양토",
+        "severity": "안전",
+        "remark": ""
+      },
+      "surgery": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      },
+      "reinforcement": {
+        "status": "필요",
+        "severity": "위험",
+        "remark": ""
+      }
+    },
+    "physiological": {
+      "growthCondition": {
+        "status": "양호",
+        "severity": "안전",
+        "remark": ""
+      },
+      "pestDisease": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "deadTree": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      }
+    }
   },
   "overallAssessment": {
-    "rating": "검토 필요",
-    "inspectorOpinion": "원본 점검표 참고"
+    "rating": "경계",
+    "inspectorOpinion": "기울기(15~20°)와 보강시설 필요, 조속한 조치 권고"
   },
   "photos": [
     "pt4_grove/1_전경.jpg",

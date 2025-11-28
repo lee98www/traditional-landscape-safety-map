@@ -426,7 +426,7 @@
         </a>
 
         <!-- 주합루 -->
-        <a href="inspection-target.html?site=2" class="site-item" data-name="주합루">
+        <a href="#" class="site-item" data-name="주합루" onclick="showNoDataToast(event, '주합루')">
           <div class="site-thumbnail">
             <svg class="site-thumbnail-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -445,7 +445,7 @@
         </a>
 
         <!-- 의두합 -->
-        <a href="inspection-target.html?site=3" class="site-item" data-name="의두합">
+        <a href="#" class="site-item" data-name="의두합" onclick="showNoDataToast(event, '의두합')">
           <div class="site-thumbnail">
             <svg class="site-thumbnail-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -475,10 +475,10 @@
         <a href="#" class="footer__link">저작권정책</a>
       </div>
       <div class="footer__info">
-        <span class="footer__info-item">OO시 OO구 OO로 123, OO타워 12층</span>
-        <span class="footer__info-item">전화번호: 02-000-0000</span>
+        <span class="footer__info-item">서울시 마포구 성암로 330, C동 718호</span>
+        <span class="footer__info-item">전화번호: 070-4044-4992</span>
       </div>
-      <p class="footer__copyright">© 2025.OOO SERVICE. ALL RIGHTS RESERVED.</p>
+      <p class="footer__copyright">© 2025. (주)디캐릭. ALL RIGHTS RESERVED.</p>
     </div>
   </footer>
 
@@ -525,8 +525,16 @@
     // 대상지 선택 시 점검 유형 파라미터 전달
     siteItems.forEach(item => {
       const href = item.getAttribute('href');
-      item.setAttribute('href', href + '&type=' + inspectionType);
+      if (href && href.includes('inspection-target.html')) {
+        item.setAttribute('href', href + '&type=' + inspectionType);
+      }
     });
+
+    // 데이터 없음 토스트 알림
+    function showNoDataToast(event, siteName) {
+      event.preventDefault();
+      alert(`${siteName}의 데이터가 아직 준비되지 않았습니다.\n현재는 낙선재 데이터만 이용 가능합니다.`);
+    }
   </script>
 </body>
 </html>

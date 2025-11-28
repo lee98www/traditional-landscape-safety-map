@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>점검표 시스템 테스트</title>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 { color: #333; }
+    h2 { color: #0052CC; margin-top: 0; }
+    .status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+    .status.success { background: #4CAF50; color: white; }
+    .status.error { background: #F44336; color: white; }
+    .status.pending { background: #FF9800; color: white; }
+    .inspection-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .inspection-card {
+      border: 2px solid #ddd;
+      padding: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .inspection-card:hover {
+      border-color: #0052CC;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .inspection-card h3 {
+      margin: 0 0 10px 0;
+      color: #333;
+    }
+    .inspection-card p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #666;
+    }
+    .rating {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 12px;
+    }
+    .rating.안전 { background: #4CAF50; color: white; }
+    .rating.관심 { background: #2196F3; color: white; }
+    .rating.주의 { background: #FF9800; color: white; }
+    .rating.경계 { background: #FF5722; color: white; }
+    .rating.위험 { background: #F44336; color: white; }
+    pre {
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 12px;
+    }
+    .btn {
+      background: #0052CC;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+    .btn:hover {
+      background: #003d99;
+    }
+    .btn.secondary {
+      background: #4CAF50;
+    }
+    .btn.secondary:hover {
+      background: #388E3C;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 TLSM 점검표 시스템 테스트</h1>
+
+  <!-- 1. DataLoader 테스트 -->
+  <div class="test-section">
+    <h2>1. DataLoader 모듈 로드 테스트</h2>
+    <div id="dataloader-status">테스트 중...</div>
+  </div>
+
+  <!-- 2. 전체 점검표 로드 테스트 -->
+  <div class="test-section">
+    <h2>2. 전체 점검표 데이터 로드 (12개)</h2>
+    <div id="inspections-status">로딩 중...</div>
+    <div id="inspections-list" class="inspection-list"></div>
+  </div>
+
+  <!-- 3. 개별 점검표 상세 테스트 -->
+  <div class="test-section">
+    <h2>3. 개별 점검표 상세 보기</h2>
+    <button class="btn" onclick="testInspection('pl1_wall')">pl1_wall (석축)</button>
+    <button class="btn" onclick="testInspection('pt2_tree')">pt2_tree (단일목)</button>
+    <button class="btn" onclick="testInspection('pt4_grove')">pt4_grove (군락)</button>
+    <button class="btn" onclick="testInspection('pt5_chimney')">pt5_chimney (굴뚝)</button>
+    <button class="btn" onclick="testInspection('drain')">drain (집수정)</button>
+    <div id="detail-result" style="margin-top: 15px;"></div>
+  </div>
+
+  <!-- 4. 폼 렌더링 테스트 -->
+  <div class="test-section">
+    <h2>4. 동적 폼 렌더링 테스트</h2>
+    <button class="btn secondary" onclick="testForm('pl1_wall')">석축 폼</button>
+    <button class="btn secondary" onclick="testForm('pt2_tree')">단일목 폼</button>
+    <button class="btn secondary" onclick="testForm('pt4_grove')">군락 폼</button>
+    <button class="btn secondary" onclick="testForm('pt5_chimney')">굴뚝 폼</button>
+    <button class="btn secondary" onclick="testForm('drain')">집수정 폼</button>
+    <div id="form-result" style="margin-top: 15px;"></div>
+  </div>
+
+  <!-- 5. 페이지 링크 테스트 -->
+  <div class="test-section">
+    <h2>5. 실제 페이지 테스트</h2>
+    <p>아래 버튼을 클릭하여 실제 페이지를 테스트하세요:</p>
+    <a href="site-detail.html" class="btn" target="_blank">📍 site-detail.html (지도 + 점검 이력)</a>
+    <a href="inspection-confirm.html?id=pl1_wall" class="btn" target="_blank">📋 inspection-confirm.html (보고서)</a>
+    <a href="inspection-checklist.html?id=pl1_wall" class="btn secondary" target="_blank">✏️ inspection-checklist.html (점검표 수정)</a>
+  </div>
+
+  <script src="js/data-loader.js"></script>
+  <script src="js/form-renderer.js"></script>
+  <script>
+    // 1. DataLoader 모듈 테스트
+    function testDataLoader() {
+      const status = document.getElementById('dataloader-status');
+      if (typeof DataLoader !== 'undefined') {
+        status.innerHTML = '<span class="status success">✓ 성공</span> DataLoader 모듈이 정상적으로 로드되었습니다.';
+      } else {
+        status.innerHTML = '<span class="status error">✗ 실패</span> DataLoader 모듈을 찾을 수 없습니다.';
+      }
+    }
+
+    // 2. 전체 점검표 로드 테스트
+    async function testAllInspections() {
+      const status = document.getElementById('inspections-status');
+      const list = document.getElementById('inspections-list');
+
+      try {
+        const inspections = await DataLoader.loadAllInspections();
+
+        if (inspections && inspections.length > 0) {
+          status.innerHTML = `<span class="status success">✓ 성공</span> ${inspections.length}개 점검표 로드 완료`;
+
+          list.innerHTML = inspections.map(ins => `
+            <div class="inspection-card" onclick="testInspection('${ins.id}')">
+              <h3>${ins.targetName}</h3>
+              <p><strong>타입:</strong> ${ins.targetType}</p>
+              <p><strong>일자:</strong> ${ins.inspectionDate}</p>
+              <p><strong>판정:</strong> <span class="rating ${ins.overallAssessment?.rating}">${ins.overallAssessment?.rating || '미확인'}</span></p>
+              <p style="font-size: 12px; color: #999;">ID: ${ins.id}</p>
+            </div>
+          `).join('');
+        } else {
+          status.innerHTML = '<span class="status error">✗ 실패</span> 점검표 데이터가 비어있습니다.';
+        }
+      } catch (error) {
+        status.innerHTML = `<span class="status error">✗ 실패</span> ${error.message}`;
+        console.error('점검표 로드 실패:', error);
+      }
+    }
+
+    // 3. 개별 점검표 상세 테스트
+    async function testInspection(id) {
+      const result = document.getElementById('detail-result');
+      result.innerHTML = '<p>로딩 중...</p>';
+
+      try {
+        const inspection = await DataLoader.loadInspection(id);
+
+        result.innerHTML = `
+          <h3>${inspection.targetName}</h3>
+          <pre>${JSON.stringify(inspection, null, 2)}</pre>
+        `;
+      } catch (error) {
+        result.innerHTML = `<span class="status error">✗ 실패</span> ${error.message}`;
+      }
+    }
+
+    // 4. 폼 렌더링 테스트
+    async function testForm(id) {
+      const result = document.getElementById('form-result');
+      result.innerHTML = '<p>렌더링 중...</p>';
+
+      try {
+        const inspection = await DataLoader.loadInspection(id);
+
+        if (typeof FormRenderer === 'undefined') {
+          result.innerHTML = '<span class="status error">✗ 실패</span> FormRenderer 모듈을 찾을 수 없습니다.';
+          return;
+        }
+
+        const formHTML = FormRenderer.renderChecklistForm(
+          inspection.targetType,
+          inspection
+        );
+
+        result.innerHTML = `
+          <h3>${inspection.targetName} - ${inspection.targetType} 폼</h3>
+          <div style="border: 2px solid #ddd; padding: 20px; border-radius: 8px; background: white;">
+            ${formHTML}
+          </div>
+        `;
+      } catch (error) {
+        result.innerHTML = `<span class="status error">✗ 실패</span> ${error.message}`;
+        console.error('폼 렌더링 실패:', error);
+      }
+    }
+
+    // 페이지 로드 시 자동 테스트 실행
+    window.addEventListener('DOMContentLoaded', () => {
+      testDataLoader();
+      testAllInspections();
+    });
+  </script>
+</body>
+</html>

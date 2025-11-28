@@ -12,11 +12,84 @@
     "extractedText": "❑ 시설물(배수시설) 안전점검표\r\n<일반 현황><항목><내용><비고><종류><□ 수로><■ 집수정><□ 명거><■ 암거><pt7><재료><□ 흙><□ 수지재><□ 강재(스틸그레이팅)><><■ 석재><□ 콘크리트><□ 기타(         )><><지형><■ 평지><□ 경사지><□ 석축, 옹벽><>\r\n<점검 항목><구분><안전><관심><주의><경계><위험><비고><당해 시설><바닥부><균열><□ 없음><□ 경미><□ 약간 심각><□ 심각><□ 매우 심각><><파손·탈락><□ 없음><□ 경미><□ 약간 심각><□ 심각><□ 매우 심각><><열화><□ 없음><□ 경미><□ 약간 심각><□ 심각><□ 매우 심각><><퇴적><□ 없음><-><-><-><■ 있음><><침하><□ 없음><-><-><-><□ 있음><><누수><□ 없음><-><-><-><□ 있음><><벽체부><균열><□ 없음><□ 경미><□ 약간 심각><□ 심각><□ 매우 심각><><파손·탈락><□ 없음><□ 경미><□ 약간 심각>..."
   },
   "checklistItems": {
-    "note": "원본 HWPX 파일을 참고하여 수동으로 입력 필요"
+    "floor": {
+      "crack": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "damage": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "weathering": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "sedimentation": {
+        "status": "있음",
+        "severity": "위험",
+        "remark": ""
+      },
+      "subsidence": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      },
+      "leakage": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      }
+    },
+    "wall": {
+      "crack": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "damage": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "weathering": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      }
+    },
+    "cover": {
+      "crack": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "damage": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "falling": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      }
+    }
   },
   "overallAssessment": {
-    "rating": "검토 필요",
-    "inspectorOpinion": "원본 점검표 참고"
+    "rating": "관심",
+    "inspectorOpinion": "퇴적물 제거 필요, 배수기능 점검 권고"
   },
   "photos": [
     "drain/1. 전경.jpg",

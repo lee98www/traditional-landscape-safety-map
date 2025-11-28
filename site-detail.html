@@ -210,6 +210,431 @@
       font-weight: var(--font-weight-semibold);
     }
 
+    /* 재해/수리 이력 테이블 스타일 */
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .history-table th,
+    .history-table td {
+      padding: 12px;
+      border: 1px solid #E0E0E0;
+      text-align: center;
+    }
+
+    .history-table th {
+      background: #C8E6F5;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .history-table tbody tr:hover {
+      background: #F5F5F5;
+    }
+
+    /* Hover 툴팁 스타일 */
+    .history-tooltip {
+      min-width: 220px;
+      padding: 12px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      font-family: 'Noto Sans KR', sans-serif;
+      animation: tooltipFadeIn 0.6s ease-out;
+    }
+
+    @keyframes tooltipFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .tooltip-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #E0E0E0;
+    }
+
+    .tooltip-header strong {
+      font-size: 14px;
+      color: #333;
+    }
+
+    .tooltip-badge {
+      background: #E53935;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .tooltip-badge.repair {
+      background: #6A1B9A;
+    }
+
+    .tooltip-body {
+      margin-bottom: 8px;
+    }
+
+    .tooltip-item {
+      display: flex;
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .tooltip-label {
+      color: #666;
+      margin-right: 8px;
+      min-width: 50px;
+    }
+
+    .tooltip-value {
+      color: #333;
+      font-weight: 500;
+    }
+
+    .tooltip-footer {
+      padding-top: 8px;
+      border-top: 1px solid #E0E0E0;
+    }
+
+    .tooltip-action {
+      font-size: 11px;
+      color: #1976D2;
+      font-weight: 500;
+      animation: tooltipActionPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes tooltipActionPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    /* 점검 이력 팝업 메뉴 스타일 */
+    .inspection-popup-menu {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      z-index: 10000;
+      min-width: 300px;
+      animation: popupFadeIn 0.2s ease-out;
+    }
+
+    @keyframes popupFadeIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -45%);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    .popup-menu-content {
+      padding: 20px;
+    }
+
+    .popup-menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #E0E0E0;
+    }
+
+    .popup-menu-header h4 {
+      margin: 0;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .popup-menu-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #666;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+    }
+
+    .popup-menu-close:hover {
+      color: #333;
+    }
+
+    .popup-menu-body {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .popup-menu-btn {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      background: #F5F5F5;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      transition: all 0.2s ease;
+    }
+
+    .popup-menu-btn:hover {
+      background: #E3F2FD;
+      border-color: #1976D2;
+      color: #1976D2;
+    }
+
+    .menu-icon {
+      font-size: 20px;
+      margin-right: 12px;
+    }
+
+    /* 점검 이력 간단 팝업 스타일 */
+    .inspection-simple-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+      z-index: 10000;
+      min-width: 320px;
+      max-width: 400px;
+      animation: popupSlideIn 0.25s ease-out;
+    }
+
+    @keyframes popupSlideIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -46%);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    .inspection-simple-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid #E0E0E0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .inspection-simple-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+    }
+
+    .inspection-simple-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #999;
+      padding: 0;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+
+    .inspection-simple-close:hover {
+      color: #333;
+    }
+
+    .inspection-simple-body {
+      padding: 20px 24px 24px 24px;
+    }
+
+    .inspection-simple-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .inspection-simple-btn {
+      padding: 14px 20px;
+      background: #F8F9FA;
+      border: 1px solid #E0E0E0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      transition: all 0.2s ease;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .inspection-simple-btn:hover {
+      background: #E8F4FD;
+      border-color: #1976D2;
+      color: #1976D2;
+    }
+
+    .inspection-simple-btn-icon {
+      font-size: 18px;
+    }
+
+    /* 점검 이력 2차 팝업 스타일 */
+    .inspection-second-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+      z-index: 10001;
+      width: 90%;
+      max-width: 800px;
+      max-height: 85vh;
+      overflow-y: auto;
+      animation: popupSlideIn 0.25s ease-out;
+    }
+
+    .inspection-second-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid #E0E0E0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 1;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .inspection-back-btn {
+      background: none;
+      border: none;
+      font-size: 14px;
+      font-weight: 500;
+      color: #1976D2;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .inspection-back-btn:hover {
+      background: #E3F2FD;
+    }
+
+    .inspection-second-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+      flex: 1;
+      text-align: center;
+    }
+
+    .inspection-second-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #999;
+      padding: 0;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+
+    .inspection-second-close:hover {
+      color: #333;
+    }
+
+    .inspection-second-body {
+      padding: 24px;
+    }
+
+    /* 사진 리스트 스타일 */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .photo-item {
+      position: relative;
+      cursor: pointer;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid #E0E0E0;
+      transition: all 0.2s;
+    }
+
+    .photo-item:hover {
+      border-color: #1976D2;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .photo-item img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-item-label {
+      padding: 8px 12px;
+      background: white;
+      font-size: 13px;
+      color: #333;
+      text-align: center;
+      border-top: 1px solid #E0E0E0;
+    }
+
+    /* 보고서 이미지 스타일 */
+    .report-image-container {
+      text-align: center;
+    }
+
+    .report-image-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
     .checkbox-group {
       display: flex;
       flex-wrap: wrap;
@@ -252,12 +677,11 @@
       display: block;
     }
 
-    /* 상단 필터 바 */
+    /* 상단 필터 바 - 우측 정렬 */
     .filter-bar {
       position: absolute;
       top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
+      right: 20px;
       background: rgba(255,255,255,0.95);
       padding: 12px 20px;
       border-radius: 8px;
@@ -345,18 +769,21 @@
     .legend__color--repair-mid { background: #AB47BC; }
     .legend__color--repair-low { background: #CE93D8; }
 
-    /* 경고 배너 */
+    /* 경고 배너 - 중앙 하단으로 이동 */
     .warning-banner {
       position: absolute;
-      top: 80px;
+      bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.75);
       color: white;
-      padding: 10px 20px;
+      padding: 12px 24px;
       border-radius: 6px;
       font-size: 13px;
       pointer-events: auto;
+      z-index: 60;
+      line-height: 1.4;
+      white-space: nowrap;
     }
 
     /* 점검 이력 팝업 */
@@ -482,6 +909,71 @@
 
     .submenu-item.active .submenu-item__radio-inner {
       display: block;
+    }
+
+    /* 점검 상세 모달 스타일 */
+    .inspection-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 28px;
+      color: #999;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .close-btn:hover {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .modal-body {
+      margin: 20px 0;
+    }
+
+    .modal-footer {
+      margin-top: 20px;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -668,6 +1160,76 @@
     </div>
   </div>
 
+  <!-- 재해 이력 테이블 모달 -->
+  <div class="modal-overlay" id="disasterTableModal" style="display: none;" onclick="closeDisasterModal()">
+    <div class="modal" style="max-width: 1000px;" onclick="event.stopPropagation()">
+      <div class="modal__header">
+        <h2 class="modal__title">재해 이력</h2>
+        <button class="modal__close" onclick="closeDisasterModal()">×</button>
+      </div>
+      <div class="modal__body" style="padding: 20px;">
+        <table class="history-table" id="disasterTableContent">
+          <!-- 동적으로 생성됨 -->
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 수리 이력 테이블 모달 -->
+  <div class="modal-overlay" id="repairTableModal" style="display: none;" onclick="closeRepairModal()">
+    <div class="modal" style="max-width: 1000px;" onclick="event.stopPropagation()">
+      <div class="modal__header">
+        <h2 class="modal__title">수리 이력</h2>
+        <button class="modal__close" onclick="closeRepairModal()">×</button>
+      </div>
+      <div class="modal__body" style="padding: 20px;">
+        <table class="history-table" id="repairTableContent">
+          <!-- 동적으로 생성됨 -->
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 점검 이력 1차 팝업 (메뉴 선택) -->
+  <div class="modal-overlay" id="inspectionDetailModal" style="display: none;" onclick="closeInspectionDetail()">
+    <div class="inspection-simple-popup" onclick="event.stopPropagation()">
+      <div class="inspection-simple-header">
+        <h4 class="inspection-simple-title" id="inspectionSimpleTitle"></h4>
+        <button class="inspection-simple-close" onclick="closeInspectionDetail()">×</button>
+      </div>
+      <div class="inspection-simple-body">
+        <div class="inspection-simple-buttons">
+          <button class="inspection-simple-btn" onclick="viewInspectionReport()">
+            <span>안전 점검 보고서</span>
+            <span class="inspection-simple-btn-icon">📄</span>
+          </button>
+          <button class="inspection-simple-btn" onclick="viewPhotos()">
+            <span>사진</span>
+            <span class="inspection-simple-btn-icon">📷</span>
+          </button>
+          <button class="inspection-simple-btn" onclick="viewMetaReport()">
+            <span>메타포트</span>
+            <span class="inspection-simple-btn-icon">📊</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 점검 이력 2차 팝업 (상세 정보) -->
+  <div class="modal-overlay" id="inspectionSecondModal" style="display: none;" onclick="closeSecondModal()">
+    <div class="inspection-second-popup" onclick="event.stopPropagation()">
+      <div class="inspection-second-header">
+        <button class="inspection-back-btn" onclick="backToFirstModal()">← 뒤로</button>
+        <h4 class="inspection-second-title" id="inspectionSecondTitle"></h4>
+        <button class="inspection-second-close" onclick="closeSecondModal()">×</button>
+      </div>
+      <div class="inspection-second-body" id="inspectionSecondBody">
+        <!-- 동적으로 생성됩니다 -->
+      </div>
+    </div>
+  </div>
+
   <!-- 재해 이력 오버레이 -->
   <div class="history-overlay" id="disasterOverlay">
     <div class="filter-bar">
@@ -780,6 +1342,7 @@
     let gisData = {};
     let allDisasterHistory = [];
     let allRepairHistory = [];
+    let buildingPolygons = null; // 건물 폴리곤 GeoJSON 데이터
 
     // 대상지 좌표 (창덕궁 낙선재)
     const siteInfo = DataLoader.getSiteInfo();
@@ -927,6 +1490,15 @@
       allDisasterHistory = await DataLoader.loadDisasterHistory();
       allRepairHistory = await DataLoader.loadRepairHistory();
       console.log(`재해 이력 ${allDisasterHistory.length}개, 수리 이력 ${allRepairHistory.length}개 로드 완료`);
+
+      // 건물 폴리곤 데이터 로드
+      try {
+        const response = await fetch('data/gis/nakseonjae-buildings.geojson');
+        buildingPolygons = await response.json();
+        console.log(`건물 폴리곤 ${buildingPolygons.features.length}개 로드 완료`);
+      } catch (error) {
+        console.error('건물 폴리곤 로드 실패:', error);
+      }
     }
 
     // 메뉴 활성화 상태 업데이트
@@ -942,6 +1514,13 @@
       document.getElementById('disasterOverlay').classList.remove('active');
       document.getElementById('repairOverlay').classList.remove('active');
       document.querySelector('.repair-submenu-container').classList.remove('active');
+
+      // 모든 팝업 모달 닫기
+      closeDisasterModal();
+      closeRepairModal();
+      closeInspectionDetail();
+      closeSecondModal();
+
       clearPolygons();
       clearInspectionMarkers();
       currentMode = null;
@@ -955,19 +1534,145 @@
     }
 
     // 점검 이력 표시
+    let currentInspectionId = null;
+
     function showInspectionHistory() {
       hideAllOverlays();
       setActiveMenu(1);
       currentMode = 'inspection';
 
-      // 실제 점검표 데이터로 마커 생성
+      // 실제 점검표 데이터로 마커 생성 (클릭 이벤트 활성화)
       if (inspectionsData && inspectionsData.length > 0) {
-        GISRenderer.addAllInspectionMarkers(inspectionsData, (inspection) => {
-          // 클릭 시 모달 팝업 표시 (페이지 이동 대신)
-          showInspectionModal(inspection);
-        });
+        GISRenderer.addAllInspectionMarkers(inspectionsData, onInspectionMarkerClick);
       } else {
         console.warn('점검표 데이터가 없습니다.');
+      }
+    }
+
+    // 마커 클릭 시 간단 팝업 표시
+    function onInspectionMarkerClick(inspection) {
+      currentInspectionId = inspection.id;
+
+      // 팝업 제목 설정
+      document.getElementById('inspectionSimpleTitle').textContent =
+        `${inspection.targetName} (${inspection.targetType})`;
+
+      // 팝업 표시
+      document.getElementById('inspectionDetailModal').style.display = 'flex';
+    }
+
+    // 팝업 닫기
+    function closeInspectionDetail() {
+      const modal = document.getElementById('inspectionDetailModal');
+      if (modal) {
+        modal.style.display = 'none';
+      }
+      currentInspectionId = null;
+    }
+
+    // 2차 팝업 열기 (1차 팝업 숨기기)
+    function openSecondModal(title, content) {
+      document.getElementById('inspectionDetailModal').style.display = 'none';
+      document.getElementById('inspectionSecondTitle').textContent = title;
+      document.getElementById('inspectionSecondBody').innerHTML = content;
+      document.getElementById('inspectionSecondModal').style.display = 'flex';
+    }
+
+    // 2차 팝업 닫기
+    function closeSecondModal() {
+      document.getElementById('inspectionSecondModal').style.display = 'none';
+      currentInspectionId = null;
+    }
+
+    // 2차 팝업에서 1차 팝업으로 돌아가기
+    function backToFirstModal() {
+      document.getElementById('inspectionSecondModal').style.display = 'none';
+      document.getElementById('inspectionDetailModal').style.display = 'flex';
+    }
+
+    // 안전 점검 보고서 보기 (2차 팝업)
+    function viewInspectionReport() {
+      if (!currentInspectionId) return;
+
+      const inspection = inspectionsData.find(i => i.id === currentInspectionId);
+      if (!inspection) {
+        alert('점검 데이터를 찾을 수 없습니다.');
+        return;
+      }
+
+      // 통일된 안전 점검 보고서 PNG 이미지 경로
+      const reportImagePath = `assets/photos/nakseonjae/안전 점검 보고서.PNG`;
+
+      const content = `
+        <div class="report-image-container">
+          <img src="${reportImagePath}" alt="안전점검 보고서" onerror="this.parentElement.innerHTML='<p style=\\'text-align:center;color:#999;padding:40px;\\'>보고서 이미지를 불러올 수 없습니다.</p>'">
+        </div>
+      `;
+
+      openSecondModal('안전 점검 보고서', content);
+    }
+
+    // 메타포트 보기 (2차 팝업)
+    function viewMetaReport() {
+      if (!currentInspectionId) return;
+
+      const content = `
+        <div style="text-align: center; padding: 40px; color: #999;">
+          <p style="font-size: 16px; margin-bottom: 12px;">📊</p>
+          <p>메타포트 기능은 준비 중입니다.</p>
+        </div>
+      `;
+
+      openSecondModal('메타포트', content);
+    }
+
+    // 사진 리스트 보기 (2차 팝업)
+    function viewPhotos() {
+      if (!currentInspectionId) return;
+
+      const inspection = inspectionsData.find(i => i.id === currentInspectionId);
+      if (!inspection || !inspection.photos || inspection.photos.length === 0) {
+        alert('사진이 없습니다.');
+        return;
+      }
+
+      // 사진 경로 처리
+      const photoUrls = inspection.photos.map(photoPath => {
+        if (photoPath.includes('assets/photos')) {
+          return photoPath;
+        } else {
+          return `assets/photos/nakseonjae/${photoPath}`;
+        }
+      });
+
+      // 사진 그리드 HTML 생성
+      let photoGridHTML = '<div class="photo-grid">';
+      photoUrls.forEach((url, index) => {
+        const filename = url.split('/').pop();
+        photoGridHTML += `
+          <div class="photo-item" onclick="openPhotoGallery(${index})">
+            <img src="${url}" alt="${filename}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'200\\'%3E%3Crect fill=\\'%23f0f0f0\\' width=\\'200\\' height=\\'200\\'/%3E%3Ctext x=\\'50%25\\' y=\\'50%25\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' fill=\\'%23999\\'%3E이미지 없음%3C/text%3E%3C/svg%3E'">
+            <div class="photo-item-label">${filename}</div>
+          </div>
+        `;
+      });
+      photoGridHTML += '</div>';
+
+      // 전역 변수로 사진 URL 저장 (갤러리 오픈용)
+      window.currentPhotoUrls = photoUrls;
+
+      openSecondModal(`사진 (${photoUrls.length}장)`, photoGridHTML);
+    }
+
+    // 사진 갤러리 열기
+    function openPhotoGallery(index) {
+      if (window.currentPhotoUrls && window.currentPhotoUrls.length > 0) {
+        if (typeof PhotoGallery !== 'undefined' && PhotoGallery.showModal) {
+          PhotoGallery.showModal(window.currentPhotoUrls, index);
+        } else {
+          // PhotoGallery가 없으면 새 탭에서 이미지 열기
+          window.open(window.currentPhotoUrls[index], '_blank');
+        }
       }
     }
 
@@ -1031,8 +1736,13 @@
           <div class="modal-footer">
             <button onclick="window.location.href='inspection-confirm.html?id=${inspection.id}'"
                     style="width: 100%; padding: 12px; background: #0052CC; color: white; border: none;
-                           border-radius: 8px; cursor: pointer; font-size: 16px;">
+                           border-radius: 8px; cursor: pointer; font-size: 16px; margin-bottom: 8px;">
               전체 보고서 보기 →
+            </button>
+            <button onclick="window.location.href='inspection-checklist.html?id=${inspection.id}'"
+                    style="width: 100%; padding: 12px; background: #4CAF50; color: white; border: none;
+                           border-radius: 8px; cursor: pointer; font-size: 16px;">
+              점검표 수정하기 →
             </button>
           </div>
         </div>
@@ -1104,45 +1814,196 @@
       renderDisasterHistory(filtered);
     }
 
-    // 재해 이력 렌더링 함수
+    // 재해 이력 렌더링 함수 (건물 폴리곤 기반)
     function renderDisasterHistory(disasters) {
       clearPolygons();
 
+      if (!buildingPolygons || !buildingPolygons.features) {
+        console.error('건물 폴리곤 데이터가 없습니다.');
+        return;
+      }
+
+      // 위치별 재해 횟수 계산 (좌표가 비슷한 것들을 그룹핑)
+      const locationGroups = {};
       disasters.forEach(disaster => {
-        // 재해 위치에 작은 원형 마커 생성
-        const circle = new google.maps.Circle({
-          strokeColor: disaster.color || '#FF5252',
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: disaster.color || '#FF5252',
-          fillOpacity: 0.35,
-          map: map,
-          center: disaster.coordinates,
-          radius: 15, // 15미터 반경
-          clickable: true
-        });
+        // 좌표를 소수점 4자리로 반올림하여 그룹핑 키 생성
+        const key = `${disaster.coordinates.lat.toFixed(4)},${disaster.coordinates.lng.toFixed(4)}`;
+        if (!locationGroups[key]) {
+          locationGroups[key] = [];
+        }
+        locationGroups[key].push(disaster);
+      });
 
-        // 클릭 이벤트: 재해 정보 표시
-        circle.addListener('click', () => {
-          showDisasterInfo(disaster);
-        });
+      // 각 재해 그룹에 대해 가장 가까운 건물 찾아서 폴리곤 표시
+      Object.entries(locationGroups).forEach(([key, groupDisasters]) => {
+        const disasterCount = groupDisasters.length;
+        const representativeDisaster = groupDisasters[0];
 
-        polygons.push(circle);
+        // 횟수에 따른 색상 결정 (범례와 일치)
+        let color;
+        if (disasterCount >= 10) {
+          color = '#E53935'; // 빨강 - 10회 이상 (범례 일치)
+        } else if (disasterCount >= 5) {
+          color = '#FB8C00'; // 주황 - 5회 이상 (범례 일치)
+        } else {
+          color = '#FFD54F'; // 노랑 - 1회 이상 (범례 일치)
+        }
+
+        // 가장 가까운 건물 찾기
+        const nearestBuilding = findNearestBuilding(representativeDisaster.coordinates);
+
+        if (nearestBuilding) {
+          // 건물 폴리곤 표시
+          const polygon = new google.maps.Polygon({
+            paths: nearestBuilding.geometry.coordinates[0].map(coord => ({
+              lat: coord[1],
+              lng: coord[0]
+            })),
+            strokeColor: color,
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: color,
+            fillOpacity: 0.4,
+            map: map,
+            clickable: true
+          });
+
+          // Hover 이벤트: 개선된 툴팁 표시
+          let hoverInfoWindow = null;
+          polygon.addListener('mouseover', (event) => {
+            // 폴리곤 강조 효과
+            polygon.setOptions({
+              strokeWeight: 3,
+              fillOpacity: 0.5
+            });
+
+            // 폴리곤의 상단 중심 좌표 계산
+            const coords = nearestBuilding.geometry.coordinates[0];
+            const lats = coords.map(c => c[1]);
+            const lngs = coords.map(c => c[0]);
+            const topLat = Math.max(...lats);
+            const centerLng = lngs.reduce((sum, lng) => sum + lng, 0) / lngs.length;
+
+            const tooltipContent = `
+              <div class="history-tooltip">
+                <div class="tooltip-header">
+                  <strong>${representativeDisaster.year}년 재해</strong>
+                  <span class="tooltip-badge">${disasterCount}건</span>
+                </div>
+                <div class="tooltip-body">
+                  <div class="tooltip-item">
+                    <span class="tooltip-label">종류:</span>
+                    <span class="tooltip-value">${representativeDisaster.type}</span>
+                  </div>
+                  <div class="tooltip-item">
+                    <span class="tooltip-label">대상:</span>
+                    <span class="tooltip-value">${representativeDisaster.target || '미상'}</span>
+                  </div>
+                </div>
+                <div class="tooltip-footer">
+                  <span class="tooltip-action">📋 클릭하여 자세히 보기</span>
+                </div>
+              </div>
+            `;
+            hoverInfoWindow = new google.maps.InfoWindow({
+              content: tooltipContent,
+              position: { lat: topLat, lng: centerLng },
+              disableAutoPan: true
+            });
+            hoverInfoWindow.open(map);
+          });
+
+          polygon.addListener('mouseout', () => {
+            // 폴리곤 원상복구
+            polygon.setOptions({
+              strokeWeight: 2,
+              fillOpacity: 0.4
+            });
+
+            if (hoverInfoWindow) {
+              hoverInfoWindow.close();
+              hoverInfoWindow = null;
+            }
+          });
+
+          // 클릭 이벤트: 테이블 모달 표시
+          polygon.addListener('click', () => {
+            if (hoverInfoWindow) {
+              hoverInfoWindow.close();
+            }
+            showDisasterTableModal(groupDisasters);
+          });
+
+          polygons.push(polygon);
+        }
       });
     }
 
+    // 가장 가까운 건물 찾기 함수
+    function findNearestBuilding(coordinates) {
+      if (!buildingPolygons || !buildingPolygons.features) return null;
+
+      let nearestBuilding = null;
+      let minDistance = Infinity;
+
+      buildingPolygons.features.forEach(feature => {
+        // 건물 폴리곤의 중심점 계산
+        const coords = feature.geometry.coordinates[0];
+        const centerLat = coords.reduce((sum, c) => sum + c[1], 0) / coords.length;
+        const centerLng = coords.reduce((sum, c) => sum + c[0], 0) / coords.length;
+
+        // 거리 계산 (간단한 유클리드 거리)
+        const distance = Math.sqrt(
+          Math.pow(coordinates.lat - centerLat, 2) +
+          Math.pow(coordinates.lng - centerLng, 2)
+        );
+
+        if (distance < minDistance) {
+          minDistance = distance;
+          nearestBuilding = feature;
+        }
+      });
+
+      // 거리가 너무 먼 경우 (0.001도 = 약 100m 이상) null 반환
+      if (minDistance > 0.001) {
+        return null;
+      }
+
+      return nearestBuilding;
+    }
+
     // 재해 정보 표시 함수
-    function showDisasterInfo(disaster) {
-      const infoContent = `
-        <div style="padding: 10px; max-width: 250px;">
+    function showDisasterInfo(disaster, groupDisasters = null, disasterCount = 1) {
+      const hasGroup = groupDisasters && groupDisasters.length > 1;
+
+      let infoContent = `
+        <div style="padding: 10px; max-width: 300px;">
           <h4 style="margin: 0 0 8px 0; color: #E53935;">재해 이력</h4>
+          ${hasGroup ? `<p style="margin: 4px 0; font-weight: bold; color: #E53935;">이 위치 총 ${disasterCount}회 재해</p>` : ''}
           <p style="margin: 4px 0;"><strong>연도:</strong> ${disaster.year}년</p>
           <p style="margin: 4px 0;"><strong>위치:</strong> ${disaster.location}</p>
           <p style="margin: 4px 0;"><strong>종류:</strong> ${disaster.type}</p>
           <p style="margin: 4px 0;"><strong>대상:</strong> ${disaster.target}</p>
           <p style="margin: 4px 0;"><strong>피해:</strong> ${disaster.damage}</p>
-        </div>
       `;
+
+      // 그룹이 있으면 전체 목록 표시
+      if (hasGroup && groupDisasters.length > 1) {
+        infoContent += `
+          <hr style="margin: 10px 0; border: none; border-top: 1px solid #ddd;">
+          <p style="margin: 4px 0; font-size: 12px; color: #666;"><strong>전체 재해 이력:</strong></p>
+          <div style="max-height: 150px; overflow-y: auto;">
+        `;
+        groupDisasters.forEach((d, index) => {
+          infoContent += `
+            <p style="margin: 4px 0; font-size: 11px; padding: 4px; background: #f5f5f5; border-radius: 3px;">
+              ${index + 1}. ${d.year}년 - ${d.type} (${d.damage.substring(0, 30)}${d.damage.length > 30 ? '...' : ''})
+            </p>
+          `;
+        });
+        infoContent += '</div>';
+      }
+      infoContent += '</div>';
 
       const infoWindow = new google.maps.InfoWindow({
         content: infoContent,
@@ -1150,6 +2011,85 @@
       });
 
       infoWindow.open(map);
+    }
+
+    // 재해 이력 테이블 모달 표시
+    function showDisasterTableModal(disasters) {
+      const tableContent = document.getElementById('disasterTableContent');
+      let html = `
+        <thead>
+          <tr>
+            <th style="width: 80px;">연도</th>
+            <th style="width: 100px;">지역</th>
+            <th style="width: 120px;">재해종류</th>
+            <th style="width: 150px;">재해 대상</th>
+            <th>내용</th>
+            <th style="width: 100px;">특기사항</th>
+          </tr>
+        </thead>
+        <tbody>
+      `;
+
+      disasters.forEach(disaster => {
+        html += `
+          <tr>
+            <td>${disaster.year}</td>
+            <td>${disaster.location}</td>
+            <td>${disaster.type}</td>
+            <td>${disaster.target}</td>
+            <td style="text-align: left;">${disaster.damage}</td>
+            <td>${disaster.severity === 'high' ? '지체없구' : (disaster.severity === 'medium' ? '자제확구' : '')}</td>
+          </tr>
+        `;
+      });
+
+      html += '</tbody>';
+      tableContent.innerHTML = html;
+      document.getElementById('disasterTableModal').style.display = 'flex';
+    }
+
+    // 재해 이력 모달 닫기
+    function closeDisasterModal() {
+      document.getElementById('disasterTableModal').style.display = 'none';
+    }
+
+    // 수리 이력 테이블 모달 표시
+    function showRepairTableModal(repairs) {
+      const tableContent = document.getElementById('repairTableContent');
+      let html = `
+        <thead>
+          <tr>
+            <th style="width: 80px;">연도</th>
+            <th style="width: 120px;">주변 지형</th>
+            <th style="width: 120px;">수리 대상</th>
+            <th>정비 보수 수리</th>
+            <th style="width: 100px;">예산(천원)</th>
+          </tr>
+        </thead>
+        <tbody>
+      `;
+
+      repairs.forEach(repair => {
+        const isDummy = repair.note === "더미 데이터";
+        html += `
+          <tr ${isDummy ? 'style="background: #FFF9C4;"' : ''}>
+            <td>${repair.year}${isDummy ? ' <span style="color: #F57C00; font-size: 10px; font-weight: bold;">더미</span>' : ''}</td>
+            <td>${repair.elementType}</td>
+            <td>${repair.target}</td>
+            <td style="text-align: left;">${repair.workDescription}</td>
+            <td>${repair.cost || '-'}</td>
+          </tr>
+        `;
+      });
+
+      html += '</tbody>';
+      tableContent.innerHTML = html;
+      document.getElementById('repairTableModal').style.display = 'flex';
+    }
+
+    // 수리 이력 모달 닫기
+    function closeRepairModal() {
+      document.getElementById('repairTableModal').style.display = 'none';
     }
 
     // 수리 이력 표시
@@ -1164,45 +2104,165 @@
       renderRepairHistory(allRepairHistory);
     }
 
-    // 수리 이력 렌더링 함수
+    // 수리 이력 렌더링 함수 (건물 폴리곤 기반)
     function renderRepairHistory(repairs) {
       clearPolygons();
 
+      if (!buildingPolygons || !buildingPolygons.features) {
+        console.error('건물 폴리곤 데이터가 없습니다.');
+        return;
+      }
+
+      // 위치별 수리 횟수 계산 (좌표가 비슷한 것들을 그룹핑)
+      const locationGroups = {};
       repairs.forEach(repair => {
-        // 수리 위치에 작은 원형 마커 생성
-        const circle = new google.maps.Circle({
-          strokeColor: repair.color || '#4CAF50',
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: repair.color || '#4CAF50',
-          fillOpacity: 0.35,
-          map: map,
-          center: repair.coordinates,
-          radius: 15, // 15미터 반경
-          clickable: true
-        });
+        // 좌표를 소수점 4자리로 반올림하여 그룹핑 키 생성
+        const key = `${repair.coordinates.lat.toFixed(4)},${repair.coordinates.lng.toFixed(4)}`;
+        if (!locationGroups[key]) {
+          locationGroups[key] = [];
+        }
+        locationGroups[key].push(repair);
+      });
 
-        // 클릭 이벤트: 수리 정보 표시
-        circle.addListener('click', () => {
-          showRepairInfo(repair);
-        });
+      // 각 수리 그룹에 대해 가장 가까운 건물 찾아서 폴리곤 표시
+      Object.entries(locationGroups).forEach(([key, groupRepairs]) => {
+        const repairCount = groupRepairs.length;
+        const representativeRepair = groupRepairs[0];
 
-        polygons.push(circle);
+        // 횟수에 따른 색상 결정 (범례와 일치)
+        let color;
+        if (repairCount >= 10) {
+          color = '#6A1B9A'; // 보라색 (진한) - 10회 이상
+        } else if (repairCount >= 5) {
+          color = '#8E24AA'; // 보라색 (중간) - 5회 이상
+        } else {
+          color = '#BA68C8'; // 보라색 (연한) - 1회 이상
+        }
+
+        // 가장 가까운 건물 찾기
+        const nearestBuilding = findNearestBuilding(representativeRepair.coordinates);
+
+        if (nearestBuilding) {
+          // 건물 폴리곤 표시
+          const polygon = new google.maps.Polygon({
+            paths: nearestBuilding.geometry.coordinates[0].map(coord => ({
+              lat: coord[1],
+              lng: coord[0]
+            })),
+            strokeColor: color,
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: color,
+            fillOpacity: 0.4,
+            map: map,
+            clickable: true
+          });
+
+          // Hover 이벤트: 개선된 툴팁 표시
+          let hoverInfoWindow = null;
+          polygon.addListener('mouseover', (event) => {
+            // 폴리곤 강조 효과
+            polygon.setOptions({
+              strokeWeight: 3,
+              fillOpacity: 0.5
+            });
+
+            // 폴리곤의 상단 중심 좌표 계산
+            const coords = nearestBuilding.geometry.coordinates[0];
+            const lats = coords.map(c => c[1]);
+            const lngs = coords.map(c => c[0]);
+            const topLat = Math.max(...lats);
+            const centerLng = lngs.reduce((sum, lng) => sum + lng, 0) / lngs.length;
+
+            const tooltipContent = `
+              <div class="history-tooltip">
+                <div class="tooltip-header">
+                  <strong>${representativeRepair.year}년 수리</strong>
+                  <span class="tooltip-badge repair">${repairCount}건</span>
+                </div>
+                <div class="tooltip-body">
+                  <div class="tooltip-item">
+                    <span class="tooltip-label">종류:</span>
+                    <span class="tooltip-value">${representativeRepair.repairType}</span>
+                  </div>
+                  <div class="tooltip-item">
+                    <span class="tooltip-label">대상:</span>
+                    <span class="tooltip-value">${representativeRepair.target || '미상'}</span>
+                  </div>
+                </div>
+                <div class="tooltip-footer">
+                  <span class="tooltip-action">📋 클릭하여 자세히 보기</span>
+                </div>
+              </div>
+            `;
+            hoverInfoWindow = new google.maps.InfoWindow({
+              content: tooltipContent,
+              position: { lat: topLat, lng: centerLng },
+              disableAutoPan: true
+            });
+            hoverInfoWindow.open(map);
+          });
+
+          polygon.addListener('mouseout', () => {
+            // 폴리곤 원상복구
+            polygon.setOptions({
+              strokeWeight: 2,
+              fillOpacity: 0.4
+            });
+
+            if (hoverInfoWindow) {
+              hoverInfoWindow.close();
+              hoverInfoWindow = null;
+            }
+          });
+
+          // 클릭 이벤트: 테이블 모달 표시
+          polygon.addListener('click', () => {
+            if (hoverInfoWindow) {
+              hoverInfoWindow.close();
+            }
+            showRepairTableModal(groupRepairs);
+          });
+
+          polygons.push(polygon);
+        }
       });
     }
 
     // 수리 정보 표시 함수
-    function showRepairInfo(repair) {
-      const infoContent = `
-        <div style="padding: 10px; max-width: 250px;">
-          <h4 style="margin: 0 0 8px 0; color: #4CAF50;">수리 이력</h4>
+    function showRepairInfo(repair, groupRepairs = null, repairCount = 1) {
+      // 그룹이 있으면 그룹 정보 표시, 없으면 단일 항목 표시
+      const hasGroup = groupRepairs && groupRepairs.length > 1;
+
+      let infoContent = `
+        <div style="padding: 10px; max-width: 300px;">
+          <h4 style="margin: 0 0 8px 0; color: #8E24AA;">수리 이력</h4>
+          ${hasGroup ? `<p style="margin: 4px 0; font-weight: bold; color: #8E24AA;">이 위치 총 ${repairCount}회 수리</p>` : ''}
           <p style="margin: 4px 0;"><strong>연도:</strong> ${repair.year}년</p>
           <p style="margin: 4px 0;"><strong>위치:</strong> ${repair.location}</p>
           <p style="margin: 4px 0;"><strong>대상:</strong> ${repair.target}</p>
           <p style="margin: 4px 0;"><strong>내용:</strong> ${repair.workDescription}</p>
           ${repair.cost ? `<p style="margin: 4px 0;"><strong>비용:</strong> ${repair.cost}</p>` : ''}
-        </div>
       `;
+
+      // 그룹이 있으면 전체 목록 표시
+      if (hasGroup && groupRepairs.length > 1) {
+        infoContent += `
+          <hr style="margin: 10px 0; border: none; border-top: 1px solid #ddd;">
+          <p style="margin: 4px 0; font-size: 12px; color: #666;"><strong>전체 수리 이력:</strong></p>
+          <div style="max-height: 150px; overflow-y: auto;">
+        `;
+        groupRepairs.forEach((r, index) => {
+          infoContent += `
+            <p style="margin: 4px 0; font-size: 11px; padding: 4px; background: #f5f5f5; border-radius: 3px;">
+              ${index + 1}. ${r.year}년 - ${r.workDescription.substring(0, 30)}${r.workDescription.length > 30 ? '...' : ''}
+            </p>
+          `;
+        });
+        infoContent += '</div>';
+      }
+
+      infoContent += '</div>';
 
       const infoWindow = new google.maps.InfoWindow({
         content: infoContent,

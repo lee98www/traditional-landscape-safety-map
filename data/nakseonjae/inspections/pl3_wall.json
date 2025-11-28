@@ -12,11 +12,98 @@
     "extractedText": "❑ 시설물(석축 및 옹벽) 안전점검표\r\n<일반 현황><항목><내용><비고><위치><낙선재 권역 ><pl2><재료><■ 석재><□ 콘크리트><□ 기타(                 )><>\r\n<점검 항목><구분><안전><관심><주의><경계><위험><비고><당해 시설><기초부><세굴><■ 없음><-><-><-><□ 있음><><침하><■ 없음><-><-><-><□ 있음><><우수침투흔><■ 없음><-><-><-><□ 있음><><전면부><균열><□ 없음><■ 경미><□ 약간 심각><□ 심각><□ 매우 심각><><파손·탈락><□ 없음><■ 경미><□ 약간 심각><□ 심각><□ 매우 심각><><열화><□ 없음><□ 경미><□ 약간 심각><■ 심각><□ 매우 심각><><누수흔><□ 없음><-><-><-><■ 있음><><채움재 유실><■ 없음><-><-><-><□ 있음><><줄눈 유실><□ 없음><-><-><-><■ 있음><><변형><□ 없음><□ 경미><□ 약간 심각><□ 심각><■ 매우 심각>..."
   },
   "checklistItems": {
-    "note": "원본 HWPX 파일을 참고하여 수동으로 입력 필요"
+    "foundation": {
+      "scour": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      },
+      "subsidence": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      },
+      "waterInfiltration": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      }
+    },
+    "front": {
+      "crack": {
+        "status": "있음",
+        "severity": "주의",
+        "grade": "약간 심각",
+        "remark": ""
+      },
+      "damage": {
+        "status": "있음",
+        "severity": "관심",
+        "grade": "경미",
+        "remark": ""
+      },
+      "weathering": {
+        "status": "있음",
+        "severity": "경계",
+        "grade": "심각",
+        "remark": ""
+      },
+      "leakage": {
+        "status": "있음",
+        "severity": "위험",
+        "remark": ""
+      },
+      "fillingLoss": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      },
+      "jointLoss": {
+        "status": "있음",
+        "severity": "위험",
+        "remark": ""
+      },
+      "deformation": {
+        "status": "있음",
+        "severity": "위험",
+        "grade": "매우 심각",
+        "remark": ""
+      }
+    },
+    "drainage": {
+      "status": "원활",
+      "severity": "안전",
+      "remark": ""
+    },
+    "rockfall": {
+      "status": "없음",
+      "severity": "안전",
+      "remark": ""
+    },
+    "top": {
+      "groundSubsidence": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      }
+    },
+    "additionalDamage": {
+      "exist": "없음",
+      "waterway": {
+        "status": "",
+        "severity": "",
+        "remark": ""
+      },
+      "sump": {
+        "status": "",
+        "severity": "",
+        "remark": ""
+      }
+    }
   },
   "overallAssessment": {
-    "rating": "검토 필요",
-    "inspectorOpinion": "원본 점검표 참고"
+    "rating": "위험",
+    "inspectorOpinion": "매우 심각한 변형, 누수 및 줄눈 유실 확인, 긴급 보수 필요"
   },
   "photos": [
     "pl3_wall/0_사진기록.png",

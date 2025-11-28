@@ -12,11 +12,94 @@
     "extractedText": "❑ 수목 안전점검표\r\n<일반 현황><항목><내용><비고><위치><낙선재 권역><□ 노거수><pt3><형상><수종 : 소나무><수고(m) : 8.0><흉고(cm) : 30><수관폭(m) : 5.0><>\r\n<점검 항목><구분><안전><관심><주의><경계><위험><비고><당해 요소><뿌리><복토·심토><■ 없음><□ 경미><□ 국부><□ 광대><□ 심각><><뿌리들림><■ 없음><-><□ 경미><-><□ 심각><><뿌리감기><■ 없음><-><□ 경미><-><□ 심각><><결함><□ 없음><-><□ 경미><-><■ 있음><뿌리노출><근원><결함><■ 없음><-><□ 경미><-><□ 심각><><병충해><■ 없음><-><□ 경미><-><□ 심각><><줄기><밀도><■ 정상><-><-><-><□ 쇠퇴(50%이하)><><엽색><■ 진한녹색><-><□ 녹색><-><□ 변색><><결함><■ 없음><-><□ 경미><-><□ 심각><><병충해><■ 없음><-><□ 경미><-><□ 심각><><가지><고사지..."
   },
   "checklistItems": {
-    "note": "원본 HWPX 파일을 참고하여 수동으로 입력 필요"
+    "root": {
+      "burial": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "uprooting": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "circling": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "defect": {
+        "status": "있음",
+        "severity": "위험",
+        "grade": "",
+        "remark": "뿌리노출"
+      }
+    },
+    "base": {
+      "defect": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "pestDisease": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      }
+    },
+    "trunk": {
+      "density": {
+        "status": "정상",
+        "severity": "안전",
+        "remark": ""
+      },
+      "leafColor": {
+        "status": "진한녹색",
+        "severity": "안전",
+        "remark": ""
+      },
+      "defect": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "pestDisease": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      }
+    },
+    "branch": {
+      "deadBranch": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "defect": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "pestDisease": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      }
+    }
   },
   "overallAssessment": {
-    "rating": "검토 필요",
-    "inspectorOpinion": "원본 점검표 참고"
+    "rating": "관심",
+    "inspectorOpinion": "뿌리 결함(뿌리노출) 확인 필요, 전반적으로 양호한 상태"
   },
   "photos": [
     "pt3_tree/1_정면.jpg",

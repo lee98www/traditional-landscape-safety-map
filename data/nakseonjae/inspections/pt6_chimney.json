@@ -12,11 +12,55 @@
     "extractedText": ""
   },
   "checklistItems": {
-    "note": "원본 HWPX 파일을 참고하여 수동으로 입력 필요"
+    "foundation": {
+      "scour": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      },
+      "subsidence": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      }
+    },
+    "body": {
+      "crack": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "damage": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      },
+      "weathering": {
+        "status": "있음",
+        "severity": "관심",
+        "grade": "경미",
+        "remark": ""
+      },
+      "leaning": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      }
+    },
+    "top": {
+      "damage": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      }
+    }
   },
   "overallAssessment": {
-    "rating": "검토 필요",
-    "inspectorOpinion": "원본 점검표 참고"
+    "rating": "관심",
+    "inspectorOpinion": "경미한 열화 현상 확인, 정기적 모니터링 필요"
   },
   "photos": [
     "pt6_chimney/0_사진기록.JPG",

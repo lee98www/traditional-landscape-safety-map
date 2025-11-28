@@ -412,6 +412,85 @@
         min-width: 700px;
       }
     }
+
+    /* 동적 폼 스타일 */
+    .form-container {
+      padding: 20px;
+    }
+
+    .form-section {
+      margin-bottom: 32px;
+      background: var(--color-bg-white);
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .form-section h3 {
+      margin: 0 0 20px 0;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--color-primary);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .form-field {
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .field-label {
+      min-width: 120px;
+      font-weight: 500;
+      color: var(--color-text-primary);
+    }
+
+    .field-controls {
+      display: flex;
+      gap: 8px;
+      flex: 1;
+      align-items: center;
+    }
+
+    .status-select,
+    .severity-select,
+    .grade-select {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      background: white;
+      cursor: pointer;
+    }
+
+    .status-select {
+      min-width: 100px;
+    }
+
+    .severity-select {
+      min-width: 80px;
+    }
+
+    .grade-select {
+      min-width: 100px;
+    }
+
+    .remark-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .info-text {
+      color: var(--color-text-secondary);
+      font-size: 14px;
+      margin: 20px 0;
+    }
   </style>
 </head>
 <body class="inspection-page">
@@ -689,6 +768,10 @@
     </button>
   </div>
 
+  <!-- 외부 스크립트 로드 -->
+  <script src="js/data-loader.js"></script>
+  <script src="js/form-renderer.js"></script>
+
   <script>
     // URL 파라미터
     const urlParams = new URLSearchParams(window.location.search);
@@ -696,6 +779,10 @@
     const inspectionType = urlParams.get('type') || 'regular';
     const target = urlParams.get('target') || '석축 및 옹벽';
     const section = urlParams.get('section') || 'facility';
+    const inspectionId = urlParams.get('id'); // 점검표 ID (예: pl1_wall)
+
+    // 전역 변수
+    let currentInspection = null;
 
     // 점검 데이터 수집 및 저장
     function collectChecklistData() {
@@ -789,6 +876,63 @@
         alert(`${input.files.length}개의 사진이 선택되었습니다.\n(UI 데모 - 실제 업로드는 구현되지 않음)`);
       }
     }
+
+    // 동적 폼 로드 및 렌더링
+    async function loadDynamicForm() {
+      if (!inspectionId) {
+        console.log('inspection ID가 없습니다. 기존 정적 폼을 사용합니다.');
+        return;
+      }
+
+      try {
+        console.log('점검표 로딩 중:', inspectionId);
+
+        // DataLoader를 사용하여 점검 데이터 로드
+        const inspection = await DataLoader.loadInspection(inspectionId);
+
+        if (!inspection) {
+          console.error('점검표를 찾을 수 없습니다:', inspectionId);
+          alert('점검표 데이터를 찾을 수 없습니다.');
+          return;
+        }
+
+        currentInspection = inspection;
+        console.log('점검표 로드 완료:', inspection);
+
+        // FormRenderer를 사용하여 동적 폼 생성
+        const formHTML = FormRenderer.renderChecklistForm(
+          inspection.targetType,
+          inspection
+        );
+
+        // 기존 facilityChecklist를 동적 폼으로 교체
+        const facilityChecklistContainer = document.getElementById('facilityChecklist');
+        if (facilityChecklistContainer) {
+          facilityChecklistContainer.innerHTML = `
+            <div class="checklist-card__header">${inspection.targetName} 점검표</div>
+            <div class="checklist-card__body">
+              ${formHTML}
+            </div>
+          `;
+        }
+
+        // additionalChecklist 숨김 (동적 폼은 모든 섹션을 하나로 통합)
+        const additionalChecklistContainer = document.getElementById('additionalChecklist');
+        if (additionalChecklistContainer) {
+          additionalChecklistContainer.style.display = 'none';
+        }
+
+        console.log('동적 폼 렌더링 완료');
+      } catch (error) {
+        console.error('폼 로딩 오류:', error);
+        alert('점검표 로딩 중 오류가 발생했습니다: ' + error.message);
+      }
+    }
+
+    // 페이지 로드 시 동적 폼 로드
+    window.addEventListener('DOMContentLoaded', () => {
+      loadDynamicForm();
+    });
   </script>
 </body>
 </html>

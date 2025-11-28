@@ -158,14 +158,12 @@ const GISRenderer = {
       inspectionData: inspection
     });
 
-    // 클릭 이벤트
-    marker.addListener('click', () => {
-      if (onClick) {
+    // 클릭 이벤트 (onClick이 null이면 클릭 이벤트 없음)
+    if (onClick) {
+      marker.addListener('click', () => {
         onClick(inspection);
-      } else {
-        this.showInfoWindow(marker, inspection);
-      }
-    });
+      });
+    }
 
     this.markers[inspection.id] = marker;
     return marker;

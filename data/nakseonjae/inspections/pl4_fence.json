@@ -12,11 +12,98 @@
     "extractedText": ""
   },
   "checklistItems": {
-    "note": "원본 HWPX 파일을 참고하여 수동으로 입력 필요"
+    "foundation": {
+      "scour": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      },
+      "subsidence": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      },
+      "waterInfiltration": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      }
+    },
+    "front": {
+      "crack": {
+        "status": "있음",
+        "severity": "관심",
+        "grade": "경미",
+        "remark": ""
+      },
+      "damage": {
+        "status": "있음",
+        "severity": "관심",
+        "grade": "경미",
+        "remark": ""
+      },
+      "weathering": {
+        "status": "있음",
+        "severity": "주의",
+        "grade": "약간 심각",
+        "remark": ""
+      },
+      "leakage": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      },
+      "fillingLoss": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      },
+      "jointLoss": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      },
+      "deformation": {
+        "status": "없음",
+        "severity": "안전",
+        "grade": "",
+        "remark": ""
+      }
+    },
+    "drainage": {
+      "status": "원활",
+      "severity": "안전",
+      "remark": ""
+    },
+    "rockfall": {
+      "status": "없음",
+      "severity": "안전",
+      "remark": ""
+    },
+    "top": {
+      "groundSubsidence": {
+        "status": "없음",
+        "severity": "안전",
+        "remark": ""
+      }
+    },
+    "additionalDamage": {
+      "exist": "없음",
+      "waterway": {
+        "status": "",
+        "severity": "",
+        "remark": ""
+      },
+      "sump": {
+        "status": "",
+        "severity": "",
+        "remark": ""
+      }
+    }
   },
   "overallAssessment": {
-    "rating": "검토 필요",
-    "inspectorOpinion": "원본 점검표 참고"
+    "rating": "주의",
+    "inspectorOpinion": "경미한 균열 및 열화, 정기 모니터링 권장"
   },
   "photos": [
     "pl4_fence/0_사진기록1.jpg",
