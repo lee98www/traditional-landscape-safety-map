@@ -270,6 +270,32 @@
       color: #CCCCCC;
     }
 
+    .site-item--disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      position: relative;
+    }
+
+    .site-item--disabled::after {
+      content: '준비중';
+      position: absolute;
+      top: 50%;
+      right: 40px;
+      transform: translateY(-50%);
+      background: #888;
+      color: white;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    .site-item--disabled:hover {
+      background-color: transparent;
+      margin: 0;
+      padding: 16px 0;
+      border-radius: 0;
+    }
+
     /* Footer */
     .footer {
       background-color: #1A1A1A;
@@ -426,7 +452,7 @@
         </a>
 
         <!-- 주합루 -->
-        <a href="#" class="site-item" data-name="주합루" onclick="showNoDataToast(event, '주합루')">
+        <a href="#" class="site-item site-item--disabled" data-name="주합루" onclick="showNoDataToast(event, '주합루')">
           <div class="site-thumbnail">
             <svg class="site-thumbnail-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -445,7 +471,7 @@
         </a>
 
         <!-- 의두합 -->
-        <a href="#" class="site-item" data-name="의두합" onclick="showNoDataToast(event, '의두합')">
+        <a href="#" class="site-item site-item--disabled" data-name="의두합" onclick="showNoDataToast(event, '의두합')">
           <div class="site-thumbnail">
             <svg class="site-thumbnail-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <rect x="3" y="3" width="18" height="18" rx="2"/>

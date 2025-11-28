@@ -235,14 +235,34 @@
     }
 
     /* Hover 툴팁 스타일 */
+    /* Google Maps InfoWindow 스타일 조정 */
+    .gm-style-iw-chr {
+      display: none !important;
+    }
+    .gm-ui-hover-effect {
+      display: none !important;
+    }
+    /* InfoWindow 내부 패딩/마진 제거 */
+    .gm-style-iw-c {
+      padding: 0 !important;
+      border-radius: 12px !important;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2) !important;
+    }
+    .gm-style-iw-d {
+      overflow: visible !important;
+      padding: 0 !important;
+    }
+    .gm-style-iw-tc {
+      display: none !important;
+    }
+
     .history-tooltip {
-      min-width: 220px;
-      padding: 12px;
+      min-width: 240px;
+      padding: 16px;
       background: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border-radius: 12px;
       font-family: 'Noto Sans KR', sans-serif;
-      animation: tooltipFadeIn 0.6s ease-out;
+      animation: tooltipFadeIn 0.3s ease-out;
     }
 
     @keyframes tooltipFadeIn {
@@ -937,87 +957,6 @@
       display: block;
     }
 
-    /* 수리 이역 서브메뉴 컨테이너 */
-    .repair-submenu-container {
-      margin-top: 8px;
-      display: none;
-    }
-
-    .repair-submenu-container.active {
-      display: block;
-    }
-
-    .submenu-label {
-      font-size: 11px;
-      font-weight: 600;
-      color: #666;
-      padding: 0 16px 6px 16px;
-    }
-
-    /* 수리 이력 서브메뉴 */
-    .repair-submenu {
-      background: var(--color-bg-white);
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      overflow: hidden;
-    }
-
-    .submenu-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 16px;
-      font-size: 13px;
-      color: var(--color-text-primary);
-      cursor: pointer;
-      transition: all var(--transition-fast);
-      border: none;
-      background: none;
-      width: 100%;
-      text-align: left;
-      border-bottom: 1px solid #F0F0F0;
-    }
-
-    .submenu-item:last-child {
-      border-bottom: none;
-    }
-
-    .submenu-item:hover {
-      background: #F5F9FC;
-    }
-
-    .submenu-item.active {
-      background: var(--color-primary-light);
-      color: var(--color-primary);
-    }
-
-    .submenu-item__radio {
-      width: 16px;
-      height: 16px;
-      border: 2px solid #CCC;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .submenu-item.active .submenu-item__radio {
-      border-color: var(--color-primary);
-    }
-
-    .submenu-item__radio-inner {
-      width: 8px;
-      height: 8px;
-      background: var(--color-primary);
-      border-radius: 50%;
-      display: none;
-    }
-
-    .submenu-item.active .submenu-item__radio-inner {
-      display: block;
-    }
-
     /* 점검 상세 모달 스타일 */
     .inspection-modal {
       position: fixed;
@@ -1122,40 +1061,6 @@
         </svg>
         수리 이력
       </button>
-    </div>
-
-    <!-- 수리 이력 서브메뉴 -->
-    <div class="repair-submenu-container">
-      <div class="repair-submenu" id="repairSubmenu">
-        <button class="submenu-item active" onclick="selectRepairFilter('all')">
-          <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
-          모두보기
-        </button>
-        <button class="submenu-item" onclick="selectRepairFilter('flood')">
-          <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
-          범람 위험 요소
-        </button>
-        <button class="submenu-item" onclick="selectRepairFilter('terrain')">
-          <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
-          인접 지형
-        </button>
-        <button class="submenu-item" onclick="selectRepairFilter('surrounding')">
-          <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
-          주변 영향
-        </button>
-        <button class="submenu-item" onclick="selectRepairFilter('elevation')">
-          <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
-          고저차
-        </button>
-        <button class="submenu-item" onclick="selectRepairFilter('hydraulic')">
-          <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
-          수리 조건
-        </button>
-        <button class="submenu-item" onclick="selectRepairFilter('rainfall')">
-          <span class="submenu-item__radio"><span class="submenu-item__radio-inner"></span></span>
-          강우 이력
-        </button>
-      </div>
     </div>
   </div>
 
@@ -1384,9 +1289,6 @@
         </select>
       </div>
     </div>
-    <div class="warning-banner">
-      ※ 본 지도의 조사 영역과 결과는 실제 조사 결과가 아닌 이해를 돕기 위한 예시 이미지입니다
-    </div>
     <div class="legend" id="disasterLegend">
       <div class="legend__header">
         재해 이력 범례
@@ -1446,9 +1348,6 @@
 
   <!-- 수리 이력 오버레이 -->
   <div class="history-overlay" id="repairOverlay">
-    <div class="warning-banner">
-      ※ 본 지도의 조사 영역과 결과는 실제 조사 결과가 아닌 이해를 돕기 위한 예시 이미지입니다
-    </div>
     <div class="legend" id="repairLegend">
       <div class="legend__header">
         수리 이력 범례
@@ -1667,7 +1566,6 @@
       document.getElementById('disasterOverlay').style.display = 'none';
       document.getElementById('repairOverlay').style.display = 'none';
       document.getElementById('inspectionOverlay').style.display = 'none';
-      document.querySelector('.repair-submenu-container').classList.remove('active');
 
       // 모든 팝업 모달 닫기
       closeDisasterModal();
@@ -2277,7 +2175,6 @@
       `;
 
       repairs.forEach(repair => {
-        const isDummy = repair.note === "더미 데이터";
         // 비용 포맷팅 (원 단위를 천원 단위로 변환하고 천 단위 구분자 추가)
         let costDisplay = repair.cost || '-';
         if (repair.cost) {
@@ -2290,8 +2187,8 @@
         }
 
         html += `
-          <tr ${isDummy ? 'style="background: #FFF9C4;"' : ''}>
-            <td>${repair.year}${isDummy ? ' <span style="color: #F57C00; font-size: 10px; font-weight: bold;">더미</span>' : ''}</td>
+          <tr>
+            <td>${repair.year}</td>
             <td>${repair.elementType}</td>
             <td>${repair.target}</td>
             <td style="text-align: left;">${repair.workDescription}</td>
@@ -2316,15 +2213,18 @@
       setActiveMenu(3);
       currentMode = 'repair';
       document.getElementById('repairOverlay').style.display = 'block';
-      document.querySelector('.repair-submenu-container').classList.add('active');
 
-      // 전체 수리 이력 표시 (필터: '전통조경요소')
+      // 전체 수리 이력 표시
       renderRepairHistory(allRepairHistory);
     }
+
+    // 현재 필터링된 수리 이력 저장 (폴리곤 클릭 시 사용)
+    let currentFilteredRepairs = [];
 
     // 수리 이력 렌더링 함수 (건물 폴리곤 기반)
     function renderRepairHistory(repairs) {
       clearPolygons();
+      currentFilteredRepairs = repairs; // 현재 필터링된 데이터 저장
 
       if (!buildingPolygons || !buildingPolygons.features) {
         console.error('건물 폴리곤 데이터가 없습니다.');
@@ -2434,12 +2334,12 @@
             }
           });
 
-          // 클릭 이벤트: 테이블 모달 표시
+          // 클릭 이벤트: 현재 필터 조건의 전체 목록 모달 표시
           polygon.addListener('click', () => {
             if (hoverInfoWindow) {
               hoverInfoWindow.close();
             }
-            showRepairTableModal(groupRepairs);
+            showRepairTableModal(currentFilteredRepairs);
           });
 
           polygons.push(polygon);
@@ -2488,25 +2388,6 @@
       });
 
       infoWindow.open(map);
-    }
-
-    // 수리 이력 필터 선택
-    function selectRepairFilter(filterType) {
-      // 모든 서브메뉴 아이템 비활성화
-      document.querySelectorAll('#repairSubmenu .submenu-item').forEach(item => {
-        item.classList.remove('active');
-      });
-      // 클릭한 아이템 활성화
-      event.currentTarget.classList.add('active');
-
-      console.log('수리 이력 선택된 필터:', filterType);
-
-      // DataLoader의 필터링 함수 사용 (elementType 기반)
-      const filtered = DataLoader.filterHistory(allRepairHistory, filterType);
-      console.log(`수리 이력 필터링 결과: ${filtered.length}개 항목`);
-
-      // 필터링된 데이터로 지도 업데이트
-      renderRepairHistory(filtered);
     }
 
     // 폴리곤 제거

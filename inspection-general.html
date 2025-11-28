@@ -343,7 +343,7 @@
   <!-- Header -->
   <header class="header">
     <a href="index.html" class="header__logo">전통조경 안전지도 시범서비스</a>
-    <h1 class="header__title">안전 점검 실시</h1>
+    <h1 class="header__title" id="headerTitle">안전 점검 실시</h1>
     <div style="width: 180px;"></div>
   </header>
 
@@ -435,6 +435,14 @@
               </div>
             </div>
           </div>
+
+          <!-- 시설물 개요 - 점검 대상별 동적 렌더링 -->
+          <div class="form-section" id="facilityOverviewSection">
+            <h3 class="form-section__title">시설물 개요</h3>
+            <div class="form-grid" id="facilityFields">
+              <!-- JS로 target에 따라 동적 렌더링 -->
+            </div>
+          </div>
         </div>
       </div>
     </main>
@@ -463,7 +471,235 @@
     const urlParams = new URLSearchParams(window.location.search);
     const siteId = urlParams.get('site') || '1';
     const inspectionType = urlParams.get('type') || 'regular';
-    const target = urlParams.get('target') || '석축 및 옹벽';
+    const targetRaw = urlParams.get('target');
+    const target = targetRaw || '석축 및 옹벽';
+
+    // 디버그: target 파라미터 확인
+    console.log('[inspection-general] URL search:', window.location.search);
+    console.log('[inspection-general] target raw:', targetRaw);
+    console.log('[inspection-general] target:', target);
+
+    // 헤더에 점검 대상 항목명 표시
+    document.getElementById('headerTitle').textContent = `안전 점검 실시 (${target})`;
+
+    // 시설물 개요 필드 렌더링 (점검 대상별)
+    function renderFacilityFields() {
+      const container = document.getElementById('facilityFields');
+      let html = '';
+
+      // 공통: 위치 필드
+      html += `
+        <div class="form-group">
+          <label class="form-label">위치</label>
+          <input type="text" class="form-input" id="facilityLocation" placeholder="시설물 위치">
+        </div>
+      `;
+
+      switch(target) {
+        case '비탈면':
+          html += `
+            <div class="form-group">
+              <label class="form-label">높이 (m)</label>
+              <input type="text" class="form-input" id="facilityHeight" placeholder="높이">
+            </div>
+            <div class="form-group">
+              <label class="form-label">경사각 (°)</label>
+              <input type="text" class="form-input" id="facilitySlopeAngle" placeholder="경사각">
+            </div>
+            <div class="form-group">
+              <label class="form-label">재료</label>
+              <select class="form-input" id="facilityMaterial">
+                <option value="">선택</option>
+                <option value="흙">흙</option>
+                <option value="암반">암반</option>
+                <option value="혼합">혼합</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">경계</label>
+              <select class="form-input" id="facilityBoundary">
+                <option value="">선택</option>
+                <option value="시설물">시설물</option>
+                <option value="없음">없음</option>
+              </select>
+            </div>
+          `;
+          break;
+
+        case '지반':
+          html += `
+            <div class="form-group">
+              <label class="form-label">재료</label>
+              <select class="form-input" id="facilityMaterial">
+                <option value="">선택</option>
+                <option value="흙">흙</option>
+                <option value="석재">석재</option>
+                <option value="소성재">소성재</option>
+                <option value="아스콘/콘크리트">아스콘/콘크리트</option>
+                <option value="혼합">혼합</option>
+              </select>
+            </div>
+          `;
+          break;
+
+        case '석축 및 옹벽':
+          html += `
+            <div class="form-group">
+              <label class="form-label">규모 (가로×세로×높이 m)</label>
+              <input type="text" class="form-input" id="facilityScale" placeholder="예: 10×5×3">
+            </div>
+          `;
+          break;
+
+        case '다리':
+          html += `
+            <div class="form-group">
+              <label class="form-label">길이 (m)</label>
+              <input type="text" class="form-input" id="facilityLength" placeholder="길이">
+            </div>
+            <div class="form-group">
+              <label class="form-label">폭 (m)</label>
+              <input type="text" class="form-input" id="facilityWidth" placeholder="폭">
+            </div>
+          `;
+          break;
+
+        case '지당':
+          html += `
+            <div class="form-group">
+              <label class="form-label">면적 (㎡)</label>
+              <input type="text" class="form-input" id="facilityArea" placeholder="면적">
+            </div>
+          `;
+          break;
+
+        case '문':
+        case '담장':
+        case '굴뚝':
+          html += `
+            <div class="form-group">
+              <label class="form-label">규모 (가로×세로×높이 m)</label>
+              <input type="text" class="form-input" id="facilityScale" placeholder="예: 3×0.5×2">
+            </div>
+          `;
+          break;
+
+        case '배수시설':
+          html += `
+            <div class="form-group">
+              <label class="form-label">규모 (길이×폭×깊이 m)</label>
+              <input type="text" class="form-input" id="facilityScale" placeholder="예: 50×0.3×0.5">
+            </div>
+          `;
+          break;
+
+        case '수목: 단일목':
+          html += `
+            <div class="form-group">
+              <label class="form-label">수고 (m)</label>
+              <input type="text" class="form-input" id="facilityTreeHeight" placeholder="수고">
+            </div>
+            <div class="form-group">
+              <label class="form-label">흉고직경 (cm)</label>
+              <input type="text" class="form-input" id="facilityDbh" placeholder="흉고직경">
+            </div>
+            <div class="form-group">
+              <label class="form-label">수관폭 (m)</label>
+              <input type="text" class="form-input" id="facilityCrownWidth" placeholder="수관폭">
+            </div>
+          `;
+          break;
+
+        case '수목: 군락':
+          html += `
+            <div class="form-group">
+              <label class="form-label">본수</label>
+              <input type="text" class="form-input" id="facilityTreeCount" placeholder="본수">
+            </div>
+            <div class="form-group">
+              <label class="form-label">주요 수종</label>
+              <input type="text" class="form-input" id="facilityMainSpecies" placeholder="주요 수종">
+            </div>
+            <div class="form-group">
+              <label class="form-label">평균 수고 (m)</label>
+              <input type="text" class="form-input" id="facilityAvgHeight" placeholder="평균 수고">
+            </div>
+            <div class="form-group">
+              <label class="form-label">평균 수관폭 (m)</label>
+              <input type="text" class="form-input" id="facilityAvgCrownWidth" placeholder="평균 수관폭">
+            </div>
+          `;
+          break;
+
+        default:
+          html += `
+            <div class="form-group">
+              <label class="form-label">규모</label>
+              <input type="text" class="form-input" id="facilityScale" placeholder="규모">
+            </div>
+          `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    // 시설물 개요 데이터 수집
+    function collectFacilityData() {
+      const facilityData = {
+        location: document.getElementById('facilityLocation')?.value || ''
+      };
+
+      switch(target) {
+        case '비탈면':
+          facilityData.height = document.getElementById('facilityHeight')?.value || '';
+          facilityData.slopeAngle = document.getElementById('facilitySlopeAngle')?.value || '';
+          facilityData.material = document.getElementById('facilityMaterial')?.value || '';
+          facilityData.boundary = document.getElementById('facilityBoundary')?.value || '';
+          break;
+
+        case '지반':
+          facilityData.material = document.getElementById('facilityMaterial')?.value || '';
+          break;
+
+        case '석축 및 옹벽':
+        case '문':
+        case '담장':
+        case '굴뚝':
+        case '배수시설':
+          facilityData.scale = document.getElementById('facilityScale')?.value || '';
+          break;
+
+        case '다리':
+          facilityData.length = document.getElementById('facilityLength')?.value || '';
+          facilityData.width = document.getElementById('facilityWidth')?.value || '';
+          break;
+
+        case '지당':
+          facilityData.area = document.getElementById('facilityArea')?.value || '';
+          break;
+
+        case '수목: 단일목':
+          facilityData.treeHeight = document.getElementById('facilityTreeHeight')?.value || '';
+          facilityData.dbh = document.getElementById('facilityDbh')?.value || '';
+          facilityData.crownWidth = document.getElementById('facilityCrownWidth')?.value || '';
+          break;
+
+        case '수목: 군락':
+          facilityData.treeCount = document.getElementById('facilityTreeCount')?.value || '';
+          facilityData.mainSpecies = document.getElementById('facilityMainSpecies')?.value || '';
+          facilityData.avgHeight = document.getElementById('facilityAvgHeight')?.value || '';
+          facilityData.avgCrownWidth = document.getElementById('facilityAvgCrownWidth')?.value || '';
+          break;
+
+        default:
+          facilityData.scale = document.getElementById('facilityScale')?.value || '';
+      }
+
+      return facilityData;
+    }
+
+    // 페이지 로드 시 시설물 개요 필드 렌더링
+    renderFacilityFields();
 
     // 대상지 데이터 로드 및 자동 입력
     async function loadSiteData() {
@@ -526,14 +762,15 @@
 
     // 폼 데이터 저장
     function saveFormData() {
-      const inputs = document.querySelectorAll('.form-input');
+      // 국가유산 개요 필드 (고정 위치)
+      const heritageInputs = document.querySelectorAll('.form-section:first-child .form-input');
 
       const existingData = JSON.parse(sessionStorage.getItem('inspectionData') || '{}');
       existingData.basicInfo = {
-        '국가유산명': inputs[0].value,
-        '국가유산유형': inputs[1].value,
-        '소재지': inputs[2].value,
-        '소유자관리자': inputs[3].value,
+        '국가유산명': heritageInputs[0]?.value || '',
+        '국가유산유형': heritageInputs[1]?.value || '',
+        '소재지': heritageInputs[2]?.value || '',
+        '소유자관리자': heritageInputs[3]?.value || '',
         '관리항목': {
           '종합정비계획': document.getElementById('plan').checked,
           '정기조사': document.getElementById('survey').checked,
@@ -542,6 +779,10 @@
           '국가유산지킴이': document.getElementById('keeper').checked
         }
       };
+
+      // 시설물 개요 데이터 추가
+      existingData.facilityInfo = collectFacilityData();
+
       sessionStorage.setItem('inspectionData', JSON.stringify(existingData));
     }
 

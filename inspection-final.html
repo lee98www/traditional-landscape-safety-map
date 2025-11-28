@@ -354,7 +354,7 @@
   <!-- Header -->
   <header class="header">
     <a href="index.html" class="header__logo">전통조경 안전지도 시범서비스</a>
-    <h1 class="header__title">안전 점검 실시</h1>
+    <h1 class="header__title" id="headerTitle">안전 점검 실시</h1>
     <div style="width: 180px;"></div>
   </header>
 
@@ -454,6 +454,9 @@
     const siteId = urlParams.get('site') || '1';
     const inspectionType = urlParams.get('type') || 'regular';
     const target = urlParams.get('target') || '석축 및 옹벽';
+
+    // 헤더에 점검 대상 항목명 표시
+    document.getElementById('headerTitle').textContent = `안전 점검 실시 (${decodeURIComponent(target)})`;
 
     // 서브메뉴 토글
     function toggleSubmenu(id) {

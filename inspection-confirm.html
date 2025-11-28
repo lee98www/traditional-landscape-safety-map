@@ -20,6 +20,8 @@
   <!-- Data Loading Modules -->
   <script src="js/data-loader.js"></script>
   <script src="js/photo-gallery.js"></script>
+  <!-- html2canvas for PNG export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
     /* 확인 페이지 - 디자인 시안 기준 */
@@ -120,6 +122,15 @@
       font-weight: 600;
       color: #0052CC;
       margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #E0E0E0;
+    }
+
+    .report-section__subtitle {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333333;
+      margin: 24px 0 12px 0;
       padding-bottom: 8px;
       border-bottom: 1px solid #E0E0E0;
     }
@@ -267,19 +278,20 @@
       left: 0;
       right: 0;
       bottom: 0;
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       background-color: rgba(0, 0, 0, 0.5);
-      z-index: 9999;
-      align-items: center;
-      justify-content: center;
+      z-index: 99999;
     }
 
     .modal-overlay.active {
       display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
     }
 
     .modal {
+      display: block !important;
       position: relative;
       background-color: #FFFFFF;
       border-radius: 16px;
@@ -287,7 +299,9 @@
       max-width: 400px;
       width: 90%;
       box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
-      z-index: 501;
+      z-index: 100000;
+      opacity: 1 !important;
+      visibility: visible !important;
     }
 
     .modal__icon {
@@ -308,10 +322,13 @@
     }
 
     .modal__title {
-      font-size: 18px;
-      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 600;
       color: #333333;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
     .modal__message {
@@ -321,21 +338,33 @@
       line-height: 1.6;
     }
 
+    .modal__message-box {
+      background-color: #F5F5F5;
+      padding: 16px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #333333;
+      margin-bottom: 24px;
+    }
+
     .modal__buttons {
       display: flex;
       gap: 12px;
-      justify-content: center;
     }
 
     .btn-modal {
-      min-width: 120px;
-      height: 44px;
+      flex: 1;
+      height: 48px;
       padding: 0 20px;
       border-radius: 8px;
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
     .btn-modal--primary {
@@ -346,6 +375,16 @@
 
     .btn-modal--primary:hover {
       background-color: #003D99;
+    }
+
+    .btn-modal--outline {
+      background-color: #FFFFFF;
+      color: #0052CC;
+      border: 2px solid #0052CC;
+    }
+
+    .btn-modal--outline:hover {
+      background-color: #E8F4FD;
     }
 
     .btn-modal--secondary {
@@ -453,7 +492,7 @@
 
     /* 체크박스 스타일 */
     .check-cell {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 4px;
@@ -462,23 +501,28 @@
     .check-box {
       width: 14px;
       height: 14px;
-      border: 1px solid #CCC;
+      border: 2px solid #999;
+      border-radius: 2px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      background-color: #FFFFFF;
     }
 
     .check-box.checked {
-      background-color: #4A90E2;
-      border-color: #4A90E2;
+      background-color: #0052CC;
+      border-color: #0052CC;
     }
 
     .check-box.checked::after {
       content: '';
-      width: 8px;
+      width: 4px;
       height: 8px;
-      background-color: #FFFFFF;
+      border: solid #FFFFFF;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      margin-bottom: 2px;
     }
 
     .check-label {
@@ -602,7 +646,7 @@
   <!-- Header -->
   <header class="header">
     <a href="index.html" class="header__logo">전통조경 안전지도 시범서비스</a>
-    <h1 class="header__title">안전 점검 실시</h1>
+    <h1 class="header__title" id="headerTitle">안전 점검 실시</h1>
     <div style="width: 180px;"></div>
   </header>
 
@@ -892,7 +936,7 @@
             <div class="report-info__label">점검자 의견</div>
             <div class="report-info__value" data-field="inspectorOpinion" style="grid-column: 2; white-space: pre-wrap;">(의견 없음)</div>
           </div>
-          <div style="font-size: 13px; font-weight: 500; color: #333; margin-bottom: 12px;">점검 결과에 따른 보수 필요성</div>
+          <h4 class="report-section__subtitle">점검 결과에 따른 보수 필요성</h4>
           <div class="report-judgment">
             <div class="report-judgment__item" data-rating="안전">
               <span class="report-judgment__label">안전</span>
@@ -950,18 +994,18 @@
 
   <!-- 제출 완료 모달 (디자인 시안 02_07_02 기준) -->
   <div class="modal-overlay" id="submitModal">
-    <div class="modal" style="text-align: left;">
-      <h3 class="modal__title" style="text-align: left; display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+    <div class="modal">
+      <h3 class="modal__title">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0052CC" stroke-width="2">
           <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="16" x2="12" y2="12"/>
-          <line x1="12" y1="8" x2="12" y2="8"/>
+          <line x1="12" y1="12" x2="12" y2="8"/>
+          <circle cx="12" cy="16" r="0.5" fill="#0052CC"/>
         </svg>
         알림
       </h3>
-      <p class="modal__message" style="background-color: #F5F5F5; padding: 16px; border-radius: 8px; margin-bottom: 24px;">제출 완료되었습니다.</p>
-      <div class="modal__buttons" style="display: flex; gap: 12px;">
-        <button type="button" class="btn-modal btn-modal--secondary" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;" onclick="downloadReport()">
+      <div class="modal__message-box">제출 완료되었습니다.</div>
+      <div class="modal__buttons">
+        <button type="button" class="btn-modal btn-modal--outline" onclick="downloadReport()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
             <polyline points="7,10 12,15 17,10"/>
@@ -969,7 +1013,7 @@
           </svg>
           보고서 다운로드
         </button>
-        <button type="button" class="btn-modal btn-modal--primary" style="flex: 1;" onclick="goHome()">
+        <button type="button" class="btn-modal btn-modal--primary" onclick="goHome()">
           종료
         </button>
       </div>
@@ -1000,7 +1044,16 @@
     const inspectionId = urlParams.get('id'); // 새로운 방식: inspection ID
     const siteId = urlParams.get('site') || '3';
     const inspectionType = urlParams.get('type') || 'regular';
-    const target = urlParams.get('target') || '석축 및 옹벽';
+    const targetRaw = urlParams.get('target');
+    const target = targetRaw || '석축 및 옹벽';
+
+    // 디버그: target 파라미터 확인
+    console.log('[inspection-confirm] URL search:', window.location.search);
+    console.log('[inspection-confirm] target raw:', targetRaw);
+    console.log('[inspection-confirm] target:', target);
+
+    // 헤더에 점검 대상 항목명 표시
+    document.getElementById('headerTitle').textContent = `안전 점검 실시 (${target})`;
 
     // sessionStorage에서 점검 데이터 불러오기
     let inspectionData = JSON.parse(sessionStorage.getItem('inspectionData') || '{}');
@@ -1024,7 +1077,7 @@
     // sessionStorage 데이터가 있으면 우선 사용, 없으면 URL 파라미터 사용
     if (inspectionTypeEl) inspectionTypeEl.textContent = inspectionData.inspectionTypeName || (inspectionType === 'regular' ? '정기점검' : '상시점검');
     if (siteEl) siteEl.textContent = (inspectionData.basicInfo && inspectionData.basicInfo['국가유산명']) || sites[siteId] || '창덕궁 낙선재 권역';
-    if (targetEl) targetEl.textContent = inspectionData.target || decodeURIComponent(target);
+    if (targetEl) targetEl.textContent = inspectionData.target || target;
     if (dateEl) dateEl.textContent = inspectionData.inspectionDate || new Date().toLocaleDateString('ko-KR').replace(/\./g, '.').slice(0, -1);
 
     // 일반현황 정보 업데이트
@@ -1104,7 +1157,7 @@
         }
 
         // 조사자 의견
-        const opinionEl = document.getElementById('inspectorOpinion');
+        const opinionEl = document.querySelector('[data-field="inspectorOpinion"]');
         if (opinionEl) {
           if (inspectionData.final.opinion && inspectionData.final.opinion.trim()) {
             opinionEl.textContent = inspectionData.final.opinion;
@@ -1113,12 +1166,107 @@
           }
         }
       }
+
+      // 점검결과의 rating도 종합판정 영역에 표시
+      if (inspectionData.result && inspectionData.result.rating) {
+        const ratingEl = document.querySelector('[data-field="rating"]');
+        if (ratingEl) {
+          ratingEl.textContent = inspectionData.result.rating;
+          // 등급별 색상
+          const colors = {
+            '안전': '#4CAF50',
+            '관심': '#8BC34A',
+            '주의': '#FFC107',
+            '경계': '#FF9800',
+            '위험': '#F44336'
+          };
+          ratingEl.style.color = colors[inspectionData.result.rating] || '#333';
+        }
+      }
+    }
+
+    // 점검항목 체크리스트 업데이트 (sessionStorage 데이터 기반)
+    function updateChecklistDisplay() {
+      if (!inspectionData.checklist) {
+        console.log('No checklist data in sessionStorage');
+        return;
+      }
+
+      console.log('Updating checklist display with:', inspectionData.checklist);
+
+      // 먼저 모든 체크박스 초기화 (하드코딩된 checked 제거)
+      document.querySelectorAll('.checklist-table .check-box').forEach(box => {
+        box.classList.remove('checked');
+      });
+
+      // 일반현황 체크박스도 초기화
+      document.querySelectorAll('.status-table .check-box').forEach(box => {
+        box.classList.remove('checked');
+      });
+
+      // facility 점검 항목 처리
+      if (inspectionData.checklist.facility) {
+        inspectionData.checklist.facility.forEach(item => {
+          if (item.item && item.rating) {
+            updateCheckboxInTable(item.item, item.rating);
+          }
+        });
+      }
+
+      // additional 점검 항목 처리
+      if (inspectionData.checklist.additional) {
+        inspectionData.checklist.additional.forEach(item => {
+          if (item.item && item.rating) {
+            updateCheckboxInTable(item.item, item.rating);
+          }
+        });
+      }
+    }
+
+    // 테이블 내 체크박스 상태 업데이트
+    function updateCheckboxInTable(itemName, selectedValue) {
+      console.log('Updating checkbox:', itemName, '->', selectedValue);
+
+      // 점검표 테이블에서 해당 항목 행 찾기
+      const rows = document.querySelectorAll('.checklist-table tbody tr');
+
+      rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+
+        // 각 셀을 순회하며 항목명 찾기
+        for (let i = 0; i < cells.length; i++) {
+          const cell = cells[i];
+          const cellText = cell.textContent.trim();
+
+          // 항목명이 일치하는지 확인 (rowspan/colspan이 없는 일반 텍스트 셀)
+          if (cellText === itemName || cellText.includes(itemName)) {
+            // 이 행의 모든 체크박스에서 선택값 찾기
+            const checkCells = row.querySelectorAll('.check-cell');
+
+            checkCells.forEach(checkCell => {
+              const labelText = checkCell.textContent.trim();
+              const checkBox = checkCell.querySelector('.check-box');
+
+              if (checkBox) {
+                // 선택된 값과 라벨이 일치하면 체크
+                if (labelText.includes(selectedValue) || selectedValue.includes(labelText.replace(/\s+/g, ''))) {
+                  checkBox.classList.add('checked');
+                  console.log('Checked:', itemName, labelText);
+                }
+              }
+            });
+
+            break; // 항목을 찾았으면 루프 종료
+          }
+        }
+      });
     }
 
     // 페이지 로드 시 데이터 업데이트
     updateBasicInfo();
     updateResultInfo();
     updateFinalInfo();
+    updateChecklistDisplay();
 
     // 이전 버튼
     function goBack() {
@@ -1130,10 +1278,51 @@
       document.getElementById('submitModal').classList.add('active');
     }
 
-    // 보고서 다운로드
-    function downloadReport() {
-      document.getElementById('submitModal').classList.remove('active');
-      document.getElementById('downloadModal').classList.add('active');
+    // 보고서 다운로드 (PNG)
+    async function downloadReport() {
+      const reportEl = document.querySelector('.report-preview');
+      if (!reportEl) {
+        alert('보고서를 찾을 수 없습니다.');
+        return;
+      }
+
+      try {
+        // 모달 숨기기
+        document.getElementById('submitModal').classList.remove('active');
+
+        // html2canvas로 캡처
+        const canvas = await html2canvas(reportEl, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#FFFFFF',
+          logging: false
+        });
+
+        // PNG 다운로드
+        const targetText = document.getElementById('targetDisplay')?.textContent || '보고서';
+        const dateText = document.getElementById('dateDisplay')?.textContent || new Date().toISOString().slice(0, 10);
+        const fileName = `안전점검보고서_${targetText}_${dateText.replace(/\./g, '')}.png`;
+
+        // Blob으로 변환하여 다운로드
+        canvas.toBlob(function(blob) {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.download = fileName;
+          link.href = url;
+          link.click();
+          URL.revokeObjectURL(url);
+
+          // 다운로드 시작 후 잠시 대기 후 완료 모달 표시
+          setTimeout(() => {
+            document.getElementById('downloadModal').classList.add('active');
+          }, 500);
+        }, 'image/png');
+
+      } catch (error) {
+        console.error('PNG 다운로드 오류:', error);
+        alert('보고서 다운로드에 실패했습니다.');
+      }
     }
 
     // 다운로드 모달 닫기

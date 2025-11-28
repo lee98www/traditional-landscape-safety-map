@@ -79,6 +79,15 @@
       border-top-width: 4px;
     }
 
+    .target-card__title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333333;
+      margin: 0 0 20px 0;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #E0E0E0;
+    }
+
     /* 조경요소 그리드 - 디자인 시안 기준 */
     .target-grid {
       display: grid;
@@ -111,19 +120,6 @@
       background-color: #0052CC;
       border-color: #0052CC;
       color: #FFFFFF;
-    }
-
-    .target-btn.disabled {
-      background-color: #F5F5F5;
-      border-color: #E0E0E0;
-      color: #999999;
-      cursor: not-allowed;
-    }
-
-    .target-btn.disabled:hover {
-      background-color: #F5F5F5;
-      border-color: #E0E0E0;
-      color: #999999;
     }
 
     /* Navigation Buttons - 디자인 시안 기준 */
@@ -309,6 +305,7 @@
   <!-- Main Content -->
   <main class="main-content">
     <div class="target-card">
+      <h2 class="target-card__title">점검 대상 선택</h2>
       <div class="target-grid">
         <button type="button" class="target-btn" data-target="비탈면">비탈면</button>
         <button type="button" class="target-btn" data-target="지반">지반</button>
@@ -390,7 +387,11 @@
     // 다음 버튼
     function goNext() {
       if (selectedTarget) {
-        window.location.href = `inspection-general.html?site=${siteId}&type=${inspectionType}&target=${encodeURIComponent(selectedTarget)}`;
+        const nextUrl = `inspection-general.html?site=${siteId}&type=${inspectionType}&target=${encodeURIComponent(selectedTarget)}`;
+        console.log('[inspection-target] selectedTarget:', selectedTarget);
+        console.log('[inspection-target] encoded:', encodeURIComponent(selectedTarget));
+        console.log('[inspection-target] navigating to:', nextUrl);
+        window.location.href = nextUrl;
       }
     }
   </script>

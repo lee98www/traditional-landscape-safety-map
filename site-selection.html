@@ -187,6 +187,29 @@
       display: none;
     }
 
+    .site-item--disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      position: relative;
+    }
+
+    .site-item--disabled::after {
+      content: '준비중';
+      position: absolute;
+      top: 50%;
+      right: 40px;
+      transform: translateY(-50%);
+      background: #888;
+      color: white;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    .site-item--disabled:hover {
+      background: transparent;
+    }
+
     .site-item__thumb {
       width: 64px;
       height: 64px;
@@ -323,7 +346,7 @@
           </svg>
         </a>
 
-        <a href="#" class="site-item" onclick="showNoDataAlert(event, '주합루')">
+        <a href="#" class="site-item site-item--disabled" onclick="showNoDataAlert(event, '주합루')">
           <div class="site-item__thumb">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -340,7 +363,7 @@
           </svg>
         </a>
 
-        <a href="#" class="site-item" onclick="showNoDataAlert(event, '의두합')">
+        <a href="#" class="site-item site-item--disabled" onclick="showNoDataAlert(event, '의두합')">
           <div class="site-item__thumb">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <rect x="3" y="3" width="18" height="18" rx="2"/>
