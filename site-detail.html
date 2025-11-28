@@ -849,6 +849,33 @@
     .legend__color--repair-mid { background: #AB47BC; }
     .legend__color--repair-low { background: #CE93D8; }
 
+    /* 점검 이력 범례 마커 */
+    .legend__marker {
+      display: inline-block;
+      width: 12px;
+      height: 18px;
+      margin-right: 8px;
+      position: relative;
+    }
+
+    .legend__marker::before {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      left: 0;
+      top: 0;
+      border: 2px solid white;
+    }
+
+    .legend__marker--safe::before { background: #4CAF50; }
+    .legend__marker--interest::before { background: #FFC107; }
+    .legend__marker--caution::before { background: #FF9800; }
+    .legend__marker--alert::before { background: #FF5722; }
+    .legend__marker--danger::before { background: #F44336; }
+
     /* 경고 배너 - 중앙 하단으로 이동 */
     .warning-banner {
       position: absolute;
@@ -1382,6 +1409,41 @@
     </div>
   </div>
 
+  <!-- 점검 이력 오버레이 -->
+  <div class="history-overlay" id="inspectionOverlay">
+    <div class="warning-banner">
+      ※ 본 지도의 조사 영역과 결과는 실제 조사 결과가 아닌 이해를 돕기 위한 예시 이미지 입니다
+    </div>
+    <div class="legend" id="inspectionLegend">
+      <div class="legend__header">
+        점검 이력 범례
+        <svg class="legend__toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 15l-6-6-6 6"/>
+        </svg>
+      </div>
+      <div class="legend__item">
+        <span class="legend__marker legend__marker--safe"></span>
+        안전
+      </div>
+      <div class="legend__item">
+        <span class="legend__marker legend__marker--interest"></span>
+        관심
+      </div>
+      <div class="legend__item">
+        <span class="legend__marker legend__marker--caution"></span>
+        주의
+      </div>
+      <div class="legend__item">
+        <span class="legend__marker legend__marker--alert"></span>
+        경계
+      </div>
+      <div class="legend__item">
+        <span class="legend__marker legend__marker--danger"></span>
+        위험
+      </div>
+    </div>
+  </div>
+
   <!-- 수리 이력 오버레이 -->
   <div class="history-overlay" id="repairOverlay">
     <div class="warning-banner">
@@ -1602,8 +1664,9 @@
 
     // 모든 오버레이 숨기기
     function hideAllOverlays() {
-      document.getElementById('disasterOverlay').classList.remove('active');
-      document.getElementById('repairOverlay').classList.remove('active');
+      document.getElementById('disasterOverlay').style.display = 'none';
+      document.getElementById('repairOverlay').style.display = 'none';
+      document.getElementById('inspectionOverlay').style.display = 'none';
       document.querySelector('.repair-submenu-container').classList.remove('active');
 
       // 모든 팝업 모달 닫기
@@ -1631,6 +1694,9 @@
       hideAllOverlays();
       setActiveMenu(1);
       currentMode = 'inspection';
+
+      // 점검 이력 오버레이 표시
+      document.getElementById('inspectionOverlay').style.display = 'block';
 
       // 실제 점검표 데이터로 마커 생성 (클릭 이벤트 활성화)
       if (inspectionsData && inspectionsData.length > 0) {
@@ -1909,7 +1975,7 @@
       hideAllOverlays();
       setActiveMenu(2);
       currentMode = 'disaster';
-      document.getElementById('disasterOverlay').classList.add('active');
+      document.getElementById('disasterOverlay').style.display = 'block';
 
       // 전체 재해 이력 표시
       renderDisasterHistory(allDisasterHistory);
@@ -2228,7 +2294,7 @@
       hideAllOverlays();
       setActiveMenu(3);
       currentMode = 'repair';
-      document.getElementById('repairOverlay').classList.add('active');
+      document.getElementById('repairOverlay').style.display = 'block';
       document.querySelector('.repair-submenu-container').classList.add('active');
 
       // 전체 수리 이력 표시 (필터: '전통조경요소')
