@@ -278,8 +278,18 @@
     }
 
     .checklist-table .remark-cell {
-      width: 60px;
+      width: 120px;
       background-color: #F5F5F5;
+      padding: 4px;
+    }
+
+    .checklist-table .remark-cell input {
+      width: 100%;
+      border: 1px solid #ddd;
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      background-color: white;
     }
 
     .checklist-table .dash-cell {
@@ -539,7 +549,7 @@
         <table class="checklist-table">
           <thead>
             <tr>
-              <th colspan="2">구분</th>
+              <th colspan="3">구분</th>
               <th>안전</th>
               <th>관심</th>
               <th>주의</th>
@@ -551,10 +561,8 @@
           <tbody>
             <!-- 기초부 -->
             <tr>
-              <td class="section-header" rowspan="12">당<br>해<br>시<br>설</td>
-              <td class="sub-header" rowspan="3">기<br>초<br>부</td>
-            </tr>
-            <tr>
+              <td class="section-header" rowspan="13">설<br>시<br>해<br>당</td>
+              <td class="sub-header" rowspan="3">부<br>초<br>기</td>
               <td class="item-cell">세굴</td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="scour" value="없음"> 없음</label></td>
               <td class="check-cell dash-cell">-</td>
@@ -583,9 +591,7 @@
             </tr>
             <!-- 전면부 -->
             <tr>
-              <td class="sub-header" rowspan="8">전<br>면<br>부</td>
-            </tr>
-            <tr>
+              <td class="sub-header" rowspan="7">부<br>면<br>전</td>
               <td class="item-cell">균열</td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="crack" value="없음"> 없음</label></td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="crack" value="경미"> 경미</label></td>
@@ -650,9 +656,7 @@
             </tr>
             <!-- 상단부 -->
             <tr>
-              <td class="sub-header" rowspan="4">상<br>단<br>부</td>
-            </tr>
-            <tr>
+              <td class="sub-header" rowspan="3">부<br>단<br>상</td>
               <td class="item-cell">배수공</td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="drainage" value="원활"> 원활</label></td>
               <td class="check-cell dash-cell">-</td>
@@ -698,7 +702,7 @@
           </thead>
           <tbody>
             <tr>
-              <td class="section-header" rowspan="4">추<br>가<br>피<br>해<br>요<br>소</td>
+              <td class="section-header" rowspan="4">소<br>요<br>해<br>피<br>가<br>추</td>
               <td class="item-cell">유무</td>
               <td class="check-cell"><label class="check-label"><input type="radio" name="additional_exist" value="없음"> 없음</label></td>
               <td class="check-cell dash-cell">-</td>
@@ -708,11 +712,14 @@
             </tr>
             <tr>
               <td class="item-cell">유형</td>
-              <td class="check-cell"><label class="check-label"><input type="checkbox" name="additional_type" value="건조물"> 건조물</label></td>
-              <td class="check-cell"><label class="check-label"><input type="checkbox" name="additional_type" value="시설물"> 시설물</label></td>
-              <td class="check-cell"><label class="check-label"><input type="checkbox" name="additional_type" value="수목"> 수목</label></td>
-              <td class="check-cell"><label class="check-label"><input type="checkbox" name="additional_type" value="보행로"> 보행로</label></td>
-              <td class="check-cell"><label class="check-label"><input type="checkbox" name="additional_type" value="기타"> 기타(<input type="text" style="width:40px;border:none;border-bottom:1px solid #333;">)</label></td>
+              <td class="check-cell" colspan="4">
+                <label class="check-label"><input type="checkbox" name="additional_type" value="건조물"> 건조물</label>
+                <label class="check-label"><input type="checkbox" name="additional_type" value="시설물"> 시설물</label>
+                <label class="check-label"><input type="checkbox" name="additional_type" value="수목"> 수목</label>
+                <label class="check-label"><input type="checkbox" name="additional_type" value="보행로"> 보행로</label>
+                <label class="check-label"><input type="checkbox" name="additional_type" value="기타"> 기타(<input type="text" style="width:40px;border:none;border-bottom:1px solid#333;">)</label>
+              </td>
+              <td class="remark-cell"></td>
             </tr>
             <tr>
               <td class="item-cell">수로</td>

@@ -267,24 +267,27 @@
       left: 0;
       right: 0;
       bottom: 0;
+      width: 100%;
+      height: 100%;
       background-color: rgba(0, 0, 0, 0.5);
-      z-index: 500;
+      z-index: 9999;
       align-items: center;
       justify-content: center;
     }
 
     .modal-overlay.active {
-      display: flex;
+      display: flex !important;
     }
 
     .modal {
+      position: relative;
       background-color: #FFFFFF;
       border-radius: 16px;
       padding: 40px;
-      text-align: center;
       max-width: 400px;
       width: 90%;
       box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+      z-index: 501;
     }
 
     .modal__icon {
@@ -721,7 +724,7 @@
             <tbody>
               <!-- 당해시설 - 기초부 -->
               <tr>
-                <td rowspan="12" class="sub-header">당해<br>시설<br>(12)</td>
+                <td rowspan="12" class="sub-header">당해시설<br>(12)</td>
                 <td rowspan="3" class="row-header">기초부</td>
                 <td>세굴</td>
                 <td><span class="check-cell"><span class="check-box checked"></span> 없음</span></td>
@@ -776,7 +779,7 @@
                 <td><span class="check-cell"><span class="check-box checked"></span> 심각(국부)</span></td>
                 <td><span class="check-cell"><span class="check-box"></span> 심각(광대)</span></td>
                 <td><span class="check-cell"><span class="check-box"></span> 파괴예상</span></td>
-                <td style="font-size:10px;">풍화, 배흘,<br>벌리박락, 탄화/<br>철근 노출</td>
+                <td style="font-size:10px;">풍화, 배흘림, 벌리박락, 탄화, 철근 노출</td>
               </tr>
               <tr>
                 <td>누수흔</td>
@@ -812,7 +815,7 @@
                 <td><span class="check-cell"><span class="check-box"></span> 심각(국부)</span></td>
                 <td><span class="check-cell"><span class="check-box"></span> 심각(광대)</span></td>
                 <td><span class="check-cell"><span class="check-box"></span> 파괴예상</span></td>
-                <td style="font-size:10px;">기울기, 배부름<br>등 석렬이탈</td>
+                <td style="font-size:10px;">기울기, 배부름 등 석렬이탈</td>
               </tr>
               <tr>
                 <td>배수공</td>
@@ -834,9 +837,9 @@
               </tr>
               <!-- 추가 피해 요소 -->
               <tr>
-                <td rowspan="3" class="sub-header">추가<br>피해<br>요소<br>(3)</td>
+                <td rowspan="3" class="sub-header">추가 피해요소<br>(3)</td>
                 <td class="row-header">상부</td>
-                <td>지반 침하<br>여부</td>
+                <td>지반 침하 여부</td>
                 <td><span class="check-cell"><span class="check-box checked"></span> 없음</span></td>
                 <td>-</td>
                 <td>-</td>

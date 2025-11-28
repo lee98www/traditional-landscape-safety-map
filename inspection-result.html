@@ -395,8 +395,8 @@
           <table class="result-table">
             <thead>
               <tr>
-                <th colspan="2">점검결과</th>
-                <th>보수정비<br>필요성</th>
+                <th rowspan="2">점검<br>결과</th>
+                <th rowspan="2">보수정비 필요성</th>
                 <th class="grade-safe">안전<br>(현상유지)</th>
                 <th class="grade-interest">관심<br>(모니터링)</th>
                 <th class="grade-caution">주의<br>(경미보수)</th>
@@ -404,14 +404,7 @@
                 <th class="grade-danger">위험<br>(즉시 조치)</th>
                 <th>비고</th>
               </tr>
-            </thead>
-            <tbody>
               <tr>
-                <td class="section-header">점검<br>결과</td>
-                <td class="label-cell">종합평가</td>
-                <td class="input-cell">
-                  <input type="text" placeholder="입력">
-                </td>
                 <td class="radio-cell">
                   <input type="radio" name="result" value="안전">
                 </td>
@@ -431,7 +424,8 @@
                   <input type="text" placeholder="비고">
                 </td>
               </tr>
-            </tbody>
+            </thead>
+            <tbody>
           </table>
         </div>
       </div>

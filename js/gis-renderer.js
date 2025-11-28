@@ -161,7 +161,8 @@ const GISRenderer = {
     // 클릭 이벤트 (onClick이 null이면 클릭 이벤트 없음)
     if (onClick) {
       marker.addListener('click', () => {
-        onClick(inspection);
+        // 마커의 실제 지도 좌표를 함께 전달
+        onClick(inspection, position);
       });
     }
 

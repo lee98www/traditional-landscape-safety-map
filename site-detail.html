@@ -411,7 +411,7 @@
       margin-right: 12px;
     }
 
-    /* 점검 이력 간단 팝업 스타일 */
+    /* 점검 이력 간단 팝업 스타일 (마커 위치에 표시) */
     .inspection-simple-popup {
       position: fixed;
       top: 50%;
@@ -1385,7 +1385,7 @@
       </div>
     </div>
     <div class="warning-banner">
-      ※ 본 지도의 조사 영역과 결과는 실제 조사 결과가 아닌 이해를 돕기 위한 예시 이미지 입니다
+      ※ 본 지도의 조사 영역과 결과는 실제 조사 결과가 아닌 이해를 돕기 위한 예시 이미지입니다
     </div>
     <div class="legend" id="disasterLegend">
       <div class="legend__header">
@@ -1412,7 +1412,7 @@
   <!-- 점검 이력 오버레이 -->
   <div class="history-overlay" id="inspectionOverlay">
     <div class="warning-banner">
-      ※ 본 지도의 조사 영역과 결과는 실제 조사 결과가 아닌 이해를 돕기 위한 예시 이미지 입니다
+      ※ 본 지도의 조사 영역과 결과는 실제 조사 결과가 아닌 이해를 돕기 위한 예시 이미지입니다
     </div>
     <div class="legend" id="inspectionLegend">
       <div class="legend__header">
@@ -1447,7 +1447,7 @@
   <!-- 수리 이력 오버레이 -->
   <div class="history-overlay" id="repairOverlay">
     <div class="warning-banner">
-      ※ 본 지도의 조사 영역과 결과는 실제 조사 결과가 아닌 이해를 돕기 위한 예시 이미지 입니다
+      ※ 본 지도의 조사 영역과 결과는 실제 조사 결과가 아닌 이해를 돕기 위한 예시 이미지입니다
     </div>
     <div class="legend" id="repairLegend">
       <div class="legend__header">
@@ -1707,7 +1707,7 @@
     }
 
     // 마커 클릭 시 간단 팝업 표시
-    function onInspectionMarkerClick(inspection) {
+    function onInspectionMarkerClick(inspection, markerPosition) {
       currentInspectionId = inspection.id;
 
       // 팝업 제목 설정
@@ -1762,7 +1762,7 @@
 
       const content = `
         <div class="report-image-container">
-          <img src="${reportImagePath}" alt="안전점검 보고서"
+          <img src="${reportImagePath}" alt="안전 점검 보고서"
                onerror="this.parentElement.innerHTML='<div style=\\'text-align:center;padding:60px;color:#999;\\'><p style=\\'font-size:16px;margin-bottom:12px;\\'>📄</p><p>안전 점검 보고서는 준비 중입니다.</p></div>'">
         </div>
       `;
@@ -2217,17 +2217,27 @@
         <thead>
           <tr>
             <th style="width: 80px;">연도</th>
-            <th style="width: 100px;">지역</th>
+            <th style="width: 100px;">지점</th>
             <th style="width: 120px;">재해종류</th>
-            <th style="width: 150px;">재해 대상</th>
+            <th style="width: 150px;">재해방상</th>
             <th>내용</th>
-            <th style="width: 100px;">특기사항</th>
+            <th style="width: 100px;">복구완성</th>
           </tr>
         </thead>
         <tbody>
       `;
 
       disasters.forEach(disaster => {
+        // 복구완성 매핑: high -> 자재력구, medium -> 자재확구, low -> 중복시연
+        let recoveryStatus = '';
+        if (disaster.severity === 'high') {
+          recoveryStatus = '자재력구';
+        } else if (disaster.severity === 'medium') {
+          recoveryStatus = '자재확구';
+        } else {
+          recoveryStatus = '중복시연';
+        }
+
         html += `
           <tr>
             <td>${disaster.year}</td>
@@ -2235,7 +2245,7 @@
             <td>${disaster.type}</td>
             <td>${disaster.target}</td>
             <td style="text-align: left;">${disaster.damage}</td>
-            <td>${disaster.severity === 'high' ? '지체없구' : (disaster.severity === 'medium' ? '자제확구' : '')}</td>
+            <td>${recoveryStatus}</td>
           </tr>
         `;
       });
@@ -2268,13 +2278,24 @@
 
       repairs.forEach(repair => {
         const isDummy = repair.note === "더미 데이터";
+        // 비용 포맷팅 (원 단위를 천원 단위로 변환하고 천 단위 구분자 추가)
+        let costDisplay = repair.cost || '-';
+        if (repair.cost) {
+          const costNumber = repair.cost.replace(/[^0-9]/g, '');
+          if (costNumber) {
+            // 원 단위를 천원 단위로 변환 (1000으로 나누기)
+            const costInThousand = Math.round(Number(costNumber) / 1000);
+            costDisplay = costInThousand.toLocaleString('ko-KR');
+          }
+        }
+
         html += `
           <tr ${isDummy ? 'style="background: #FFF9C4;"' : ''}>
             <td>${repair.year}${isDummy ? ' <span style="color: #F57C00; font-size: 10px; font-weight: bold;">더미</span>' : ''}</td>
             <td>${repair.elementType}</td>
             <td>${repair.target}</td>
             <td style="text-align: left;">${repair.workDescription}</td>
-            <td>${repair.cost || '-'}</td>
+            <td>${costDisplay}</td>
           </tr>
         `;
       });
