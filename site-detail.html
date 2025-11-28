@@ -614,14 +614,6 @@
       display: block;
     }
 
-    .photo-item-label {
-      padding: 8px 12px;
-      background: white;
-      font-size: 13px;
-      color: #333;
-      text-align: center;
-      border-top: 1px solid #E0E0E0;
-    }
 
     /* 보고서 이미지 스타일 */
     .report-image-container {
@@ -633,6 +625,94 @@
       height: auto;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* 이미지 확대 뷰어 스타일 */
+    .image-viewer-container {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-viewer-container img {
+      max-width: 100%;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .image-viewer-close {
+      position: absolute;
+      top: -50px;
+      right: 0;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      z-index: 10001;
+    }
+
+    .image-viewer-close:hover {
+      background: white;
+      transform: scale(1.1);
+    }
+
+    .image-viewer-prev,
+    .image-viewer-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      font-size: 32px;
+      cursor: pointer;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      z-index: 10001;
+    }
+
+    .image-viewer-prev {
+      left: -70px;
+    }
+
+    .image-viewer-next {
+      right: -70px;
+    }
+
+    .image-viewer-prev:hover,
+    .image-viewer-next:hover {
+      background: white;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .image-viewer-counter {
+      position: absolute;
+      bottom: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
     }
 
     .checkbox-group {
@@ -1230,6 +1310,17 @@
     </div>
   </div>
 
+  <!-- 이미지 확대 팝업 -->
+  <div class="modal-overlay" id="imageViewerModal" style="display: none;" onclick="closeImageViewer()">
+    <div class="image-viewer-container" onclick="event.stopPropagation()">
+      <button class="image-viewer-close" onclick="closeImageViewer()">×</button>
+      <button class="image-viewer-prev" onclick="prevImage(event)">‹</button>
+      <button class="image-viewer-next" onclick="nextImage(event)">›</button>
+      <img id="imageViewerImg" src="" alt="확대 이미지">
+      <div class="image-viewer-counter" id="imageViewerCounter"></div>
+    </div>
+  </div>
+
   <!-- 재해 이력 오버레이 -->
   <div class="history-overlay" id="disasterOverlay">
     <div class="filter-bar">
@@ -1605,7 +1696,8 @@
 
       const content = `
         <div class="report-image-container">
-          <img src="${reportImagePath}" alt="안전점검 보고서" onerror="this.parentElement.innerHTML='<p style=\\'text-align:center;color:#999;padding:40px;\\'>보고서 이미지를 불러올 수 없습니다.</p>'">
+          <img src="${reportImagePath}" alt="안전점검 보고서"
+               onerror="this.parentElement.innerHTML='<div style=\\'text-align:center;padding:60px;color:#999;\\'><p style=\\'font-size:16px;margin-bottom:12px;\\'>📄</p><p>안전 점검 보고서는 준비 중입니다.</p></div>'">
         </div>
       `;
 
@@ -1637,7 +1729,7 @@
       }
 
       // 사진 경로 처리
-      const photoUrls = inspection.photos.map(photoPath => {
+      let photoUrls = inspection.photos.map(photoPath => {
         if (photoPath.includes('assets/photos')) {
           return photoPath;
         } else {
@@ -1645,14 +1737,25 @@
         }
       });
 
-      // 사진 그리드 HTML 생성
+      // 사진 정렬: "0_사진기록.jpg" 파일이 제일 앞으로
+      photoUrls.sort((a, b) => {
+        const filenameA = a.split('/').pop();
+        const filenameB = b.split('/').pop();
+
+        // "0_사진기록" 패턴이 포함된 파일을 최우선으로
+        if (filenameA.includes('0_사진기록') || filenameA.includes('0. 사진기록')) return -1;
+        if (filenameB.includes('0_사진기록') || filenameB.includes('0. 사진기록')) return 1;
+
+        // 나머지는 원래 순서 유지
+        return 0;
+      });
+
+      // 사진 그리드 HTML 생성 (파일명 숨김)
       let photoGridHTML = '<div class="photo-grid">';
       photoUrls.forEach((url, index) => {
-        const filename = url.split('/').pop();
         photoGridHTML += `
           <div class="photo-item" onclick="openPhotoGallery(${index})">
-            <img src="${url}" alt="${filename}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'200\\'%3E%3Crect fill=\\'%23f0f0f0\\' width=\\'200\\' height=\\'200\\'/%3E%3Ctext x=\\'50%25\\' y=\\'50%25\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' fill=\\'%23999\\'%3E이미지 없음%3C/text%3E%3C/svg%3E'">
-            <div class="photo-item-label">${filename}</div>
+            <img src="${url}" alt="사진 ${index + 1}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'200\\'%3E%3Crect fill=\\'%23f0f0f0\\' width=\\'200\\' height=\\'200\\'/%3E%3Ctext x=\\'50%25\\' y=\\'50%25\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' fill=\\'%23999\\'%3E이미지 없음%3C/text%3E%3C/svg%3E'">
           </div>
         `;
       });
@@ -1664,15 +1767,43 @@
       openSecondModal(`사진 (${photoUrls.length}장)`, photoGridHTML);
     }
 
-    // 사진 갤러리 열기
+    // 사진 갤러리 열기 (팝업으로 표시)
+    let currentImageIndex = 0;
+
     function openPhotoGallery(index) {
       if (window.currentPhotoUrls && window.currentPhotoUrls.length > 0) {
-        if (typeof PhotoGallery !== 'undefined' && PhotoGallery.showModal) {
-          PhotoGallery.showModal(window.currentPhotoUrls, index);
-        } else {
-          // PhotoGallery가 없으면 새 탭에서 이미지 열기
-          window.open(window.currentPhotoUrls[index], '_blank');
-        }
+        currentImageIndex = index;
+        showImageViewer();
+      }
+    }
+
+    function showImageViewer() {
+      const imgElement = document.getElementById('imageViewerImg');
+      const counterElement = document.getElementById('imageViewerCounter');
+
+      imgElement.src = window.currentPhotoUrls[currentImageIndex];
+      counterElement.textContent = `${currentImageIndex + 1} / ${window.currentPhotoUrls.length}`;
+
+      document.getElementById('imageViewerModal').style.display = 'flex';
+    }
+
+    function closeImageViewer() {
+      document.getElementById('imageViewerModal').style.display = 'none';
+    }
+
+    function prevImage(event) {
+      event.stopPropagation();
+      if (currentImageIndex > 0) {
+        currentImageIndex--;
+        showImageViewer();
+      }
+    }
+
+    function nextImage(event) {
+      event.stopPropagation();
+      if (currentImageIndex < window.currentPhotoUrls.length - 1) {
+        currentImageIndex++;
+        showImageViewer();
       }
     }
 
